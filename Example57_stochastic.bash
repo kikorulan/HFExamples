@@ -1,15 +1,15 @@
 #!/bin/bash
 
 #================================================================================
-# EXAMPLE 53
+# EXAMPLE for STOCHASTIC PDHG
 # 3D domain. 
 # Compute the forward signal for sensors placed in the boundary of the cube
 #================================================================================
 
 # Output folder
-export EXAMPLE_FOLDER="/cs/research/medim/projects2/projects/frullan/Documents/HighFreqCode/Examples/Ex56_RT_3D_4x4x4/"
+export EXAMPLE_FOLDER="/cs/research/medim/projects2/projects/frullan/Documents/HighFreqCode/Examples/Ex57_RT_3D_5x5x5/"
 export INPUT_FOLDER=$EXAMPLE_FOLDER"input_data/"
-export OUTPUT_FOLDER=$EXAMPLE_FOLDER"03/"
+export OUTPUT_FOLDER=$EXAMPLE_FOLDER"output_data/"
 cd $EXAMPLE_FOLDER
 
 # Assign files
@@ -18,9 +18,7 @@ export SOUND_SPEED="soundSpeed_10p.dat"
 export INITIAL_PRESSURE="initialPressure_3balls.dat"
 export SENSORS="sensors.dat" 
 export FORWARD_SIGNAL="forwardSignal.dat"
-
-# Mode
-export MODE="-f"
+export PIXEL_PRESSURE="pixelPressure.dat"
 
 # Generate dimensions file
 Nx=128 dx=0.001
@@ -32,9 +30,7 @@ $dx $dy $dz
 EOF
 
 # Parameters
-nSensorsArray=4
-nRaysPhi_aux=1000
-nRaysTheta_aux=300
+nSensorsArray=5
 nRaysPhi=1000
 nRaysTheta=300
 dt=1e-7
@@ -48,7 +44,7 @@ for ((j=0; j<nSensorsArray; j++)); do
     for ((i=0; i<nSensorsArray; i++)); do
         xPos=$(echo "scale=4;($i*$dx*($Nx-1))/($nSensorsArray-1)" | bc)
         yPos=$(echo "scale=4;($j*$dy*($Ny-1))/($nSensorsArray-1)" | bc)
-        echo "$xPos $yPos 0 $nRaysPhi_aux $nRaysTheta_aux -3.14 3.14 0.04 1.57 $dt $tMax" >> $INPUT_FOLDER$SENSORS
+        echo "$xPos $yPos 0 $nRaysPhi $nRaysTheta -3.14 3.14 0.04 1.57 $dt $tMax" >> $INPUT_FOLDER$SENSORS
     done
 done
 
@@ -86,7 +82,11 @@ for ((j=0; j<nSensorsArray; j++)); do
     done
 done
 
+# Regularization parameters
+SIGMA=1e-1
+TAU=1e7
+THETA=1
+EPOCHS=20
 # Call RT solver
 export OMP_NUM_THREADS=26
-#RTsolver_CPU $MODE $INPUT_FOLDER$DIMENSIONS $INPUT_FOLDER$SOUND_SPEED $INPUT_FOLDER$INITIAL_PRESSURE $INPUT_FOLDER$SENSORS $OUTPUT_FOLDER $INPUT_FOLDER$FORWARD_SIGNAL
-RTsolver_GPU $MODE $INPUT_FOLDER$DIMENSIONS $INPUT_FOLDER$SOUND_SPEED $INPUT_FOLDER$INITIAL_PRESSURE $INPUT_FOLDER$SENSORS $OUTPUT_FOLDER $INPUT_FOLDER$FORWARD_SIGNAL
+RTiterative_GPU $INPUT_FOLDER$DIMENSIONS $INPUT_FOLDER$SOUND_SPEED $INPUT_FOLDER$SENSORS $INPUT_FOLDER$FORWARD_SIGNAL $INPUT_FOLDER$PIXEL_PRESSURE $SIGMA $TAU $THETA $EPOCHS
