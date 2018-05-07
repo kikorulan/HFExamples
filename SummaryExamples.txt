@@ -1,0 +1,160 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%% This file contains a summary of the examples developed so far for:
+%%%%%%%%     - Fast Marching Method (FMM)
+%%%%%%%%     - Ray Tracing (RT)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%==================================================
+%========== FAST MARCHING METHOD
+%==================================================
+%%%% EXAMPLE 1
+%%%% EXAMPLE 2
+%%%% EXAMPLE 3
+%%%% EXAMPLE 4
+
+%====================================================================================================
+%====================                                                   =============================
+%====================                    RAY TRACING                    =============================
+%====================                                                   =============================
+%====================================================================================================
+
+%======================================
+%=== Ray trajectories
+%======================================
+%%%% EXAMPLE 5
+%%%% EXAMPLE 6
+%%%% EXAMPLE 7
+%%%% EXAMPLE 8
+
+%======================================
+%=== Amplitudes          
+%======================================
+%%%% EXAMPLE 9 - 3 sensors
+    - Amplitudes
+%%%% EXAMPLE 10 - 3 sensors
+    - Amplitudes
+    - Comparison with kWave
+
+%%%% EXAMPLE 11 - 3 sensors    %===================================================
+    - Amplitudes               %=== REFERENCE EXAMPLE - HOMOGENEOUS SOUND SPEED   
+    - Comparison with kWave    %===================================================
+%%%% EXAMPLE 12
+    - Amplitudes using the ODE method
+%%%% EXAMPLE 13
+    - Amplitudes using the Proximal Ray method
+    - Study the depencence of amplitude over deltaX and deltaP
+%%%% EXAMPLE 14
+    - Amplitude using the ODE method
+%%%% EXAMPLE 15 - kWave
+    - kWave impulse response
+    - Time Varying source
+    - Initial Value problem
+%%%% EXAMPLE 16
+    - Amplitude using Proximal Ray method
+    - Amplitude using Spherical Spreading + Interface method
+%%%% EXAMPLE 17
+    - Ray trajectories
+    - Compare amplitude attenuation forward and inverse ray
+%%%% EXAMPLE 18 - DEPRECATED
+%%%% EXAMPLE 19
+    - Study the interface losses
+%%%% EXAMPLE 20
+    - Comparison with kWave
+%%%% EXAMPLE 21 a & b
+    - Amplitude using ODE method
+    - Amplitude using Proximal Method
+%%%% EXAMPLE 22 - 3 sensors    %===================================================
+    - Comparison with kWave    %=== REFERENCE EXAMPLE - INHOMOGENEOUS SOUND SPEED  
+    - Heterogeneous medium     %===================================================
+%%%% EXAMPLE 23 
+    - Ray trajectories using Hamiltonian
+    - Ray trajectories using Snell's law
+    - Comparison
+%%%% EXAMPLE 24
+    - Define a gaussian random domain
+    - Compute sensor pressures
+
+%======================================
+%=== Single Source - Forward problem
+%======================================
+%%%% EXAMPLE 25
+    - Time Varying Source
+    - Comparison with kWave
+%%%% EXAMPLE 26                 %===================================================
+    - Initial Value Problem     %=== REFERENCE EXAMPLE - FORWARD PROBLEM SOURCE     
+    - Comparison with kWave     %===================================================
+%%%% EXAMPLE 27
+    a) Compute impulse response using Gaussian input
+    b) Comparison kWave - RT
+        - 3 sensors in 3 media
+    c) Verify kWave smoothing
+        - 3 sensors placed in different angles
+
+%======================================
+%=== Reconstruction 2D
+%======================================
+%%%% EXAMPLE 28
+    - Shadow regions
+%%%% EXAMPLE 29
+    - Study the impact of delta in the amplitude computation
+%%%% EXAMPLE 30
+    - Forward problem with initial pressure outside interfaces
+%%%% EXAMPLE 31                       %===================================================
+    - Reconstruction of two balls     %=== REFERENCE EXAMPLE - RECONSTRUCTION - HOMOGENEOUS
+    - Homogeneous sound speed         %===================================================
+%%%% EXAMPLE 32 
+    - Amplitude computations
+%%%% EXAMPLE 33                       %===================================================
+    - Reconstruction of three balls   %=== REFERENCE EXAMPLE - RECONSTRUCTION - HETEROGENEOUS
+    - Heterogeneous sound speed       %===================================================
+%%%% EXAMPLE 34
+    - Reconstruction of two balls
+    - Homogeneous sound speed
+    - Sensors on two boundaries
+%%%% EXAMPLE 35
+    - Reconstruction of three balls
+    - Heterogeneous sound speed
+    - Sensors on two boundaries
+%%%% EXAMPLE 36
+    - Reconstruction of three balls
+    - Heterogeneous sound speed
+    - Sensors on all boundaries
+%%%% EXAMPLE 39
+    - Comparison between additive and adjoint for k-Wave
+%%%% EXAMPLE 40
+    - Example to obtain Lipschitz constant
+%%%% EXAMPLE 44
+    - Numerical error
+%%%% EXAMPLE 51                       %===================================================
+    - Reconstruction veins            %=== PAPER - RECONSTRUCTION - HETEROGENEOUS
+    - Heterogeneous sound speed       %===================================================
+
+
+
+%======================================
+%=== Gaussian Beams
+%======================================
+%%%% EXAMPLE 37
+    - Gaussian beams
+%%%% EXAMPLE 38
+    - Gaussian beams
+%%%% EXAMPLE 46
+    - Caustics
+%%%% EXAMPLE 47
+%%%% EXAMPLE 48
+%%%% EXAMPLE 49
+%%%% EXAMPLE 50
+
+%======================================
+%=== Reconstruction 3D
+%======================================
+%%%% EXAMPLE 41
+    - Homogeneous domain
+%%%% EXAMPLE 42
+    - Heterogeneous domain
+%%%% EXAMPLE 43
+    - Heterogeneous domain
+%%%% EXAMPLE 45
+    - Photo contest
+
