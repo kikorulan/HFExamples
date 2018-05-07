@@ -22,7 +22,8 @@ x = -frame:(2*frame)/(Ny-1):frame;
 y = -frame:(2*frame)/(Nx-1):frame;
 [X, Y] = meshgrid(x, y);
 p = peaks(X, Y);
-medium.sound_speed = c0*(ones(Nx, Ny) + factor*p/max(p(:)));
+%medium.sound_speed = c0*(ones(Nx, Ny) + factor*p/max(p(:)));
+medium.sound_speed = c0*ones(Nx, Ny);
 medium.density = 1;
 % Define time vector
 dt = 5e-8;
