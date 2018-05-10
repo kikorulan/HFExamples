@@ -1,6 +1,6 @@
 % Build matrix of propagation times from each pair  of sensors
-%cd /cs/research/medim/projects2/projects/frullan/Documents/HighFreqCode/Examples/Ex58_kWave_US;
-cd /home/kiko/Documents/HighFreqCode/Examples/Ex58_kWave_US;
+cd /cs/research/medim/projects2/projects/frullan/Documents/HighFreqCode/Examples/Ex58_US;
+%cd /home/kiko/Documents/HighFreqCode/Examples/Ex58_US;
 
 %close all;
 %=========================================================================
@@ -22,8 +22,8 @@ x = -frame:(2*frame)/(Ny-1):frame;
 y = -frame:(2*frame)/(Nx-1):frame;
 [X, Y] = meshgrid(x, y);
 p = peaks(X, Y);
-%medium.sound_speed = c0*(ones(Nx, Ny) + factor*p/max(p(:)));
-medium.sound_speed = c0*ones(Nx, Ny);
+medium.sound_speed = c0*(ones(Nx, Ny) + factor*p/max(p(:)));
+%medium.sound_speed = c0*ones(Nx, Ny);
 medium.density = 1;
 % Define time vector
 dt = 5e-8;
