@@ -1,5 +1,5 @@
 % Heterogeneous Propagation Medium Example
-cd /cs/research/medim/projects2/projects/frullan/Documents/MATLAB/HighFreq/Examples/Ex46_caustics;
+cd /cs/research/medim/projects2/projects/frullan/Documents/HighFreqCode/Examples/Ex46_caustics;
 
 clear all;
 close all;
@@ -12,8 +12,8 @@ run colourMap;
 % create the computational grid
 Nx = 128;           % number of grid points in the x (row) direction
 Ny = 256;           % number of grid points in the y (column) direction
-dx = 1e-3;        % grid point spacing in the x direction [m]
-dy = 1e-3;        % grid point spacing in the y direction [m]
+dx = 1e-4;        % grid point spacing in the x direction [m]
+dy = 1e-4;        % grid point spacing in the y direction [m]
 kgrid = makeGrid(Nx, dx, Ny, dy);
 gridAux = gridRT(Nx, dx, Ny, dy);
 
@@ -22,7 +22,7 @@ gridAux = gridRT(Nx, dx, Ny, dy);
 %==============================
 % Build domain
 c0 = 1500;
-v1 = 0;
+v1 = -0.3;
 v2 = 0.1;
 kernelSize = 30;
 % Auxiliary matrices
@@ -38,8 +38,8 @@ medium.sound_speed = cConv(1+kernelSize:end-kernelSize, 1+kernelSize:end-kernelS
 medium.density = 1;
     
 % compute time
-dt = 2e-7;
-tMax = 2e-4;
+dt = 2e-8;
+tMax = 2e-5;
 kgrid.t_array = 0:dt:tMax;
 %[kgrid.t_array, dt] = makeTime(kgrid, medium.sound_speed);
 
@@ -69,11 +69,11 @@ sensor_data_low = kspaceFirstOrder2D(kgrid, medium, source_low, sensor, input_ar
 sensor_data_mid = kspaceFirstOrder2D(kgrid, medium, source_mid, sensor, input_args{:});
 sensor_data_high = kspaceFirstOrder2D(kgrid, medium, source_high, sensor, input_args{:});
 
-save sensor_data_homogeneous.mat kgrid sensor source_low source_mid source_high medium c0 dt sensor_data_low sensor_data_mid sensor_data_high input_args u0;
+save sensor_data.mat kgrid sensor source_low source_mid source_high medium c0 dt sensor_data_low sensor_data_mid sensor_data_high input_args u0;
 %=========================================================================
 % VISUALISATION
 %=========================================================================
-cd /cs/research/medim/projects2/projects/frullan/Documents/MATLAB/HighFreq/Examples/Ex46_caustics;
+cd /cs/research/medim/projects2/projects/frullan/Documents/HighFreqCode/Examples/Ex46_caustics;
 load sensor_data_homogeneous.mat;
 
 %==============================
@@ -88,5 +88,5 @@ legend('IP low', 'IP mid', 'IP high');
 xlabel('t (s)');
 ylabel('amplitude');
 
-cd /cs/research/medim/projects2/projects/frullan/Documents/MATLAB/HighFreq/Examples/Ex46_caustics;
+cd /cs/research/medim/projects2/projects/frullan/Documents/HighFreqCode/Examples/Ex46_caustics;
 %cd /home/kiko/Documents/MATLAB/HighFreq/Examples;

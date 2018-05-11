@@ -1,7 +1,7 @@
 %================================================================================
 % Example for gridRT class
 %===============================================================================
-cd /cs/research/medim/projects2/projects/frullan/Documents/MATLAB/HighFreq/Examples/Ex46_caustics;
+cd /cs/research/medim/projects2/projects/frullan/Documents/HighFreqCode/Examples/Ex46_caustics;
 
 close all;
 %clear all;
@@ -14,8 +14,8 @@ run colourMap;
 %========================================
 Nx = 128;           % number of grid points in the x (row) direction
 Ny = 256;           % number of grid points in the y (column) direction
-dx = 1e-3;        % grid point spacing in the x direction [m]
-dy = 1e-3;        % grid point spacing in the y direction [m]
+dx = 1e-4;        % grid point spacing in the x direction [m]
+dy = 1e-4;        % grid point spacing in the y direction [m]
 gridR = gridRT(Nx, dx, Ny, dy);
 
 % Make matrix symmetric
@@ -27,17 +27,17 @@ c = medium.sound_speed;
 gridR.setCMatrix(c);
 
 
-%%  %========================================
-%%  % Impulse Response
-%%  %========================================
+%========================================
+% Impulse Response
+%========================================
 %%  % Set time
-%%  dt = 2e-7;
+%%  dt = 2e-8;
 %%  %dt = min(gridR.dx, gridR.dy)/c0/2;
-%%  tMax = 2e-4;
+%%  tMax = 2e-5;
 %%  gridR.setTime(dt, tMax);
 %%  % Compute impulse response
 %%  gridR.impulse_additive('IV');
-%%  save gridRT_impulse_homogeneous.mat gridR c0 dt tMax;
+%%  save gridRT_impulse.mat gridR c0 dt tMax;
 
 %========================================
 % Ray Shooting
@@ -80,18 +80,19 @@ gridR.computeHamil(source(3));
 %==================================================================================
 % Plot results
 %==================================================================================
-cd /cs/research/medim/projects2/projects/frullan/Documents/MATLAB/HighFreq/Examples/Ex46_caustics;
+cd /cs/research/medim/projects2/projects/frullan/Documents/HighFreqCode/Examples/Ex46_caustics;
 %cd /home/kiko/Documents/MATLAB/HighFreq/Examples;
 
 %load gridRRT.mat;
 %load sensor_data.mat;
 position = [700 500 320 600];
-positionYBar = [700 700 390 600];
+positionYBar = [700 700 410 600];
+positionBar = [700 700 360 600];
 set(0,'DefaultFigurePaperPositionMode','auto');
 
-%%  %==============================
-%%  % Initial Pressure
-%%  %==============================
+%==============================
+% Initial Pressure
+%==============================
 %%  pressure = source_low.p0 + source_mid.p0 + source_high.p0;
 %%  figure;
 %%  axis([0 gridR.xAxis(end) 0 gridR.yAxis(end)]);
@@ -100,21 +101,24 @@ set(0,'DefaultFigurePaperPositionMode','auto');
 %%  view(2);
 %%  title('Initial Pressure');
 %%  xlabel('x (m)');
-%%  ylabel('y (m)');
-%%  set(gcf, 'pos', position);
-%%  %saveas(gcf, 'Example46_U.fig'); 
+%%  set(gca, 'ytick', []);
+%%  set(gca, 'yticklabel', []);
+%%  colorbar();
+%%  set(gcf, 'pos', positionBar);
+%%  saveas(gcf, 'Example46_U', 'png'); 
+%%  saveas(gcf, 'Example46_U.fig'); 
 
-%%  %==============================
-%%  % Sound speed
-%%  %==============================
+%==============================
+% Sound speed
+%==============================
 %%  gridR.plot_soundSpeed();
 %%  set(gcf, 'pos', positionYBar);
 %%  colorbar();
 %%  %saveas(gcf, 'Example46_C.fig'); 
 
-%%  %==============================
-%%  % Traveled distance
-%%  %==============================
+%==============================
+% Traveled distance
+%==============================
 %%  figure;
 %%  colours = winter(100);
 %%  for n = 1:100
@@ -126,16 +130,16 @@ set(0,'DefaultFigurePaperPositionMode','auto');
 %%  title('Traveled distance');
 %%  xlabel('t (s)');
 
-%%  %==============================
-%%  % Sources and their respective Rays
-%%  %==============================
+%==============================
+% Sources and their respective Rays
+%==============================
 %%  for n = 1:nSources
-%%      source(1).plot_rays(gridR, 10);
+%%     source(1).plot_rays(gridR, 10);
 %%  end
 
-%%  %==============================
-%%  % Isotime curve
-%%  %==============================
+%==============================
+% Isotime curve
+%==============================
 %%  nCurves = 20;
 %%  xIso = gridR.findIsoTime(source(1), 20, 1e-4, 1.2e-4);
 %%  % Figure
@@ -154,9 +158,9 @@ set(0,'DefaultFigurePaperPositionMode','auto');
 %%  view(2);
 %%  legend('Isocurves for times tMin = 1e-4s, tMax = 1.2e-4s');
 
-%%  %==============================
-%%  % Sound speed + rays
-%%  %==============================
+%==============================
+% Sound speed + rays
+%==============================
 %%  h = figure;
 %%  hold on;
 %%  axis([0 gridR.xAxis(end) 0 gridR.yAxis(end)]);
@@ -179,99 +183,181 @@ set(0,'DefaultFigurePaperPositionMode','auto');
 %==============================
 % Amplitude
 %==============================
-% Imagesc
-figure;
-surf(real(log(real(source(1).amplitude))), 'EdgeColor', 'none');
-view(2);
-xlabel('time step');
-ylabel('ray number');
-title('Amplitudes (log scale)');
-colorbar();
-hold on;
-%plot(1:1000, 350*ones(1, 1000), 'Color', 'r');
-%plot(1:1000, 450*ones(1, 1000), 'Color', 'r');
-saveas(gcf, 'Example46_surf_amplitudeDin_log', 'png');
+%%  % Imagesc
+%%  figure;
+%%  surf(real(log(real(source(1).amplitude))), 'EdgeColor', 'none');
+%%  view(2);
+%%  xlabel('time step');
+%%  ylabel('ray number');
+%%  title('Amplitudes (log scale)');
+%%  colorbar();
+%%  hold on;
+%%  %plot(1:1000, 350*ones(1, 1000), 'Color', 'r');
+%%  %plot(1:1000, 450*ones(1, 1000), 'Color', 'r');
+%%  %%  saveas(gcf, 'Example46_surf_amplitudeDin_log', 'png');
+%%  %%  
+%%  % Log plot
+%%  figure;
+%%  colours = winter(100);
+%%  for n = 1:100
+%%      semilogy(gridR.tForward, real(source(1).amplitude(n+350, :)), 'Color', colours(n, :));
+%%      hold on;
+%%  end;
+%%  grid on;
+%%  box on;
+%%  title('Amplitudes for rays with caustic (Gaussian Beam)');
+%%  xlabel('t (s)');
+%%  saveas(gcf, 'Example46_amplitudeGB_log', 'epsc');
+%%  
+%%  % Log plot
+%%  figure;
+%%  colours = winter(100);
+%%  for n = 1:100
+%%      semilogy(gridR.tForward, imag(source(1).amplitude(n+350, :)), 'Color', colours(n, :));
+%%      hold on;
+%%  end;
+%%  grid on;
+%%  box on;
+%%  title('Amplitudes for rays with caustic - imag');
+%%  xlabel('t (s)');
+%%  %saveas(gcf, 'Example46_amplitudeODE_log_caustic.fig');
 
-% Log plot
-figure;
-colours = winter(100);
-for n = 1:100
-    semilogy(gridR.tForward, real(source(1).amplitude(n+350, :)), 'Color', colours(n, :));
-    hold on;
-end;
-grid on;
-box on;
-title('Amplitudes for rays with caustic');
-xlabel('t (s)');
-saveas(gcf, 'Example46_amplitudeDin_log', 'epsc');
+%==============================
+% Amplitude & Q - RT & GB
+%==============================
+%%  % Log plot
+%%  figure;
+%%  colours = winter(100);
+%%  subplot(2, 2, 1);
+%%  for n = 1:100
+%%      plot(gridR.tForward, real(sourceRT(1).q(n+350, :)), 'Color', colours(n, :));
+%%      hold on;
+%%  end;
+%%  grid on;
+%%  box on;
+%%  title('Q rays with caustic');
+%%  xlabel('t (s)');
+%%  subplot(2, 2, 2);
+%%  for n = 1:100
+%%      plot(gridR.tForward, real(source(1).qGB(n+350, :)), 'Color', colours(n, :));
+%%      hold on;
+%%  end;
+%%  grid on;
+%%  box on;
+%%  title('Q rays with caustic (Gaussian Beam)');
+%%  xlabel('t (s)');
+%%  subplot(2, 2, 3);
+%%  for n = 1:100
+%%      semilogy(gridR.tForward, real(sourceRT(1).amplitude(n+350, :)), 'Color', colours(n, :));
+%%      axis([0 2e-5 1e-3 1]);
+%%      hold on;
+%%  end;
+%%  grid on;
+%%  box on;
+%%  title('Amplitude rays with caustic');
+%%  xlabel('t (s)');
+%%  subplot(2, 2, 4);
+%%  for n = 1:100
+%%      semilogy(gridR.tForward, real(source(1).amplitude(n+350, :)), 'Color', colours(n, :));
+%%      axis([0 2e-5 1e-3 1]);
+%%      hold on;
+%%  end;
+%%  grid on;
+%%  box on;
+%%  title('Amplitudes rays with caustic (Gaussian Beam)');
+%%  xlabel('t (s)');
+%%  
+%%  set(gcf, 'pos', [700 700 1000 500]);
+%%  saveas(gcf, 'Example46_amplitude_comparison', 'epsc');
 
-% Log plot
-figure;
-colours = winter(100);
-for n = 1:100
-    semilogy(gridR.tForward, imag(source(1).amplitude(n+350, :)), 'Color', colours(n, :));
-    hold on;
-end;
-grid on;
-box on;
-title('Amplitudes for rays with caustic - imag');
-xlabel('t (s)');
 
-%saveas(gcf, 'Example46_amplitudeODE_log_caustic.fig');
 
 %==============================
 % Q
 %==============================
-% Imagesc
-figure;
-imagesc(real(source(1).q));
-xlabel('time step');
-ylabel('ray number');
-title('Q');
-colorbar();
-%caxis([-8e-7 8e-7]);
-saveas(gcf, 'Example46_surf_qDin', 'png');
+%%  % Imagesc
+%%  figure;
+%%  imagesc(real(source(1).q));
+%%  xlabel('time step');
+%%  ylabel('ray number');
+%%  title('Q');
+%%  colorbar();
+%%  %caxis([-8e-7 8e-7]);
+%%  saveas(gcf, 'Example46_surf_qDin', 'png');
 
-hold on;
+%hold on;
 %plot(1:1000, 350*ones(1, 1000), 'Color', 'r');
 %plot(1:1000, 450*ones(1, 1000), 'Color', 'r');
 %saveas(gcf, 'Example46_qODE.fig');
 
-% Real plot
-figure;
-colours = winter(100);
-for n = 1:100
-    plot(gridR.tForward, real(source(1).q(n+350, :)), 'Color', colours(n, :));
-    hold on;
-end;
-grid on;
-box on;
-title('Qs for rays with caustic');
-xlabel('t (s)');
-saveas(gcf, 'Example46_qDin', 'epsc');
+%%  % Real plot
+%%  figure;
+%%  colours = winter(100);
+%%  for n = 1:100
+%%      plot(gridR.tForward, real(source(1).q(n+350, :)), 'Color', colours(n, :));
+%%      hold on;
+%%  end;
+%%  grid on;
+%%  box on;
+%%  title('Qs for rays with caustic');
+%%  xlabel('t (s)');
+%%  saveas(gcf, 'Example46_qDin', 'epsc');
+%%  
+%%  % Imag plot
+%%  figure;
+%%  colours = winter(100);
+%%  for n = 1:100
+%%      plot(gridR.tForward, imag(source(1).q(n+350, :)), 'Color', colours(n, :));
+%%      hold on;
+%%  end;
+%%  grid on;
+%%  box on;
+%%  title('Qs for rays with caustic - imag');
+%%  xlabel('t (s)');
+%%  %saveas(gcf, 'Example46_q.fig');
 
-% Imag plot
-figure;
-colours = winter(100);
-for n = 1:100
-    plot(gridR.tForward, imag(source(1).q(n+350, :)), 'Color', colours(n, :));
-    hold on;
-end;
-grid on;
-box on;
-title('Qs for rays with caustic - imag');
-xlabel('t (s)');
-%saveas(gcf, 'Example46_q.fig');
+%==============================
+% Q GB
+%==============================
+%%  % Imagesc
+%%  figure;
+%%  imagesc(real(source(1).qGB));
+%%  xlabel('time step');
+%%  ylabel('ray number');
+%%  title('Q GB real');
+%%  colorbar();
+%%  
+%%  
+%%  figure;
+%%  imagesc(imag(source(1).qGB));
+%%  xlabel('time step');
+%%  ylabel('ray number');
+%%  title('Q GB imag');
+%%  colorbar();
+
+
+
+%caxis([-8e-7 8e-7]);
+
 
 %==============================
 % Keller-Maslov index
 %==============================
 %%  % Imagesc
 %%  figure;
-%%  imagesc(source(1).kIndex);
+%%  imagesc(real(source(1).kIndex));
 %%  xlabel('time step');
 %%  ylabel('ray number');
-%%  title('KM index');
+%%  title('KM index real');
+%%  colorbar();
+%%  %caxis([-8e-7 8e-7]);
+%%  
+%%  % Imagesc
+%%  figure;
+%%  imagesc(imag(source(1).kIndex));
+%%  xlabel('time step');
+%%  ylabel('ray number');
+%%  title('KM index imag');
 %%  colorbar();
 %%  %caxis([-8e-7 8e-7]);
 
@@ -317,38 +403,43 @@ xlabel('t (s)');
 %%  title('beamwidth');
 %%  xlabel('t (s)');
 
-%%  %==============================
-%%  % Sound speed + ray selection
-%%  %==============================
+%==============================
+% Sound speed + ray selection
+%==============================
 %%  h = figure;
 %%  hold on;
 %%  axis([0 gridR.xAxis(end) 0 gridR.yAxis(end)]);
-%%  nColours = 100;
+%%  nColours = 320;
 %%  colourList = summer(nColours);
 %%  [nRays nSteps dim] = size(source(1).x);
 %%  zVec = 1600*ones(1, nSteps);
-%%  for j = 1:5:100
+%%  for j = 1:5:nColours
 %%      colourNum = j;
-%%      plot3(source(1).x(j + 350, :, 1), source(1).x(j + 350, :, 2), zVec, 'Color', colourList(colourNum, :));
+%%      plot3(source(1).x(j + 400-nColours/2, :, 1), source(1).x(j + 400-nColours/2, :, 2), zVec, 'Color', colourList(colourNum, :));
 %%  end
-%%  surf(gridR.xAxis, gridR.yAxis, 1./gridR.c', 'EdgeColor', 'none');
-%%  %imagesc(gridR.xAxis, gridR.yAxis, 1./gridR.c');
+%%  c = parula;
+%%  c = flipud(c);
+%%  colormap(c);
+%%  imagesc(gridR.xAxis, gridR.yAxis, gridR.c');
+%%  colorbar();
 %%  xlabel('x (m)');
 %%  ylabel('y (m)');
 %%  title('Ray Trajectories - focus');
-%%  set(gcf, 'pos', position);
-%%  %saveas(gcf, 'Example46_rays_soundSpeed_selection.fig');
+%%  set(gcf, 'pos', positionYBar);
+%%  saveas(gcf, 'Example46_rays_soundSpeed_selection', 'png');
+%%  saveas(gcf, 'Example46_rays_soundSpeed_selection.fig');
 
-%%  %==============================
-%%  % Time Signals
-%%  %==============================
+%==============================
+% Time Signals
+%==============================
 %%  % Norms
 %%  normRT = max(real(source(1).aForward));
 %%  normKWave = max(sensor_data_low(1, :));
-%%  % Number of plots
 %%  figure;
+%%  % Subplot 1
+%%  subplot(2, 1, 1);
 %%  hold on;
-%%  axis([0 2e-4 -1.5 2.5]);
+%%  axis([0 2e-5 -1.5 2]);
 %%  grid on;
 %%  box on;
 %%  plot(gridR.tForward, source(1).aForward/normRT, 'Color', 'r', 'LineWidth', 2);
@@ -357,11 +448,26 @@ xlabel('t (s)');
 %%  plot(kgrid.t_array, sensor_data_mid(1, :)/normKWave, 'Color', [0.2 0.8 0.2]);
 %%  plot(gridR.tForward, source(3).aForward/normRT, 'Color', 'b', 'LineWidth', 2);
 %%  plot(kgrid.t_array, sensor_data_high(1, :)/normKWave, 'Color', [0.2 0.2 0.8]);
-%%  legend('RT - low', 'kWave - low', 'RT - mid', 'kWave - mid', 'RT - high', 'kWave - high');
+%%  legend('RT - bottom', 'kWave - bottom', 'RT - middle', 'kWave - middle', 'RT - top', 'kWave - top');
 %%  xlabel('t (s)');
 %%  ylabel('Amplitude');
-%%  %title('Signals for focusing sound speed - Gaussian Beam');
-%%  %saveas(gcf, 'Example46_signalsGB_focus.fig');
+%%  title('Forward data - RT vs k-Wave');
+%%  % Subplot 2
+%%  subplot(2, 1, 2);
+%%  hold on;
+%%  axis([0 2e-5 -1 1]);
+%%  grid on;
+%%  box on;
+%%  plot(gridR.tForward, source(1).aForward/normRT - sensor_data_low(1, :)/normKWave, 'Color', 'r', 'LineWidth', 2);
+%%  plot(gridR.tForward, source(2).aForward/normRT - sensor_data_mid(1, :)/normKWave, 'Color', 'g', 'LineWidth', 2);
+%%  plot(gridR.tForward, source(3).aForward/normRT - sensor_data_high(1, :)/normKWave, 'Color', 'b', 'LineWidth', 2);
+%%  legend('Error - bottom', 'Error - middle', 'Error - top');
+%%  xlabel('t (s)');
+%%  ylabel('Amplitude');
+%%  title('Error - RT ');
+%%  set(gcf, 'pos', [700 700 1200 800]);
+%%  saveas(gcf, 'Example46_signalsRT_error', 'png');
+%%  saveas(gcf, 'Example46_signalsRT_error.fig');
 
 %%  %==============================
 %%  % Beam Signals
@@ -421,6 +527,6 @@ disp(['  total computation time ' num2str(etime(end_time, start_time))]);
 % Save results
 %save gridRT.mat grid nRays nSources x -v7.3;
 
-cd /cs/research/medim/projects2/projects/frullan/Documents/MATLAB/HighFreq/Examples;
+cd /cs/research/medim/projects2/projects/frullan/Documents/HighFreqCode/Examples;
 %cd /home/kiko/Documents/MATLAB/HighFreq/Examples;
 
