@@ -1,42 +1,42 @@
 #!/bin/bash
 
 #================================================================================
-# EXAMPLE 56
+# EXAMPLE 57
 # 3D domain. 
 # Compute the forward signal for sensors placed in the boundary of the cube
 #================================================================================
 
 # Output folder
-export EXAMPLE_FOLDER="/cs/research/medim/projects2/projects/frullan/Documents/HighFreqCode/Examples/Ex56_RT_3D_4x4x4/"
+export EXAMPLE_FOLDER="/cs/research/medim/projects2/projects/frullan/Documents/HighFreqCode/Examples/Ex59_RT_3D/"
 export INPUT_FOLDER=$EXAMPLE_FOLDER"input_data/"
 export OUTPUT_FOLDER=$EXAMPLE_FOLDER"03/"
 cd $EXAMPLE_FOLDER
 
 # Assign files
 export DIMENSIONS="dimensions.dat"
-export SOUND_SPEED="soundSpeed_10p.dat"
-export INITIAL_PRESSURE="initialPressure_3balls.dat"
+export SOUND_SPEED="sound_speed.dat"
+export INITIAL_PRESSURE="initial_pressure_veins.dat"
 export SENSORS="sensors.dat" 
-export FORWARD_SIGNAL="forwardSignal.dat"
+export FORWARD_SIGNAL="forwardSignal_2168sensors.dat"
 
 # Mode
 export MODE="-a"
 
 # Generate dimensions file
-Nx=128 dx=0.001
-Ny=128 dy=0.001
-Nz=128 dz=0.001
+Nx=128 dx=0.0001
+Ny=128 dy=0.0001
+Nz=128 dz=0.0001
 cat > $INPUT_FOLDER$DIMENSIONS <<EOF
 $Nx $Ny $Nz
 $dx $dy $dz
 EOF
 
 # Parameters
-nSensorsArray=4
+nSensorsArray=20
 nRaysPhi=1000
 nRaysTheta=300
-dt=1e-7
-tMax=1.5e-4
+dt=1e-8
+tMax=1.5e-5
 # Generate sensor file
 cat > $INPUT_FOLDER$SENSORS<<EOF
 EOF

@@ -1,11 +1,12 @@
 % Read data from files
-cd /cs/research/medim/projects2/projects/frullan/Documents/HighFreqCode/Examples/Ex56_RT_3D_4x4x4;
+cd /cs/research/medim/projects2/projects/frullan/Documents/HighFreqCode/Examples/Ex59_RT_3D;
 %clear all;
 close all;
 
 % Read files
 delimiterIn = ' ';
 headerlinesIn = 0;
+
 
 %==================================================
 % Dimensions
@@ -19,23 +20,12 @@ Nz = dim(1, 3); dz = dim(2, 3);
 %==========================================================================================
 % FORWARD PROBLEM
 %==========================================================================================
-% Axis
-x_axis = 0:dx:(Nx-1)*dx;
-y_axis = 0:dy:(Ny-1)*dy;
 %==============================
 % SOUND SPEED
 %==============================
-sound_speed_matrix = importdata('input_data/soundSpeed_10p.dat', delimiterIn, headerlinesIn);
-sound_speed = matrix2cube(sound_speed_matrix, Nz);
-
-figure;
-surf(x_axis, y_axis, sound_speed(:, :, 64), 'EdgeColor', 'none');
-axis([0 x_axis(end) 0 y_axis(end)]);
-view(2);
-colorbar();
-xlabel('y (m)');
-ylabel('x (m)');
-title('Sound Speed');
+%%  sound_speed_matrix = importdata('input_data/sound_speed.dat', delimiterIn, headerlinesIn);
+%%  sound_speed = matrix2cube(sound_speed_matrix, Nz);
+%%  plot_cube(sound_speed);
 
 %==============================
 % FILTERS
@@ -51,14 +41,12 @@ title('Sound Speed');
 %==================================================
 % INITIAL PRESSURE
 %==================================================
-%%  % Import data
-%%  filenameData = 'InitialPressure0.dat';
-%%  initialPressure = importdata(filenameData, delimiterIn, headerlinesIn);
-%%  
-%%  % Plot
-%%  figure;
-%%  surf(initialPressure, 'EdgeColor', 'none');
-%%  view(2);
+% Import data
+filenameData = 'input_data/initial_pressure_veins.dat';
+initial_pressure_matrix = importdata(filenameData, delimiterIn, headerlinesIn);
+initial_pressure = matrix2cube(initial_pressure_matrix, Nz);
+
+[h, h1, h2, hlink] = plot_pixel(inputKWave_norm, 1, 1, false, initial_pressure);
 
 %==================================================
 % AMPLITUDE
@@ -77,32 +65,32 @@ title('Sound Speed');
 %==================================================
 % TIME SIGNAL - RT
 %==================================================
-%%  % Import data
-%%  filenameData = 'output_data/ForwardSignal.dat';
-%%  timeSignal = importdata(filenameData, delimiterIn, headerlinesIn);
-%%  % Plot
-%%  figure;
-%%  imagesc(timeSignal(2:end, :));
-%%  box on;
+% Import data
+filenameData = 'output_data/ForwardSignal.dat';
+timeSignal = importdata(filenameData, delimiterIn, headerlinesIn);
+% Plot
+figure;
+imagesc(timeSignal(2:end, :));
+box on;
 
 %==================================================
 % TIME SIGNAL - kWave
 %==================================================
-%%  sensor_data = h5read('output_data/Example56_forward_output.h5', '/p');
-%%  % Plot
-%%  figure;
-%%  imagesc(sensor_data);
-%%  box on;
+sensor_data = h5read('output_data/Example59_forward_output.h5', '/p');
+% Plot
+figure;
+imagesc(sensor_data);
+box on;
 
 
 %==================================================
 % COMPARISON WITH K-WAVE
 %==================================================
 % Import data
-load input_data/sensor_data_3balls;
-sensor_data = h5read('output_data/Example56_forward_output.h5', '/p');
+load input_data/sensor_data_veins;
+sensor_data = h5read('output_data/Example59_forward_output.h5', '/p');
 filenameData = 'output_data/ForwardSignal.dat';
-timeSignal = importdata(filenameData, delimiterIn, headerlinesIn);
+timeSignal = importdata(filenameData, ' ', 0);
 % Input
 timeRT = timeSignal(1, :);
 inputRT = timeSignal(2:end, :);
@@ -113,8 +101,12 @@ nSensors = size(sensor_data, 1);
 
 normRT = max(inputRT(:));
 normKWave = max(inputKWave(:));
+
+% Norm difference
+difNorm = norm(inputRT(:)/normRT - inputKWave(:)/normKWave);
+
 % Plot all sensors
-for i = 1:nSensors
+for i = 1:100:nSensors
     % Normalisation - RT
     %normRT = max(inputRT(i, :));
     signalRT = inputRT(i, :)/normRT;
@@ -129,37 +121,43 @@ for i = 1:nSensors
     plot(timeRT, signalRT, 'Color', 'r', 'LineWidth', 2);
     hold on;
     plot(timeKWave, signalKWave, 'Color', 'blue', 'LineWidth', 2);
-    axis([0 1.5e-4 -1 1]);
+    axis([0 1.5e-5 -1 1]);
     legend('RT', 'k-Wave');
     xlabel('time (s)');
     ylabel('amplitude');
-    title(strcat('RT vs kWave - ', int2str(i)));
-
+    grid on;
+    title(['RT vs kWave - ', int2str(i)]);
+    %saveas(gcf, ['output_data/Example59_forwardSignal_sensor', int2str(i), '.fig']);
+    %saveas(gcf, ['output_data/Example59_forwardSignal_sensor', int2str(i)], 'png');
 end
 
-%%  % Error
-%%  signalKWave_spline = spline(timeKWave, signalKWave, timeRT);
-%%  error = signalRT - signalKWave_spline;
-%%  figure;
-%%  grid on;
-%%  plot(timeRT, error, 'Color', 'r', 'LineWidth', 2);
-%%  legend('error');
-%%  xlabel('time (s)');
-%%  ylabel('error');
-%%  saveas(gcf, 'Example56_error.fig');
-%%  saveas(gcf, 'Example56_error', 'png');
-
+%%  for i = 1:10:nSensors
+%%      % Error
+%%      signalRT = inputRT(i, :)/normRT;
+%%      signalKWave = inputKWave(i, :)/normKWave;
+%%      % Spline
+%%      signalKWave_spline = spline(timeKWave, signalKWave, timeRT);
+%%      error = signalRT - signalKWave_spline;
+%%      figure;
+%%      grid on;
+%%      plot(timeRT, error, 'Color', 'r', 'LineWidth', 2);
+%%      axis([0 1.5e-5 -.2 .2]);
+%%      legend('error');
+%%      xlabel('time (s)');
+%%      ylabel('error');
+%%      grid on;
+%%      title(['RT vs kWave - ', int2str(i)]);
+%%      %saveas(gcf, ['output_data/Example59_forwardSignal_error', int2str(i), '.fig']);
+%%      %saveas(gcf, ['output_data/Example59_forwardSignal_error', int2str(i)], 'png');
+%%  end
 %==========================================================================================
 % INVERSE PROBLEM
 %==========================================================================================
-% Axis
-x_axis = 0:dx:(Nx-1)*dx;
-y_axis = 0:dy:(Ny-1)*dy;
-% Position
-position     = [700 700 300 630];
-positionY    = [700 700 320 630];
-positionBar  = [700 700 363 630];
-positionYBar = [700 700 390 630];
+%%  % Position
+%%  position     = [700 700 300 630];
+%%  positionY    = [700 700 320 630];
+%%  positionBar  = [700 700 363 630];
+%%  positionYBar = [700 700 390 630];
 
 %==================================================
 % IMPORT DATA
@@ -251,33 +249,27 @@ positionYBar = [700 700 390 630];
 % Import data
 pixelPressureMatrix = importdata('output_data/PixelPressure.dat', delimiterIn, headerlinesIn);
 pixelPressure = max(0, matrix2cube(pixelPressureMatrix, Nz));
-plot_cube(pixelPressure, Nz);
-%saveas(gcf, 'Example56_RT_recon', 'png');
-%saveas(gcf, 'Example56_RT_recon.fig');
+plot_pixel(initial_pressure, 10, 1, pixelPressure);
 
-%==============================
+%==================================================
 % Reconstruction - kWave
-%==============================
-%%  p0_recon_PML = h5read('output_data/Example56_adjoint_output.h5', '/p_final');
-%%  PML_size = 10;
-%%  p0_recon = max(0, p0_recon_PML(1+PML_size:end-PML_size, 1+PML_size:end-PML_size, 1+PML_size:end-PML_size));
-%%  
-%%  % Normalisation - kWave
-%%  inputKWave = p0_recon(:, :, 64);
-%%  normKWave = max(inputKWave(:));
-%%  inputKWave_norm = inputKWave/normKWave;
-%%  
+%==================================================
+p0_recon_PML = h5read('output_data/Example59_adjoint_output.h5', '/p_final');
+PML_size = 10;
+p0_recon = max(0, p0_recon_PML(1+PML_size:end-PML_size, 1+PML_size:end-PML_size, 1+PML_size:end-PML_size));
+plot_pixel(p0_recon, 10, 1);
+
+%==================================================
+% Comparison
+%==================================================
+%%  reconDif = inputRT_norm - p0_recon/normKW;
 %%  % Plot figure
-%%  figure;
-%%  surf(x_axis, y_axis, inputKWave_norm, 'EdgeColor', 'none');
-%%  axis([0 x_axis(end) 0 y_axis(end)]);
-%%  view(2);
-%%  colorbar();
+%%  scrollView(permute(fliplr(permute(real(reconDif), [2 1 3])), [2 1 3]), 3, [-0.2 .2])
 %%  xlabel('y (m)');
 %%  ylabel('x (m)');
 %%  title('kWave recon - z = 0.063');
-%%  %saveas(gcf, 'Example56_kWave_recon', 'png');
-%%  %saveas(gcf, 'Example56_kWave_recon.fig');
+%%  saveas(gcf, 'output_data/Example57_error_recon.fig');
+
 
 %==================================================
 % COMPARISON
@@ -379,18 +371,6 @@ plot_cube(pixelPressure, Nz);
 %%      legend('RT 1', 'RT 2', 'RT 3', 'KW 1', 'KW 2', 'KW 3');
 %%      title(['Sensor ' int2str(i)]);
 %%  end
-
-%==================================================
-% SCROLL RT
-%==================================================
-%%  stdRT = 15*std(abs(pixelPressure(:)))
-%%  scrollView(permute(fliplr(real(pixelPressure)), [2 1 3]), 3, [0 stdRT])
-
-%==================================================
-% SCROLL kWave
-%==================================================
-%%  stdKW = 15*std(abs(p0_recon(:)));
-%%  scrollView(permute(fliplr(real(p0_recon)), [2 1 3]), 3, [0 stdKW])
 
 
 %%  %==================================================
