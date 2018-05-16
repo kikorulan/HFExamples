@@ -7,7 +7,7 @@
 #================================================================================
 
 # Output folder
-export EXAMPLE_FOLDER="/cs/research/medim/projects2/projects/frullan/Documents/HighFreqCode/Examples/Ex59_RT_3D/"
+export EXAMPLE_FOLDER="/cs/research/medim/projects2/projects/frullan/Documents/HighFreqCode/Examples/Ex59_3D_veins/"
 export INPUT_FOLDER=$EXAMPLE_FOLDER"input_data/"
 export OUTPUT_FOLDER=$EXAMPLE_FOLDER"03/"
 cd $EXAMPLE_FOLDER
@@ -15,7 +15,7 @@ cd $EXAMPLE_FOLDER
 # Assign files
 export DIMENSIONS="dimensions.dat"
 export SOUND_SPEED="sound_speed.dat"
-export INITIAL_PRESSURE="initial_pressure_veins.dat"
+export INITIAL_PRESSURE="initial_pressure_4balls.dat"
 export SENSORS="sensors.dat" 
 export FORWARD_SIGNAL="forwardSignal_2168sensors.dat"
 

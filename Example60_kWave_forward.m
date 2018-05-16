@@ -1,5 +1,5 @@
 % Heterogeneous Propagation Medium Example
-cd /cs/research/medim/projects2/projects/frullan/Documents/HighFreqCode/Examples/Ex59_RT_3D;
+cd /cs/research/medim/projects2/projects/frullan/Documents/HighFreqCode/Examples/Ex60_3D_veins;
 
 clear all;
 close all;
@@ -34,7 +34,7 @@ kgrid.t_array = 0:dt:tMax;
 %[kgrid.t_array, dt] = makeTime(kgrid, medium.sound_speed);
 
 % Load Initial Pressure
-u0Matrix = importdata('input_data/initial_pressure_veins.dat', ' ', 0);
+u0Matrix = importdata('input_data/initial_pressure_4balls.dat', ' ', 0);
 u0 = matrix2cube(u0Matrix, Nz);
 % smooth the initial pressure distribution and restore the magnitude
 source.p0 = smooth(kgrid, u0, true);
@@ -78,18 +78,18 @@ numberSensors = sum(sensor.mask(:))
 input_args = {'PMLInside', false, 'PlotPML', false, 'Smooth', false};
 
 % Save to disk
-filename = 'input_data/Example59_forward_input.h5';
+filename = 'input_data/Example60_forward_input.h5';
 kspaceFirstOrder3D(kgrid, medium, source, sensor, input_args{:}, 'SaveToDisk', filename);
 
 % Call C++ code
 setenv LD_LIBRARY_PATH '/cs/research/medim/projects2/projects/frullan/lib/GCC-5.4/lib64';
-system('../kspaceFirstOrder3D-OMP -i input_data/Example59_forward_input.h5 -o output_data/Example59_forward_output.h5');
-save input_data/sensor_data_veins.mat kgrid medium source sensor input_args;
+system('../kspaceFirstOrder3D-OMP -i input_data/Example60_forward_input.h5 -o output_data/Example60_forward_output.h5');
+save input_data/sensor_data_4balls.mat kgrid medium source sensor input_args;
 
 %=========================================================================
 % VISUALISATION
 %=========================================================================
-cd /cs/research/medim/projects2/projects/frullan/Documents/HighFreqCode/Examples/Ex59_RT_3D;
+cd /cs/research/medim/projects2/projects/frullan/Documents/HighFreqCode/Examples/Ex60_3D_veins;
 
 % Axis
 x_axis = 0:dx:(Nx-1)*dx;
@@ -107,8 +107,8 @@ colorbar();
 xlabel('y (m)');
 ylabel('x (m)');
 title('Sound Speed');
-saveas(gcf, 'Example59_C', 'png');
-saveas(gcf, 'Example59_C.fig');
+saveas(gcf, 'Example60_C', 'png');
+saveas(gcf, 'Example60_C.fig');
 
 % 3D plot
 plot_cube(medium.sound_speed);
@@ -123,13 +123,13 @@ colorbar();
 xlabel('y (m)');
 ylabel('x (m)');
 title('Initial pressure');
-saveas(gcf, 'Example59_U', 'png');
-saveas(gcf, 'Example59_U.fig');
+saveas(gcf, 'Example60_U', 'png');
+saveas(gcf, 'Example60_U.fig');
 
 %==================================================
 % TIME SIGNAL - kWave
 %==================================================
-sensor_data = h5read('output_data/Example59_forward_output.h5', '/p');
+sensor_data = h5read('output_data/Example60_forward_output.h5', '/p');
 
 figure;
 imagesc(sensor_data);

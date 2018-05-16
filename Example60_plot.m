@@ -1,5 +1,5 @@
 % Read data from files
-cd /cs/research/medim/projects2/projects/frullan/Documents/HighFreqCode/Examples/Ex59_3D_veins;
+cd /cs/research/medim/projects2/projects/frullan/Documents/HighFreqCode/Examples/Ex60_3D_veins;
 %clear all;
 close all;
 
@@ -48,63 +48,34 @@ xlabel('y [m]');
 ylabel('x [m]');
 %set(gca, 'ytick', []);
 set(gcf, 'pos', position);
-saveas(gcf, 'Example59_C_s40', 'png');
-saveas(gcf, 'Example59_C_s40.fig');
+saveas(gcf, 'Example60_C_s40', 'png');
+saveas(gcf, 'Example60_C_s40.fig');
 
-% 2D plot
+%==================================================
+% TRAJECTORIES
+%==================================================
+% Import data
+trajectories = importdata('output_data/Trajectory0.dat', ' ', 0);
+
+% Read number of rays and steps
+[nSteps nRays] = size(trajectories);
+xCoord = trajectories(:, 1:3:nRays);
+yCoord = trajectories(:, 2:3:nRays);
+zCoord = trajectories(:, 3:3:nRays);
+
+nRays = nRays/3;
+% Plot the figure
 figure;
-surf(x_axis, y_axis, sound_speed(:, :, 56), 'EdgeColor', 'none');
-axis([0 x_axis(end) 0 y_axis(end)]);
-view(2);
-box on;
-caxis([1350 1650]);
-xlabel('y [m]');
-%ylabel('x [m]');
-set(gca, 'ytick', []);
-set(gcf, 'pos', position);
-saveas(gcf, 'Example59_C_s56', 'png');
-saveas(gcf, 'Example59_C_s56.fig');
-
-% 2D plot
-figure;
-surf(x_axis, y_axis, sound_speed(:, :, 64), 'EdgeColor', 'none');
-axis([0 x_axis(end) 0 y_axis(end)]);
-view(2);
-box on;
-caxis([1350 1650]);
-xlabel('y [m]');
-%ylabel('x [m]');
-set(gca, 'ytick', []);
-set(gcf, 'pos', position);
-saveas(gcf, 'Example59_C_s64', 'png');
-saveas(gcf, 'Example59_C_s64.fig');
-
-% 2D plot
-figure;
-surf(x_axis, y_axis, sound_speed(:, :, 88), 'EdgeColor', 'none');
-axis([0 x_axis(end) 0 y_axis(end)]);
-view(2);
-box on;
-caxis([1350 1650]);
-colorbar();
-xlabel('y [m]');
-%ylabel('x [m]');
-set(gca, 'ytick', []);
-set(gcf, 'pos', positionBar);
-saveas(gcf, 'Example59_C_s88', 'png');
-saveas(gcf, 'Example59_C_s88.fig');
-
-
-%==============================
-% FILTERS
-%==============================
-%%  filters = importdata('output_data/Filters.dat', delimiterIn, headerlinesIn);
-%%  nColors = cool(100);
-%%  figure;
-%%  hold on;
-%%  for i = 1:100
-%%      plot(filters(i, :), 'Color', nColors(i, :));
-%%  end
+ax = gca;
+ax.GridAlpha = 1;
+grid on;
+axis([0 Nx*dx 0 Ny*dy 0 Nz*dz]);
+hold on;
+colours = winter(nRays);
+for n = 300:2:1500
+    plot3(xCoord(:, n), yCoord(:, n), zCoord(:, n), 'Color', colours(n, :));
+end
+title('Trajectories for sensor 1');
 
 %==================================================
 % INITIAL PRESSURE
@@ -114,17 +85,6 @@ filenameData = 'input_data/initial_pressure_veins.dat';
 initial_pressure_matrix = importdata(filenameData, ' ', 0);
 initial_pressure = matrix2cube(initial_pressure_matrix, Nz);
 [h, h1, h2, hlink] = plot_pixel(initial_pressure, 1, dx);
-colorbar off;
-view(25, 75);
-saveas(gcf, 'Example59_U_3D_1.fig');
-saveas(gcf, 'Example59_U_3D_1', 'png');
-view(85, 75);
-saveas(gcf, 'Example59_U_3D_2.fig');
-saveas(gcf, 'Example59_U_3D_2', 'png');
-view(145, 75);
-colorbar();
-saveas(gcf, 'Example59_U_3D_3.fig');
-saveas(gcf, 'Example59_U_3D_3', 'png');
 
 %==================================================
 % AMPLITUDE
@@ -154,7 +114,7 @@ box on;
 %==================================================
 % TIME SIGNAL - kWave
 %==================================================
-sensor_data = h5read('output_data/Example59_forward_output.h5', '/p');
+sensor_data = h5read('output_data/Example60_forward_output.h5', '/p');
 % Plot
 figure;
 imagesc(sensor_data);
@@ -165,14 +125,14 @@ box on;
 % COMPARISON WITH K-WAVE
 %==================================================
 % Import data
-load input_data/sensor_data_veins;
-sensor_data = h5read('output_data/Example59_forward_output.h5', '/p');
+%load input_data/sensor_data_veins;
+sensor_data = h5read('output_data/Example60_forward_output.h5', '/p');
 filenameData = 'output_data/ForwardSignal.dat';
 timeSignal = importdata(filenameData, ' ', 0);
 % Input
 timeRT = timeSignal(1, :);
 inputRT = timeSignal(2:end, :);
-timeKWave = kgrid.t_array;
+%timeKWave = kgrid.t_array;
 inputKWave = sensor_data;
 nSensors = size(sensor_data, 1);
 
@@ -184,7 +144,7 @@ normKWave = max(inputKWave(:));
 difNorm = norm(inputRT(:)/normRT - inputKWave(:)/normKWave);
 
 % Plot all sensors
-for i = 1:100:nSensors
+for i = 1:3:nSensors
     % Normalisation - RT
     %normRT = max(inputRT(i, :));
     signalRT = inputRT(i, :)/normRT;
@@ -198,15 +158,15 @@ for i = 1:100:nSensors
     grid on;
     plot(timeRT, signalRT, 'Color', 'r', 'LineWidth', 2);
     hold on;
-    plot(timeKWave, signalKWave, 'Color', 'blue', 'LineWidth', 2);
+    plot(timeRT, signalKWave, 'Color', 'blue', 'LineWidth', 2);
     axis([0 1.5e-5 -1 1]);
     legend('RT', 'k-Wave');
     xlabel('time (s)');
     ylabel('amplitude');
     grid on;
     title(['RT vs kWave - ', int2str(i)]);
-    %saveas(gcf, ['output_data/Example59_forwardSignal_sensor', int2str(i), '.fig']);
-    %saveas(gcf, ['output_data/Example59_forwardSignal_sensor', int2str(i)], 'png');
+    %saveas(gcf, ['output_data/Example60_forwardSignal_sensor', int2str(i), '.fig']);
+    %saveas(gcf, ['output_data/Example60_forwardSignal_sensor', int2str(i)], 'png');
 end
 
 %%  for i = 1:10:nSensors
@@ -225,8 +185,8 @@ end
 %%      ylabel('error');
 %%      grid on;
 %%      title(['RT vs kWave - ', int2str(i)]);
-%%      %saveas(gcf, ['output_data/Example59_forwardSignal_error', int2str(i), '.fig']);
-%%      %saveas(gcf, ['output_data/Example59_forwardSignal_error', int2str(i)], 'png');
+%%      %saveas(gcf, ['output_data/Example60_forwardSignal_error', int2str(i), '.fig']);
+%%      %saveas(gcf, ['output_data/Example60_forwardSignal_error', int2str(i)], 'png');
 %%  end
 %==========================================================================================
 % INVERSE PROBLEM
@@ -327,16 +287,16 @@ end
 % Import data
 pixelPressureMatrix = importdata('output_data/PixelPressure.dat', ' ', 0);
 pixelPressure = max(0, matrix2cube(pixelPressureMatrix, Nz));
-plot_pixel(initial_pressure, 5, 1, pixelPressure);
-plot_pixel_subsample(initial_pressure, 1, 1);
+plot_pixel(pixelPressure, 5, 1);
+%plot_pixel(initial_pressure, 5, 1, pixelPressure);
+%plot_pixel_subsample(pixelPressure, 1, 1);
 
 %==================================================
 % Reconstruction - kWave
 %==================================================
-p0_recon_PML = h5read('output_data/Example59_adjoint_output.h5', '/p_final');
+p0_recon_PML = h5read('output_data/Example60_adjoint_output.h5', '/p_final');
 PML_size = 10;
 p0_recon = max(0, p0_recon_PML(1+PML_size:end-PML_size, 1+PML_size:end-PML_size, 1+PML_size:end-PML_size));
-plot_pixel(p0_recon, 10, 1);
 
 %==================================================
 % Comparison
