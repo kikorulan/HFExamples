@@ -1,5 +1,5 @@
 % Heterogeneous Propagation Medium Example
-cd /cs/research/medim/projects2/projects/frullan/Documents/HighFreqCode/Examples/Ex59_3D_veins;
+cd /cs/research/medim/projects2/projects/frullan/Documents/HighFreqCode/Examples/Ex59_3D_4balls;
 
 clear all;
 close all;
@@ -96,12 +96,12 @@ kspaceFirstOrder3D(kgrid, medium, source, sensor, input_args{:}, 'SaveToDisk', f
 % Call C++ code
 setenv LD_LIBRARY_PATH '/cs/research/medim/projects2/projects/frullan/lib/GCC-5.4/lib64';
 system('../kspaceFirstOrder3D-OMP -i input_data/Example59_forward_input.h5 -o output_data/Example59_forward_output.h5');
-save input_data/sensor_data_veins.mat kgrid medium source sensor input_args;
+save input_data/sensor_data_4balls.mat kgrid medium source sensor input_args;
 
 %=========================================================================
 % VISUALISATION
 %=========================================================================
-cd /cs/research/medim/projects2/projects/frullan/Documents/HighFreqCode/Examples/Ex59_3D_veins;
+cd /cs/research/medim/projects2/projects/frullan/Documents/HighFreqCode/Examples/Ex59_3D_4balls;
 
 % Axis
 x_axis = 0:dx:(Nx-1)*dx;

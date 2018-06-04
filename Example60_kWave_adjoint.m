@@ -1,5 +1,5 @@
 % Heterogeneous Propagation Medium Example
-cd /cs/research/medim/projects2/projects/frullan/Documents/HighFreqCode/Examples/Ex60_3D_veins;
+cd /cs/research/medim/projects2/projects/frullan/Documents/HighFreqCode/Examples/Ex60_3D_4balls;
 
 clear all;
 close all;
@@ -34,7 +34,7 @@ system('../kspaceFirstOrder3D-OMP -i input_data/Example60_adjoint_input.h5 -o ou
 %=========================================================================
 % VISUALISATION
 %=========================================================================
-cd /cs/research/medim/projects2/projects/frullan/Documents/HighFreqCode/Examples/Ex60_3D_veins;
+cd /cs/research/medim/projects2/projects/frullan/Documents/HighFreqCode/Examples/Ex60_3D_4balls;
 
 % Axis
 x_axis = 0:kgrid.dx:(kgrid.Nx-1)*kgrid.dx;

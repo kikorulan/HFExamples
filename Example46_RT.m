@@ -225,50 +225,63 @@ set(0,'DefaultFigurePaperPositionMode','auto');
 %==============================
 % Amplitude & Q - RT & GB
 %==============================
-%%  % Log plot
-%%  figure;
-%%  colours = winter(100);
-%%  subplot(2, 2, 1);
-%%  for n = 1:100
-%%      plot(gridR.tForward, real(sourceRT(1).q(n+350, :)), 'Color', colours(n, :));
-%%      hold on;
-%%  end;
-%%  grid on;
-%%  box on;
-%%  title('Q rays with caustic');
-%%  xlabel('t (s)');
-%%  subplot(2, 2, 2);
-%%  for n = 1:100
-%%      plot(gridR.tForward, real(source(1).qGB(n+350, :)), 'Color', colours(n, :));
-%%      hold on;
-%%  end;
-%%  grid on;
-%%  box on;
-%%  title('Q rays with caustic (Gaussian Beam)');
-%%  xlabel('t (s)');
-%%  subplot(2, 2, 3);
-%%  for n = 1:100
-%%      semilogy(gridR.tForward, real(sourceRT(1).amplitude(n+350, :)), 'Color', colours(n, :));
-%%      axis([0 2e-5 1e-3 1]);
-%%      hold on;
-%%  end;
-%%  grid on;
-%%  box on;
-%%  title('Amplitude rays with caustic');
-%%  xlabel('t (s)');
-%%  subplot(2, 2, 4);
-%%  for n = 1:100
-%%      semilogy(gridR.tForward, real(source(1).amplitude(n+350, :)), 'Color', colours(n, :));
-%%      axis([0 2e-5 1e-3 1]);
-%%      hold on;
-%%  end;
-%%  grid on;
-%%  box on;
-%%  title('Amplitudes rays with caustic (Gaussian Beam)');
-%%  xlabel('t (s)');
-%%  
-%%  set(gcf, 'pos', [700 700 1000 500]);
-%%  saveas(gcf, 'Example46_amplitude_comparison', 'epsc');
+% Amplitude 
+figure;
+colours = winter(100);
+subplot(2, 1, 1);
+for n = 1:100
+    plot(gridR.tForward, real(sourceRT(1).q(n+350, :)), 'Color', colours(n, :));
+    hold on;
+end;
+ax = gca;
+ax.GridAlpha = 0.5;
+grid on;
+box on;
+title('Q rays with caustic');
+xlabel('t (s)');
+subplot(2, 1, 2);
+for n = 1:100
+    semilogy(gridR.tForward, real(sourceRT(1).amplitude(n+350, :)), 'Color', colours(n, :));
+    axis([0 2e-5 1e-3 1]);
+    hold on;
+end;
+ax = gca;
+ax.GridAlpha = 0.5;
+grid on;
+box on;
+title('Amplitude rays with caustic');
+xlabel('t (s)');
+set(gcf, 'pos', [700 700 500 500]);
+saveas(gcf, 'Example46_AQ', 'epsc');
+
+
+% Amplitude Gaussian Beam
+figure;
+subplot(2, 1, 1);
+for n = 1:100
+    plot(gridR.tForward, real(source(1).qGB(n+350, :)), 'Color', colours(n, :));
+    hold on;
+end;
+ax = gca;
+ax.GridAlpha = 0.5;
+grid on;
+box on;
+title('Q rays with caustic (Gaussian Beam)');
+xlabel('t (s)');
+subplot(2, 1, 2);
+for n = 1:100
+    semilogy(gridR.tForward, real(source(1).amplitude(n+350, :)), 'Color', colours(n, :));
+    axis([0 2e-5 1e-3 1]);
+    hold on;
+end;
+ax = gca;
+ax.GridAlpha = 0.5;
+grid on;
+box on;
+title('Amplitudes rays with caustic (Gaussian Beam)');
+xlabel('t (s)');
+set(gcf, 'pos', [700 700 500 500]);
+saveas(gcf, 'Example46_AQ_GB', 'epsc');
 
 
 
@@ -432,42 +445,48 @@ set(0,'DefaultFigurePaperPositionMode','auto');
 %==============================
 % Time Signals
 %==============================
-%%  % Norms
-%%  normRT = max(real(source(1).aForward));
-%%  normKWave = max(sensor_data_low(1, :));
-%%  figure;
-%%  % Subplot 1
-%%  subplot(2, 1, 1);
-%%  hold on;
-%%  axis([0 2e-5 -1.5 2]);
-%%  grid on;
-%%  box on;
-%%  plot(gridR.tForward, source(1).aForward/normRT, 'Color', 'r', 'LineWidth', 2);
-%%  plot(kgrid.t_array, sensor_data_low(1, :)/normKWave, 'Color', [0.8 0.2 0.2]);
-%%  plot(gridR.tForward, source(2).aForward/normRT, 'Color', 'g', 'LineWidth', 2);
-%%  plot(kgrid.t_array, sensor_data_mid(1, :)/normKWave, 'Color', [0.2 0.8 0.2]);
-%%  plot(gridR.tForward, source(3).aForward/normRT, 'Color', 'b', 'LineWidth', 2);
-%%  plot(kgrid.t_array, sensor_data_high(1, :)/normKWave, 'Color', [0.2 0.2 0.8]);
-%%  legend('RT - bottom', 'kWave - bottom', 'RT - middle', 'kWave - middle', 'RT - top', 'kWave - top');
-%%  xlabel('t (s)');
-%%  ylabel('Amplitude');
-%%  title('Forward data - RT vs k-Wave');
-%%  % Subplot 2
-%%  subplot(2, 1, 2);
-%%  hold on;
-%%  axis([0 2e-5 -1 1]);
-%%  grid on;
-%%  box on;
-%%  plot(gridR.tForward, source(1).aForward/normRT - sensor_data_low(1, :)/normKWave, 'Color', 'r', 'LineWidth', 2);
-%%  plot(gridR.tForward, source(2).aForward/normRT - sensor_data_mid(1, :)/normKWave, 'Color', 'g', 'LineWidth', 2);
-%%  plot(gridR.tForward, source(3).aForward/normRT - sensor_data_high(1, :)/normKWave, 'Color', 'b', 'LineWidth', 2);
-%%  legend('Error - bottom', 'Error - middle', 'Error - top');
-%%  xlabel('t (s)');
-%%  ylabel('Amplitude');
-%%  title('Error - RT ');
-%%  set(gcf, 'pos', [700 700 1200 800]);
-%%  saveas(gcf, 'Example46_signalsRT_error', 'png');
-%%  saveas(gcf, 'Example46_signalsRT_error.fig');
+%source = sourceRT;
+source = sourceGB;
+% Norms
+normRT = max(real(source(1).aForward));
+normRT_2 = max(real(sourceRT(1).aForward));
+normKWave = max(sensor_data_low(1, :));
+figure;
+% Subplot 1
+subplot(2, 1, 1);
+hold on;
+axis([0 2e-5 -1.5 2]);
+grid on;
+box on;
+plot(gridR.tForward, source(1).aForward/normRT, 'Color', 'r', 'LineWidth', 2);
+plot(kgrid.t_array, sensor_data_low(1, :)/normKWave, 'Color', [0.8 0.2 0.2]);
+plot(gridR.tForward, source(2).aForward/normRT, 'Color', 'g', 'LineWidth', 2);
+plot(kgrid.t_array, sensor_data_mid(1, :)/normKWave, 'Color', [0.2 0.8 0.2]);
+plot(gridR.tForward, source(3).aForward/normRT, 'Color', 'b', 'LineWidth', 2);
+plot(gridR.tForward, sourceRT(3).aForward/normRT_2, 'Color', 'k', 'LineWidth', 2, 'LineStyle', '--');
+plot(kgrid.t_array, sensor_data_high(1, :)/normKWave, 'Color', [0.2 0.2 0.8]);
+%legend('RT - bottom', 'kWave - bottom', 'RT - middle', 'kWave - middle', 'RT - top', 'kWave - top');
+legend('GB - bottom', 'kWave - bottom', 'GB - middle', 'kWave - middle', 'GB - top', 'RT - top', 'kWave - top');
+xlabel('t (s)');
+ylabel('Amplitude');
+title('Forward data - RT (Gaussian Beam) vs k-Wave');
+% Subplot 2
+subplot(2, 1, 2);
+hold on;
+axis([0 2e-5 -1 1]);
+grid on;
+box on;
+plot(gridR.tForward, source(1).aForward/normRT - sensor_data_low(1, :)/normKWave, 'Color', 'r', 'LineWidth', 2);
+plot(gridR.tForward, source(2).aForward/normRT - sensor_data_mid(1, :)/normKWave, 'Color', 'g', 'LineWidth', 2);
+plot(gridR.tForward, source(3).aForward/normRT - sensor_data_high(1, :)/normKWave, 'Color', 'b', 'LineWidth', 2);
+plot(gridR.tForward, sourceRT(3).aForward/normRT_2 - sensor_data_high(1, :)/normKWave, 'Color', 'k', 'LineWidth', 2, 'LineStyle', '--');
+legend('Error - bottom', 'Error - middle', 'Error - top', 'Error (RT) - top');
+xlabel('t (s)');
+ylabel('Amplitude');
+title('Error - RT ');
+set(gcf, 'pos', [700 700 1200 800]);
+saveas(gcf, 'Example46_signalsGB_error', 'png');
+saveas(gcf, 'Example46_signalsGB_error.fig');
 
 %%  %==============================
 %%  % Beam Signals

@@ -1,5 +1,5 @@
 % Heterogeneous Propagation Medium Example
-cd /cs/research/medim/projects2/projects/frullan/Documents/HighFreqCode/Examples/Ex60_3D_veins;
+cd /cs/research/medim/projects2/projects/frullan/Documents/HighFreqCode/Examples/Ex60_3D_4balls;
 
 clear all;
 close all;
@@ -48,7 +48,7 @@ source.p0 = max(0, source.p0);
 %==============================
 % Define the sensors
 sensor.mask = zeros(Nx, Ny, Nz);
-numberSensorsArray = 4;
+numberSensorsArray = 5;
 xArray = round(1:(Nx-1)/(numberSensorsArray-1):Nx);
 yArray = round(1:(Ny-1)/(numberSensorsArray-1):Ny);
 zArray = round(1:(Nz-1)/(numberSensorsArray-1):Nz);
@@ -89,7 +89,7 @@ save input_data/sensor_data_4balls.mat kgrid medium source sensor input_args;
 %=========================================================================
 % VISUALISATION
 %=========================================================================
-cd /cs/research/medim/projects2/projects/frullan/Documents/HighFreqCode/Examples/Ex60_3D_veins;
+cd /cs/research/medim/projects2/projects/frullan/Documents/HighFreqCode/Examples/Ex60_3D_4balls;
 
 % Axis
 x_axis = 0:dx:(Nx-1)*dx;

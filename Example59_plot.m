@@ -1,5 +1,5 @@
 % Read data from files
-cd /cs/research/medim/projects2/projects/frullan/Documents/HighFreqCode/Examples/Ex59_3D_veins;
+cd /cs/research/medim/projects2/projects/frullan/Documents/HighFreqCode/Examples/Ex59_3D_4balls;
 %clear all;
 close all;
 
@@ -110,18 +110,18 @@ saveas(gcf, 'Example59_C_s88.fig');
 % INITIAL PRESSURE
 %==================================================
 % Import data
-filenameData = 'input_data/initial_pressure_veins.dat';
+filenameData = 'input_data/initial_pressure_4balls.dat';
 initial_pressure_matrix = importdata(filenameData, ' ', 0);
 initial_pressure = matrix2cube(initial_pressure_matrix, Nz);
-[h, h1, h2, hlink] = plot_pixel(initial_pressure, 1, dx);
-colorbar off;
-view(25, 75);
+[h, h1, h2, hlink] = plot_pixel(initial_pressure, 5, dx);
+%colorbar off;
+view(75, 50);
 saveas(gcf, 'Example59_U_3D_1.fig');
 saveas(gcf, 'Example59_U_3D_1', 'png');
-view(85, 75);
+view(0, 50);
 saveas(gcf, 'Example59_U_3D_2.fig');
 saveas(gcf, 'Example59_U_3D_2', 'png');
-view(145, 75);
+view(-75, 50);
 colorbar();
 saveas(gcf, 'Example59_U_3D_3.fig');
 saveas(gcf, 'Example59_U_3D_3', 'png');
@@ -165,14 +165,14 @@ box on;
 % COMPARISON WITH K-WAVE
 %==================================================
 % Import data
-load input_data/sensor_data_veins;
+%load input_data/sensor_data_4balls;
 sensor_data = h5read('output_data/Example59_forward_output.h5', '/p');
 filenameData = 'output_data/ForwardSignal.dat';
 timeSignal = importdata(filenameData, ' ', 0);
 % Input
 timeRT = timeSignal(1, :);
 inputRT = timeSignal(2:end, :);
-timeKWave = kgrid.t_array;
+%timeKWave = kgrid.t_array;
 inputKWave = sensor_data;
 nSensors = size(sensor_data, 1);
 
@@ -198,7 +198,7 @@ for i = 1:100:nSensors
     grid on;
     plot(timeRT, signalRT, 'Color', 'r', 'LineWidth', 2);
     hold on;
-    plot(timeKWave, signalKWave, 'Color', 'blue', 'LineWidth', 2);
+    plot(timeRT, signalKWave, 'Color', 'blue', 'LineWidth', 2);
     axis([0 1.5e-5 -1 1]);
     legend('RT', 'k-Wave');
     xlabel('time (s)');
@@ -327,8 +327,18 @@ end
 % Import data
 pixelPressureMatrix = importdata('output_data/PixelPressure.dat', ' ', 0);
 pixelPressure = max(0, matrix2cube(pixelPressureMatrix, Nz));
-plot_pixel(initial_pressure, 5, 1, pixelPressure);
-plot_pixel_subsample(initial_pressure, 1, 1);
+%plot_pixel(initial_pressure, 5, 1, pixelPressure);
+%plot_pixel_subsample(initial_pressure, 1, 1);
+sortCube = sort(pixelPressure(:));
+maxCube = sortCube(end-128);
+pixelPressure = pixelPressure/maxCube;
+plot_pixel(pixelPressure, 5, dx);
+view(41, 6);
+ax = gca;
+ax.GridAlpha = 0.5;
+grid on;
+saveas(gcf, 'Example59_RT_recon.fig');
+saveas(gcf, 'Example59_RT_recon', 'png');
 
 %==================================================
 % Reconstruction - kWave
@@ -336,7 +346,17 @@ plot_pixel_subsample(initial_pressure, 1, 1);
 p0_recon_PML = h5read('output_data/Example59_adjoint_output.h5', '/p_final');
 PML_size = 10;
 p0_recon = max(0, p0_recon_PML(1+PML_size:end-PML_size, 1+PML_size:end-PML_size, 1+PML_size:end-PML_size));
-plot_pixel(p0_recon, 10, 1);
+sortCube = sort(p0_recon(:));
+maxCube = sortCube(end-128);
+p0_recon = p0_recon/maxCube;
+plot_pixel(p0_recon, 5, dx);
+view(41, 6);
+%view(116, 42);
+ax = gca;
+ax.GridAlpha = 0.5;
+grid on;
+saveas(gcf, 'Example59_kWave_recon.fig');
+saveas(gcf, 'Example59_kWave_recon', 'png');
 
 %==================================================
 % Comparison

@@ -7,7 +7,7 @@
 #================================================================================
 
 # Output folder
-export EXAMPLE_FOLDER="/cs/research/medim/projects2/projects/frullan/Documents/HighFreqCode/Examples/Ex59_3D_veins/"
+export EXAMPLE_FOLDER="/cs/research/medim/projects2/projects/frullan/Documents/HighFreqCode/Examples/Ex59_3D_4balls/"
 export INPUT_FOLDER=$EXAMPLE_FOLDER"input_data/"
 export OUTPUT_FOLDER=$EXAMPLE_FOLDER"03/"
 cd $EXAMPLE_FOLDER
