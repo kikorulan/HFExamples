@@ -129,6 +129,10 @@
 %%%% EXAMPLE 51                       %===================================================
     - Reconstruction veins            %=== PAPER - RECONSTRUCTION - HETEROGENEOUS
     - Heterogeneous sound speed       %===================================================
+%%%% EXAMPLE 62                     
+    - Subsampled data
+    - Reconstruction veins           
+    - Heterogeneous sound speed      
 
 
 
