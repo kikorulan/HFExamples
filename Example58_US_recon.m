@@ -3,8 +3,8 @@ cd /cs/research/medim/projects2/projects/frullan/Documents/HighFreqCode/Examples
 
 close all;
 %clear all;
-%load gridLMatrix;
-%load prop_time_RT_126;
+load gridLMatrix;
+load prop_time_RT_126;
 
 
 %====================================
@@ -65,3 +65,31 @@ end
 %==============================================================================================================
 % VISUALIZATION
 %==============================================================================================================
+
+positionYBar = [700 700 500 400];
+% Initial sound speed
+figure;
+surf(1e3*grid.xAxis, 1e3*grid.yAxis, cMatrix, 'EdgeColor', 'none');
+axis([0 1e3*grid.xAxis(end) 0 1e3*grid.yAxis(end)]);
+view(2);
+xlabel('x [mm]');
+ylabel('y [mm]');
+colorbar();
+box on;
+set(gcf, 'pos', positionYBar);
+%saveas(gcf, 'Example58_C', 'png');
+%saveas(gcf, 'Example58_C.fig');
+
+% Initial sound speed
+figure;
+surf(1e3*grid.xAxis, 1e3*grid.yAxis, 1./x_mat_1, 'EdgeColor', 'none');
+axis([0 1e3*grid.xAxis(end) 0 1e3*grid.yAxis(end)]);
+view(2);
+xlabel('x [mm]');
+ylabel('y [mm]');
+colorbar();
+caxis([1379 1650]);
+box on;
+set(gcf, 'pos', positionYBar);
+%saveas(gcf, 'Example58_C_recon', 'png');
+%saveas(gcf, 'Example58_C_recon.fig');

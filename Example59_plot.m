@@ -145,7 +145,7 @@ saveas(gcf, 'Example59_U_3D_3', 'png');
 %==================================================
 % Import data
 filenameData = 'output_data/ForwardSignal.dat';
-timeSignal = importdata(filenameData, delimiterIn, headerlinesIn);
+timeSignal = importdata(filenameData, ' ', 0);
 % Plot
 figure;
 imagesc(timeSignal(2:end, :));
@@ -158,6 +158,14 @@ sensor_data = h5read('output_data/Example59_forward_output.h5', '/p');
 % Plot
 figure;
 imagesc(sensor_data);
+box on;
+
+% Import data
+filenameData = 'input_data/forwardSignal_2168sensors_kWave.dat';
+sensor_data_kWave = importdata(filenameData, ' ', 0);
+% Plot
+figure;
+imagesc(sensor_data_kWave);
 box on;
 
 
@@ -357,6 +365,43 @@ ax.GridAlpha = 0.5;
 grid on;
 saveas(gcf, 'Example59_kWave_recon.fig');
 saveas(gcf, 'Example59_kWave_recon', 'png');
+
+%==================================================
+% Reconstruction - RT using kWave data
+%==================================================
+% Import data
+pixelPressureMatrix = importdata('output_data/PixelPressure_kWaveData.dat', ' ', 0);
+pixelPressure = max(0, matrix2cube(pixelPressureMatrix, Nz));
+%plot_pixel(initial_pressure, 5, 1, pixelPressure);
+%plot_pixel_subsample(initial_pressure, 1, 1);
+sortCube = sort(pixelPressure(:));
+maxCube = sortCube(end-128);
+pixelPressure = pixelPressure/maxCube;
+plot_pixel(pixelPressure, 5, dx);
+view(41, 6);
+ax = gca;
+ax.GridAlpha = 0.5;
+grid on;
+saveas(gcf, 'Example59_RT_recon_kWaveData.fig');
+saveas(gcf, 'Example59_RT_recon_kWaveData', 'png');
+
+%==================================================
+% Reconstruction - kWave using RT data
+%==================================================
+p0_recon_PML = h5read('output_data/Example59_adjoint_output_RTdata.h5', '/p_final');
+PML_size = 10;
+p0_recon = max(0, p0_recon_PML(1+PML_size:end-PML_size, 1+PML_size:end-PML_size, 1+PML_size:end-PML_size));
+sortCube = sort(p0_recon(:));
+maxCube = sortCube(end-128);
+p0_recon = p0_recon/maxCube;
+plot_pixel(p0_recon, 5, dx);
+view(41, 6);
+%view(116, 42);
+ax = gca;
+ax.GridAlpha = 0.5;
+grid on;
+saveas(gcf, 'Example59_kWave_recon_RTdata.fig');
+saveas(gcf, 'Example59_kWave_recon_RTdata', 'png');
 
 %==================================================
 % Comparison

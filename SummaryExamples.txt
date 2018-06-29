@@ -134,8 +134,6 @@
     - Reconstruction veins           
     - Heterogeneous sound speed      
 
-
-
 %======================================
 %=== Gaussian Beams
 %======================================
@@ -161,4 +159,8 @@
     - Heterogeneous domain
 %%%% EXAMPLE 45
     - Photo contest
-
+%%%% EXAMPLE 59                        %===================================================
+    - Heterogeneous sound speed        %=== REFERENCE EXAMPLE - RECONSTRUCTION - HETEROGENEOUS
+    - 4 balls                          %===================================================
+%%%% EXAMPLE 60                        
+    - Iterative reconstruction

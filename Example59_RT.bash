@@ -17,7 +17,8 @@ export DIMENSIONS="dimensions.dat"
 export SOUND_SPEED="sound_speed.dat"
 export INITIAL_PRESSURE="initial_pressure_4balls.dat"
 export SENSORS="sensors.dat" 
-export FORWARD_SIGNAL="forwardSignal_2168sensors.dat"
+#export FORWARD_SIGNAL="forwardSignal_2168sensors.dat"
+export FORWARD_SIGNAL="forwardSignal_2168sensors_kWave.dat"
 
 # Mode
 export MODE="-a"
