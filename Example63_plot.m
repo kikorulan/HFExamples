@@ -1,5 +1,5 @@
 % Read data from files
-cd /cs/research/medim/projects2/projects/frullan/Documents/HighFreqCode/Examples/Ex60_3D_4balls;
+cd /cs/research/medim/projects2/projects/frullan/Documents/HighFreqCode/Examples/Ex63_3D_veins;
 %clear all;
 close all;
 
@@ -17,9 +17,9 @@ Nx = dim(1, 1); dx = dim(2, 1);
 Ny = dim(1, 2); dy = dim(2, 2);
 Nz = dim(1, 3); dz = dim(2, 3);
 
-%==========================================================================================
+%============================================================================================================================================
 % FORWARD PROBLEM
-%==========================================================================================
+%============================================================================================================================================
 % Axis
 x_axis = 0:dx:(Nx-1)*dx;
 y_axis = 0:dy:(Ny-1)*dy;
@@ -30,70 +30,14 @@ positionY    = [700 700 370 350];
 positionBar  = [700 700 390 350];
 positionYBar = [700 700 500 350];
 
-%============================== 
-% SOUND SPEED
-%==============================
-sound_speed_matrix = importdata('input_data/sound_speed.dat', ' ', 0);
-sound_speed = matrix2cube(sound_speed_matrix, Nz);
-%plot_cube(sound_speed);
-plot_pixel_subsample(sound_speed, 0.1, 1);
-% 2D plot
-figure;
-surf(x_axis, y_axis, sound_speed(:, :, 40), 'EdgeColor', 'none');
-axis([0 x_axis(end) 0 y_axis(end)]);
-view(2);
-box on;
-caxis([1350 1650]);
-xlabel('y [m]');
-ylabel('x [m]');
-%set(gca, 'ytick', []);
-set(gcf, 'pos', position);
-saveas(gcf, 'Example60_C_s40', 'png');
-saveas(gcf, 'Example60_C_s40.fig');
-
-%==================================================
-% TRAJECTORIES
-%==================================================
-% Import data
-trajectories = importdata('output_data/Trajectory0.dat', ' ', 0);
-
-% Read number of rays and steps
-[nSteps nRays] = size(trajectories);
-xCoord = trajectories(:, 1:3:nRays);
-yCoord = trajectories(:, 2:3:nRays);
-zCoord = trajectories(:, 3:3:nRays);
-
-nRays = nRays/3;
-% Plot the figure
-figure;
-ax = gca;
-ax.GridAlpha = 1;
-grid on;
-axis([0 Nx*dx 0 Ny*dy 0 Nz*dz]);
-hold on;
-vecRays = 100:2:1500;
-colours = winter(length(vecRays));
-for n = 1:length(vecRays)
-    plot3(xCoord(:, vecRays(n)), yCoord(:, vecRays(n)), zCoord(:, vecRays(n)), 'Color', colours(n, :));
-end
-set(gcf,'pos', [500 500 800 800]);
-xlabel('x [m]');
-ylabel('y [m]');
-zlabel('z [m]');
-view(65, 28);
-box on;
-saveas(gcf, 'Example60_trajectories0.fig');
-saveas(gcf, 'Example60_trajectories0', 'epsc');
-
-
 %==================================================
 % INITIAL PRESSURE
 %==================================================
-% Import data
-filenameData = 'input_data/initial_pressure_4balls.dat';
-initial_pressure_matrix = importdata(filenameData, ' ', 0);
-initial_pressure = matrix2cube(initial_pressure_matrix, Nz);
-[h, h1, h2, hlink] = plot_pixel(initial_pressure, 1, dx);
+%%  % Import data
+%%  filenameData = 'input_data/initial_pressure_veins.dat';
+%%  initial_pressure_matrix = importdata(filenameData, ' ', 0);
+%%  initial_pressure = matrix2cube(initial_pressure_matrix, Nz);
+%%  [h, h1, h2, hlink] = plot_pixel(initial_pressure, 1, dx);
 
 %==================================================
 % AMPLITUDE
@@ -110,6 +54,21 @@ initial_pressure = matrix2cube(initial_pressure_matrix, Nz);
 %%  end
 
 %==================================================
+% BEAM SIGNAL
+%==================================================
+% Y
+y = [];
+for i = 0:97
+    y_k = importdata(['output_data/y_', int2str(i), '.dat'], ' ', 0);
+    y = [y; y_k];
+end
+figure;
+surf(y, 'EdgeColor', 'none');
+view(2);
+colorbar();
+
+
+%==================================================
 % TIME SIGNAL - RT
 %==================================================
 % Import data
@@ -119,97 +78,98 @@ timeSignal = importdata(filenameData, ' ', 0);
 figure;
 imagesc(timeSignal(2:end, :));
 box on;
+colorbar();
 
 %==================================================
 % TIME SIGNAL - kWave
 %==================================================
-sensor_data = h5read('output_data/Example60_forward_output.h5', '/p');
-% Plot
-figure;
-imagesc(sensor_data);
-box on;
-
+%%  sensor_data = h5read('output_data/Example63_forward_output.h5', '/p');
+%%  % Plot
+%%  figure;
+%%  imagesc(sensor_data);
+%%  box on;
 
 %==================================================
 % COMPARISON WITH K-WAVE
 %==================================================
-% Import data
-%load input_data/sensor_data_4balls;
-sensor_data = h5read('output_data/Example60_forward_output_26sensors.h5', '/p');
-filenameData = 'output_data/ForwardSignal_26sensors.dat';
-timeSignal = importdata(filenameData, ' ', 0);
-% Input
-timeRT = timeSignal(1, :);
-inputRT = timeSignal(2:end, :);
-%timeKWave = kgrid.t_array;
-inputKWave = sensor_data;
-nSensors = size(sensor_data, 1);
+%%  % Import data
+%%  %load input_data/sensor_data_4balls;
+%%  sensor_data = h5read('output_data/Example63_forward_output.h5', '/p');
+%%  filenameData = 'output_data/ForwardSignal.dat';
+%%  timeSignal = importdata(filenameData, ' ', 0);
+%%  % Input
+%%  timeRT = timeSignal(1, :);
+%%  inputRT = timeSignal(2:end, :);
+%%  %timeKWave = kgrid.t_array;
+%%  inputKWave = sensor_data;
+%%  nSensors = size(sensor_data, 1);
+%%  
+%%  
+%%  normRT = max(inputRT(1,:));
+%%  normKWave = max(inputKWave(1,:));
+%%  
+%%  % Norm difference
+%%  difNorm = norm(inputRT(:)/normRT - inputKWave(:)/normKWave);
+%%  
+%%  % Plot all sensors
+%%  vecS = 1:10:98;
+%%  for i = 1:length(vecS)
+%%      % Normalisation - RT
+%%      %normRT = max(inputRT(i, :));
+%%      signalRT = inputRT(vecS(i), :)/normRT;
+%%  
+%%      % Normalisation - kWave
+%%      %normKWave = max(inputKWave(i, :));
+%%      signalKWave = inputKWave(vecS(i), :)/normKWave;
+%%      
+%%      % Plot
+%%      figure;
+%%      plot(timeRT, signalRT, 'Color', 'r', 'LineWidth', 2);
+%%      hold on;
+%%      set(gca,'FontSize',18);
+%%      plot(timeRT, signalKWave, 'Color', 'blue', 'LineWidth', 2);
+%%      axis([0 1.5e-5 -1.8 1.8]);
+%%      legend('RT', 'k-Wave');
+%%      xlabel('time (s)');
+%%      ylabel('amplitude');
+%%      ax = gca;
+%%      ax.GridAlpha = 0.5;
+%%      grid on;
+%%      title(['RT vs kWave - ', int2str(i)]);
+%%      %saveas(gcf, ['Example60_forwardSignal_sensor', int2str(i), '.fig']);
+%%      %saveas(gcf, ['Example60_forwardSignal_sensor', int2str(i)], 'png');
+%%  end
+%%  
+%%  for i = 1:length(vecS)
+%%      % Error
+%%      signalRT = inputRT(vecS(i), :)/normRT;
+%%      signalKWave = inputKWave(vecS(i), :)/normKWave;
+%%      % Spline
+%%      signalKWave_spline = spline(timeRT, signalKWave, timeRT);
+%%      error = signalRT - signalKWave_spline;
+%%      figure;
+%%      plot(timeRT, error, 'Color', 'r', 'LineWidth', 2);
+%%      set(gca,'FontSize',18);
+%%      axis([0 1.5e-5 -.2 .2]);
+%%      legend('error');
+%%      xlabel('time (s)');
+%%      ylabel('error');
+%%      ax = gca;
+%%      ax.GridAlpha = 0.5;
+%%      grid on;
+%%      title(['Error RT vs kWave - ', int2str(i)]);
+%%      %saveas(gcf, ['Example60_forwardSignal_error', int2str(i), '.fig']);
+%%      %saveas(gcf, ['Example60_forwardSignal_error', int2str(i)], 'png');
+%%  end
 
-
-normRT = max(inputRT(1,:));
-normKWave = max(inputKWave(1,:));
-
-% Norm difference
-difNorm = norm(inputRT(:)/normRT - inputKWave(:)/normKWave);
-
-% Plot all sensors
-vecS = [1 19];
-for i = 1:length(vecS)
-    % Normalisation - RT
-    %normRT = max(inputRT(i, :));
-    signalRT = inputRT(vecS(i), :)/normRT;
-
-    % Normalisation - kWave
-    %normKWave = max(inputKWave(i, :));
-    signalKWave = inputKWave(vecS(i), :)/normKWave;
-    
-    % Plot
-    figure;
-    plot(timeRT, signalRT, 'Color', 'r', 'LineWidth', 2);
-    hold on;
-    set(gca,'FontSize',18);
-    plot(timeRT, signalKWave, 'Color', 'blue', 'LineWidth', 2);
-    axis([0 1.5e-5 -1.8 1.8]);
-    legend('RT', 'k-Wave');
-    xlabel('time (s)');
-    ylabel('amplitude');
-    ax = gca;
-    ax.GridAlpha = 0.5;
-    grid on;
-    %title(['RT vs kWave - ', int2str(i)]);
-    saveas(gcf, ['Example60_forwardSignal_sensor', int2str(i), '.fig']);
-    saveas(gcf, ['Example60_forwardSignal_sensor', int2str(i)], 'png');
-end
-
-for i = 1:length(vecS)
-    % Error
-    signalRT = inputRT(vecS(i), :)/normRT;
-    signalKWave = inputKWave(vecS(i), :)/normKWave;
-    % Spline
-    signalKWave_spline = spline(timeRT, signalKWave, timeRT);
-    error = signalRT - signalKWave_spline;
-    figure;
-    plot(timeRT, error, 'Color', 'r', 'LineWidth', 2);
-    set(gca,'FontSize',18);
-    axis([0 1.5e-5 -.2 .2]);
-    legend('error');
-    xlabel('time (s)');
-    ylabel('error');
-    ax = gca;
-    ax.GridAlpha = 0.5;
-    grid on;
-    %title(['RT vs kWave - ', int2str(i)]);
-    saveas(gcf, ['Example60_forwardSignal_error', int2str(i), '.fig']);
-    saveas(gcf, ['Example60_forwardSignal_error', int2str(i)], 'png');
-end
-%==========================================================================================
+%============================================================================================================================================
 % INVERSE PROBLEM
-%==========================================================================================
-%%  % Position
-%%  position     = [700 700 300 630];
-%%  positionY    = [700 700 320 630];
-%%  positionBar  = [700 700 363 630];
-%%  positionYBar = [700 700 390 630];
+%============================================================================================================================================
+% Position
+position     = [700 700 300 630];
+positionY    = [700 700 320 630];
+positionBar  = [700 700 363 630];
+positionYBar = [700 700 390 630];
 
 %==================================================
 % IMPORT DATA
@@ -303,36 +263,31 @@ pixelPressureMatrix = importdata('output_data/PixelPressure.dat', ' ', 0);
 pixelPressure = max(0, matrix2cube(pixelPressureMatrix, Nz));
 %plot_pixel(initial_pressure, 5, 1, pixelPressure);
 %plot_pixel_subsample(pixelPressure, 1, 1);
-sortCube = sort(pixelPressure(:));
-maxCube = sortCube(end-128);
-pixelPressure = pixelPressure/maxCube;
-plot_pixel(pixelPressure, 5, dx);
+plot_pixel(pixelPressure, 10, dx);
 view(41, 6);
 ax = gca;
 ax.GridAlpha = 0.5;
 grid on;
-saveas(gcf, 'Example60_RT_recon.fig');
-saveas(gcf, 'Example60_RT_recon', 'png');
+saveas(gcf, 'output_data/Example63_RT_recon.fig');
+saveas(gcf, 'output_data/Example63_RT_recon', 'png');
 
 %==================================================
 % Reconstruction - kWave
 %==================================================
-p0_recon_PML = h5read('output_data/Example60_adjoint_output.h5', '/p_final');
+p0_recon_PML = h5read('output_data/Example63_adjoint_output.h5', '/p_final');
 PML_size = 10;
 p0_recon = max(0, p0_recon_PML(1+PML_size:end-PML_size, 1+PML_size:end-PML_size, 1+PML_size:end-PML_size));
 %p0_recon = p0_recon/max(p0_recon(:));
 sortCube = sort(p0_recon(:));
 maxCube = sortCube(end-128);
 p0_recon = p0_recon/maxCube;
-plot_pixel(p0_recon, 5, dx);
+plot_pixel(p0_recon, 10, dx);
 view(41, 6);
 ax = gca;
 ax.GridAlpha = 0.5;
 grid on;
-saveas(gcf, 'Example60_kWave_recon.fig');
-saveas(gcf, 'Example60_kWave_recon', 'png');
-
-
+saveas(gcf, 'output_data/Example63_kWave_recon.fig');
+saveas(gcf, 'output_data/Example63_kWave_recon', 'png');
 
 %==================================================
 % Comparison

@@ -1,7 +1,7 @@
 %%% BUILD INITIAL PRESSURE
 
 % Read data from files
-cd /cs/research/medim/projects2/projects/frullan/Documents/HighFreqCode/Examples/Ex59_3D_veins;
+cd /cs/research/medim/projects2/projects/frullan/Documents/HighFreqCode/Examples/Ex63_3D_veins;
 %clear all;
 close all;
 
