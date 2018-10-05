@@ -82,9 +82,9 @@ filename = 'input_data/Example63_forward_input.h5';
 kspaceFirstOrder3D(kgrid, medium, source, sensor, input_args{:}, 'SaveToDisk', filename);
 
 % Call C++ code
-setenv LD_LIBRARY_PATH '/cs/research/medim/projects2/projects/frullan/lib/GCC-5.4/lib64';
-%system('../kspaceFirstOrder3D-OMP -i input_data/Example63_forward_input.h5 -o output_data/Example63_forward_output.h5');
-system('../kspaceFirstOrder3D-CUDA -i input_data/Example63_forward_input.h5 -o output_data/Example63_forward_output.h5');
+setenv LD_LIBRARY_PATH '/cs/research/medim/projects2/projects/frullan/lib/root/lib64';
+system('../kspaceFirstOrder3D-OMP -i input_data/Example63_forward_input.h5 -o output_data/Example63_forward_output.h5');
+%system('../kspaceFirstOrder3D-CUDA -i input_data/Example63_forward_input.h5 -o output_data/Example63_forward_output.h5');
 %save input_data/sensor_data_veins.mat kgrid medium source sensor input_args;
 
 %=========================================================================

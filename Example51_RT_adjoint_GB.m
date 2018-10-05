@@ -36,7 +36,9 @@ end
 
 pixelAReverseSensors = Rgrid.inverse_signal(source);
 
-%save recon_data_RT.mat pixelAReverse;
+adjointGB_nonsmooth = Rgrid.pixelAReverse;
+save adjointGB_nonsmooth adjointGB_nonsmooth;
+
 %================================================================================
 % VISUALISATION
 %===============================================================================
@@ -54,77 +56,77 @@ set(0,'DefaultFigurePaperPositionMode','auto');
 %========================================
 % Reconstruction - RT
 %========================================
-pixelAReverse = Rgrid.pixelAReverse;
-maxPixelRT = max(real(pixelAReverse(:)));
-pixelRT = max(0, real(pixelAReverse)/maxPixelRT);
-figure;
-surf(1e3*Rgrid.xAxis, 1e3*Rgrid.yAxis, pixelRT', 'EdgeColor', 'none');
-view(2);
-axis(axisGrid);
-%colorbar();
-box on;
-xlabel('x [mm]');
-ylabel('y [mm]');
-set(gcf, 'pos', positionY);
-%title('Reconstruction RT');
-%%  saveas(gcf, 'Example51_RT_recon_GB', 'png');
-%%  saveas(gcf, 'Example51_RT_recon_GB.fig');
+%%  pixelAReverse = Rgrid.pixelAReverse;
+%%  maxPixelRT = max(real(pixelAReverse(:)));
+%%  pixelRT = max(0, real(pixelAReverse)/maxPixelRT);
+%%  figure;
+%%  surf(1e3*Rgrid.xAxis, 1e3*Rgrid.yAxis, pixelRT', 'EdgeColor', 'none');
+%%  view(2);
+%%  axis(axisGrid);
+%%  %colorbar();
+%%  box on;
+%%  xlabel('x [mm]');
+%%  ylabel('y [mm]');
+%%  set(gcf, 'pos', positionY);
+%%  %title('Reconstruction RT');
+%%  saveas(gcf, 'Example51_RT_recon_GB_nonsmooth', 'png');
+%%  saveas(gcf, 'Example51_RT_recon_GB_nonsmooth.fig');
 
 %========================================
 % Reconstruction - kWave Adjoint
 %========================================
-pixelKWave = max(0, p0_recon_adjoint.p_final/max(p0_recon_adjoint.p_final(:)));
-figure;
-surf(1e3*Rgrid.xAxis, 1e3*Rgrid.yAxis, pixelKWave', 'EdgeColor', 'none');
-view(2);
-axis(axisGrid);
-colorbar();
-box on;
-xlabel('x [mm]');
-%ylabel('y (m)');
-%set(gca, 'YTick', []);
-set(gcf, 'pos', positionYBar);
-%title('Reconstruction k-Wave');
-%%  saveas(gcf, 'Example51_kWave_recon_GB', 'png');
-%%  saveas(gcf, 'Example51_kWave_recon_GB.fig');
+%%  pixelKWave = max(0, p0_recon_adjoint.p_final/max(p0_recon_adjoint.p_final(:)));
+%%  figure;
+%%  surf(1e3*Rgrid.xAxis, 1e3*Rgrid.yAxis, pixelKWave', 'EdgeColor', 'none');
+%%  view(2);
+%%  axis(axisGrid);
+%%  colorbar();
+%%  box on;
+%%  xlabel('x [mm]');
+%%  %ylabel('y (m)');
+%%  %set(gca, 'YTick', []);
+%%  set(gcf, 'pos', positionYBar);
+%%  %title('Reconstruction k-Wave');
+%%  saveas(gcf, 'Example51_kWave_recon', 'png');
+%%  saveas(gcf, 'Example51_kWave_recon.fig');
 
 %========================================
 % Error - RT-kWave
 %========================================
-errorRT = pixelRT - pixelKWave;
-figure;
-surf(1e3*Rgrid.xAxis, 1e3*Rgrid.yAxis, errorRT', 'EdgeColor', 'none');
-view(2);
-axis(axisGrid);
-caxis([-.5, .5]);
-colorbar();
-box on;
-xlabel('x [mm]');
-%ylabel('y [mm]');
-%set(gca, 'YTick', []);
-set(gcf, 'pos', positionYBar);
-%title('Error RT - kWave (ADJ)');
-%%  saveas(gcf, 'Example51_RT_errorKW_GB', 'png');
-%%  saveas(gcf, 'Example51_RT_errorKW_GB.fig');
+%%  errorRT = pixelRT - pixelKWave;
+%%  figure;
+%%  surf(1e3*Rgrid.xAxis, 1e3*Rgrid.yAxis, errorRT', 'EdgeColor', 'none');
+%%  view(2);
+%%  axis(axisGrid);
+%%  caxis([-.5, .5]);
+%%  colorbar();
+%%  box on;
+%%  xlabel('x [mm]');
+%%  %ylabel('y [mm]');
+%%  %set(gca, 'YTick', []);
+%%  set(gcf, 'pos', positionYBar);
+%%  %title('Error RT - kWave (ADJ)');
+%%  saveas(gcf, 'Example51_RT_errorKW_GB_nonsmooth', 'png');
+%%  saveas(gcf, 'Example51_RT_errorKW_GB_nonsmooth.fig');
 
 %========================================
 % Error - RT-Phantom
 %========================================
-errorRT = pixelRT - Rgrid.u;
-figure;
-surf(1e3*Rgrid.xAxis, 1e3*Rgrid.yAxis, errorRT', 'EdgeColor', 'none');
-view(2);
-axis(axisGrid);
-caxis([-.5, .5]);
-colorbar();
-box on;
-xlabel('x [mm]');
-%ylabel('y [mm]');
-set(gca, 'YTick', []);
-set(gcf, 'pos', positionYBar);
-%title('Error RT - kWave (ADJ)');
-%%  saveas(gcf, 'Example51_RT_error_GB', 'png');
-%%  saveas(gcf, 'Example51_RT_error_GB.fig');
+%%  errorRT = pixelRT - Rgrid.u;
+%%  figure;
+%%  surf(1e3*Rgrid.xAxis, 1e3*Rgrid.yAxis, errorRT', 'EdgeColor', 'none');
+%%  view(2);
+%%  axis(axisGrid);
+%%  caxis([-.5, .5]);
+%%  colorbar();
+%%  box on;
+%%  xlabel('x [mm]');
+%%  %ylabel('y [mm]');
+%%  set(gca, 'YTick', []);
+%%  set(gcf, 'pos', positionYBar);
+%%  %title('Error RT - kWave (ADJ)');
+%%  saveas(gcf, 'Example51_RT_error_GB_nonsmooth', 'png');
+%%  saveas(gcf, 'Example51_RT_error_GB_nonsmooth.fig');
 
 %========================================
 % Error - kWave

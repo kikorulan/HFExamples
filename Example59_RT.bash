@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #================================================================================
-# EXAMPLE 57
+# EXAMPLE 59
 # 3D domain. 
 # Compute the forward signal for sensors placed in the boundary of the cube
 #================================================================================
@@ -17,11 +17,11 @@ export DIMENSIONS="dimensions.dat"
 export SOUND_SPEED="sound_speed.dat"
 export INITIAL_PRESSURE="initial_pressure_4balls.dat"
 export SENSORS="sensors.dat" 
-#export FORWARD_SIGNAL="forwardSignal_2168sensors.dat"
-export FORWARD_SIGNAL="forwardSignal_2168sensors_kWave.dat"
+export FORWARD_SIGNAL="forwardSignal_2168sensors.dat"
+#export FORWARD_SIGNAL="forwardSignal_2168sensors_kWave.dat"
 
 # Mode
-export MODE="-a"
+export MODE="-f"
 
 # Generate dimensions file
 Nx=128 dx=0.0001

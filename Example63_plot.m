@@ -92,75 +92,75 @@ colorbar();
 %==================================================
 % COMPARISON WITH K-WAVE
 %==================================================
-%%  % Import data
-%%  %load input_data/sensor_data_4balls;
-%%  sensor_data = h5read('output_data/Example63_forward_output.h5', '/p');
-%%  filenameData = 'output_data/ForwardSignal.dat';
-%%  timeSignal = importdata(filenameData, ' ', 0);
-%%  % Input
-%%  timeRT = timeSignal(1, :);
-%%  inputRT = timeSignal(2:end, :);
-%%  %timeKWave = kgrid.t_array;
-%%  inputKWave = sensor_data;
-%%  nSensors = size(sensor_data, 1);
-%%  
-%%  
-%%  normRT = max(inputRT(1,:));
-%%  normKWave = max(inputKWave(1,:));
-%%  
-%%  % Norm difference
-%%  difNorm = norm(inputRT(:)/normRT - inputKWave(:)/normKWave);
-%%  
-%%  % Plot all sensors
-%%  vecS = 1:10:98;
-%%  for i = 1:length(vecS)
-%%      % Normalisation - RT
-%%      %normRT = max(inputRT(i, :));
-%%      signalRT = inputRT(vecS(i), :)/normRT;
-%%  
-%%      % Normalisation - kWave
-%%      %normKWave = max(inputKWave(i, :));
-%%      signalKWave = inputKWave(vecS(i), :)/normKWave;
-%%      
-%%      % Plot
-%%      figure;
-%%      plot(timeRT, signalRT, 'Color', 'r', 'LineWidth', 2);
-%%      hold on;
-%%      set(gca,'FontSize',18);
-%%      plot(timeRT, signalKWave, 'Color', 'blue', 'LineWidth', 2);
-%%      axis([0 1.5e-5 -1.8 1.8]);
-%%      legend('RT', 'k-Wave');
-%%      xlabel('time (s)');
-%%      ylabel('amplitude');
-%%      ax = gca;
-%%      ax.GridAlpha = 0.5;
-%%      grid on;
-%%      title(['RT vs kWave - ', int2str(i)]);
-%%      %saveas(gcf, ['Example60_forwardSignal_sensor', int2str(i), '.fig']);
-%%      %saveas(gcf, ['Example60_forwardSignal_sensor', int2str(i)], 'png');
-%%  end
-%%  
-%%  for i = 1:length(vecS)
-%%      % Error
-%%      signalRT = inputRT(vecS(i), :)/normRT;
-%%      signalKWave = inputKWave(vecS(i), :)/normKWave;
-%%      % Spline
-%%      signalKWave_spline = spline(timeRT, signalKWave, timeRT);
-%%      error = signalRT - signalKWave_spline;
-%%      figure;
-%%      plot(timeRT, error, 'Color', 'r', 'LineWidth', 2);
-%%      set(gca,'FontSize',18);
-%%      axis([0 1.5e-5 -.2 .2]);
-%%      legend('error');
-%%      xlabel('time (s)');
-%%      ylabel('error');
-%%      ax = gca;
-%%      ax.GridAlpha = 0.5;
-%%      grid on;
-%%      title(['Error RT vs kWave - ', int2str(i)]);
-%%      %saveas(gcf, ['Example60_forwardSignal_error', int2str(i), '.fig']);
-%%      %saveas(gcf, ['Example60_forwardSignal_error', int2str(i)], 'png');
-%%  end
+% Import data
+%load input_data/sensor_data_4balls;
+sensor_data = h5read('output_data/Example63_forward_output.h5', '/p');
+filenameData = 'output_data/ForwardSignal.dat';
+timeSignal = importdata(filenameData, ' ', 0);
+% Input
+timeRT = timeSignal(1, :);
+inputRT = timeSignal(2:end, :);
+%timeKWave = kgrid.t_array;
+inputKWave = sensor_data;
+nSensors = size(sensor_data, 1);
+
+
+normRT = max(inputRT(1,:));
+normKWave = max(inputKWave(1,:));
+
+% Norm difference
+difNorm = norm(inputRT(:)/normRT - inputKWave(:)/normKWave);
+
+% Plot all sensors
+vecS = 1:10:98;
+for i = 1:length(vecS)
+    % Normalisation - RT
+    %normRT = max(inputRT(i, :));
+    signalRT = inputRT(vecS(i), :)/normRT;
+
+    % Normalisation - kWave
+    %normKWave = max(inputKWave(i, :));
+    signalKWave = inputKWave(vecS(i), :)/normKWave;
+    
+    % Plot
+    figure;
+    plot(timeRT, signalRT, 'Color', 'r', 'LineWidth', 2);
+    hold on;
+    set(gca,'FontSize',18);
+    plot(timeRT, signalKWave, 'Color', 'blue', 'LineWidth', 2);
+    axis([0 1.5e-5 -1.8 1.8]);
+    legend('RT', 'k-Wave');
+    xlabel('time (s)');
+    ylabel('amplitude');
+    ax = gca;
+    ax.GridAlpha = 0.5;
+    grid on;
+    title(['RT vs kWave - ', int2str(i)]);
+    %saveas(gcf, ['Example60_forwardSignal_sensor', int2str(i), '.fig']);
+    %saveas(gcf, ['Example60_forwardSignal_sensor', int2str(i)], 'png');
+end
+
+for i = 1:length(vecS)
+    % Error
+    signalRT = inputRT(vecS(i), :)/normRT;
+    signalKWave = inputKWave(vecS(i), :)/normKWave;
+    % Spline
+    signalKWave_spline = spline(timeRT, signalKWave, timeRT);
+    error = signalRT - signalKWave_spline;
+    figure;
+    plot(timeRT, error, 'Color', 'r', 'LineWidth', 2);
+    set(gca,'FontSize',18);
+    axis([0 1.5e-5 -.2 .2]);
+    legend('error');
+    xlabel('time (s)');
+    ylabel('error');
+    ax = gca;
+    ax.GridAlpha = 0.5;
+    grid on;
+    title(['Error RT vs kWave - ', int2str(i)]);
+    %saveas(gcf, ['Example60_forwardSignal_error', int2str(i), '.fig']);
+    %saveas(gcf, ['Example60_forwardSignal_error', int2str(i)], 'png');
+end
 
 %============================================================================================================================================
 % INVERSE PROBLEM

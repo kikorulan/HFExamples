@@ -1,7 +1,7 @@
 %================================================================================
 % Example for gridRT class
 %===============================================================================
-cd /cs/research/medim/projects2/projects/frullan/Documents/MATLAB/HighFreq/Examples/Ex51_reconstruction2D;
+cd /cs/research/medim/projects2/projects/frullan/Documents/HighFreqCode/Examples/Ex51_reconstruction2D;
 
 close all;
 %clear all;
@@ -9,6 +9,7 @@ close all;
 load sensor_data.mat;
 
 run colourMap;
+
 %========================================
 % Rgrid definition
 %========================================
@@ -22,7 +23,10 @@ Rgrid = gridRT(Nx, dx, Ny, dy);
 Rgrid.setCMatrix(medium.sound_speed);
 
 % Set initial pressure
-Rgrid.setUMatrix(sourceKW.p0);
+inputIm = imread('/cs/research/medim/projects2/projects/frullan/Documents/HighFreqCode/HighFreq_2DRT/Phantoms/Veins_modified.jpg');
+u0 = double(255-inputIm)/255;
+Rgrid.setUMatrix(u0);
+%%  Rgrid.setUMatrix(sourceKW.p0);
 
 %========================================
 % Impulse Response
@@ -71,15 +75,15 @@ end
 for n = 1:Rgrid.Nx
     x{n+Rgrid.Nx+2*(Rgrid.Ny-2)} = cat(3, (n-1)*Rgrid.dx, (Rgrid.Ny-1)*Rgrid.dy);
 end
-source = Rgrid.computeForwardParallel(x, 0, 2*pi-0.01, nRays, tStep, tMax, true);
-aForward_RT = zeros(nSources, length(source(1).aForward));
+source = Rgrid.computeForwardParallel(x, 0, 2*pi-0.01, nRays, tStep, tMax, 'p', true);
+signalRT_nonsmooth = zeros(nSources, length(source(1).aForward));
 for n = 1:nSources
-    aForward_RT(n, :) = source(n).aForward;
+    signalRT_nonsmooth(n, :) = source(n).aForward;
 end
-
-%%  %========================================
-%%  % Sensor Selection
-%%  %========================================
+%save signalRT_nonsmooth signalRT_nonsmooth;
+%========================================
+% Sensor Selection
+%========================================
 %%  % Sources locations
 %%  n1 = round(Rgrid.Nx + 2*(round(Rgrid.Ny/3) - 2)   + 2);     % 1st sensor: Nx + 2*(Ny/3-2)   + 2
 %%  n2 = round(Rgrid.Nx + 2*(round(2*Rgrid.Ny/3) - 2) + 1);     % 2nd sensor: Nx + 2*(2*Ny/3-2) + 1
@@ -90,17 +94,32 @@ end
 %%  sourceSel(1) = Rgrid.newSource(sensor1, pi/2, 3*pi/2, nRays, tStep, tMax);
 %%  sourceSel(2) = Rgrid.newSource(sensor2, -pi/2, pi/2, nRays, tStep, tMax);
 %%  sourceSel(3) = Rgrid.newSource(sensor3, pi, 2*pi, nRays, tStep, tMax);
-%%  Rgrid.computeHamil(sourceSel(1));
-%%  Rgrid.computeHamil(sourceSel(2));
-%%  Rgrid.computeHamil(sourceSel(3));
+%%  sourceSel(4) = Rgrid.newSource(sensor1, pi/2, 3*pi/2, nRays, tStep, tMax);
+%%  sourceSel(5) = Rgrid.newSource(sensor2, -pi/2, pi/2, nRays, tStep, tMax);
+%%  sourceSel(6) = Rgrid.newSource(sensor3, pi, 2*pi, nRays, tStep, tMax);
+%%  Rgrid.computeHamil(sourceSel(1), 'p');
+%%  Rgrid.computeHamil(sourceSel(2), 'p');
+%%  Rgrid.computeHamil(sourceSel(3), 'p');
+%%  Rgrid.computeHamil(sourceSel(4), 'g');
+%%  Rgrid.computeHamil(sourceSel(5), 'g');
+%%  Rgrid.computeHamil(sourceSel(6), 'g');
 
+%========================================
+% Ray Trajectories
+%========================================
+%%  for i = 1:30:764
+%%      sensor = Rgrid.newSource(x{i}, 0, 2*pi-0.01, nRays, tStep, tMax);
+%%      Rgrid.computeHamil(sensor, 'p');
+%%      sensor.plot_rays(Rgrid, 100);
+%%      %pause();
+%%  end
 % Save results
 %save gridRT.mat Rgrid nRays source x -v7.3;
 
 %==================================================================================
 % Plot results
 %==================================================================================
-cd /cs/research/medim/projects2/projects/frullan/Documents/MATLAB/HighFreq/Examples/Ex51_reconstruction2D;
+cd /cs/research/medim/projects2/projects/frullan/Documents/HighFreqCode/Examples/Ex51_reconstruction2D;
 
 %load gridRT.mat;
 %load sensor_data.mat;
@@ -137,7 +156,8 @@ cd /cs/research/medim/projects2/projects/frullan/Documents/MATLAB/HighFreq/Examp
 %%  set(gcf, 'pos', position);
 %%  xlabel('x [mm]');
 %%  ylabel('y [mm]');
-%%  saveas(gcf, 'Example51_Sensor1_rays', 'png');
+%%  set(gca,'FontSize',13)
+%%  saveas(gcf, 'Example51_Sensor1_rays', 'epsc');
 %%  saveas(gcf, 'Example51_Sensor1_rays.fig'); 
 %%  
 %%  % Sensor 2
@@ -152,7 +172,8 @@ cd /cs/research/medim/projects2/projects/frullan/Documents/MATLAB/HighFreq/Examp
 %%  box on;
 %%  set(gcf, 'pos', position);
 %%  xlabel('x [mm]');
-%%  saveas(gcf, 'Example51_Sensor2_rays', 'png');
+%%  set(gca,'FontSize',13)
+%%  saveas(gcf, 'Example51_Sensor2_rays', 'epsc');
 %%  saveas(gcf, 'Example51_Sensor2_rays.fig'); 
 %%  
 %%  
@@ -168,7 +189,8 @@ cd /cs/research/medim/projects2/projects/frullan/Documents/MATLAB/HighFreq/Examp
 %%  box on;
 %%  set(gcf, 'pos', position);
 %%  xlabel('x [mm]');
-%%  saveas(gcf, 'Example51_Sensor3_rays', 'png');
+%%  set(gca,'FontSize',13)
+%%  saveas(gcf, 'Example51_Sensor3_rays', 'epsc');
 %%  saveas(gcf, 'Example51_Sensor3_rays.fig'); 
 
 %%  %==============================
@@ -180,15 +202,22 @@ cd /cs/research/medim/projects2/projects/frullan/Documents/MATLAB/HighFreq/Examp
 %%      plot(Rgrid.source(n).tBeam, Rgrid.source(n).aBeam);
 %%  end
   
-%%  %==============================
-%%  % Time Signals
-%%  %==============================
+%==============================
+% Time Signals
+%==============================
+%%  posForward = [700 700 600 400];
+%%  set(0,'DefaultFigurePaperPositionMode','auto');
+%%  
 %%  normRT = max(sourceSel(2).aForward);
+%%  normGB = max(sourceSel(5).aForward);
 %%  normKWave = max(sensor_data(n2, :));
 %%  % Signals
 %%  signalRT1 = sourceSel(1).aForward/normRT;
 %%  signalRT2 = sourceSel(2).aForward/normRT;
 %%  signalRT3 = sourceSel(3).aForward/normRT;
+%%  signalGB1 = sourceSel(4).aForward/normGB;
+%%  signalGB2 = sourceSel(5).aForward/normGB;
+%%  signalGB3 = sourceSel(6).aForward/normGB;
 %%  signalKW1 = sensor_data(n1, :)/normKWave;
 %%  signalKW2 = sensor_data(n2, :)/normKWave;
 %%  signalKW3 = sensor_data(n3, :)/normKWave;
@@ -197,50 +226,77 @@ cd /cs/research/medim/projects2/projects/frullan/Documents/MATLAB/HighFreq/Examp
 %%  figure; hold on;
 %%  axis([0 40 -.6 1.2]);
 %%  plot(1e6*Rgrid.tForward, signalRT1, 'Color', colourMapV(1), 'LineWidth', 3);
+%%  plot(1e6*Rgrid.tForward, signalGB1, 'Color',     [1 0.5 0], 'LineWidth', 2);
 %%  plot(1e6*kgrid.t_array,  signalKW1, 'Color',           'k', 'LineWidth', 1.5);
 %%  box on; grid on;
-%%  legend('Sensor 1 - RT', 'Sensor 1 - kWave');
+%%  legend('Sensor 1 - RT', 'Sensor 1 - DRT', 'Sensor 1 - kWave');
 %%  xlabel('t [\mus]');
 %%  ylabel('Amplitude');
-%%  saveas(gcf, 'Example51_Sensor1_signal', 'png');
-%%  saveas(gcf, 'Example51_Sensor1_signal.fig'); 
+%%  set(gca,'FontSize',13);
+%%  set(gcf, 'pos', posForward);
+%%  saveas(gcf, 'Example51_Sensor1_signal_smooth', 'epsc');
+%%  saveas(gcf, 'Example51_Sensor1_signal_smooth.fig'); 
 %%  % Sensor 2;
 %%  figure; hold on;
 %%  axis([0 40 -.6 1.2]);
 %%  plot(1e6*Rgrid.tForward, signalRT2, 'Color', colourMapV(2), 'LineWidth', 3);
+%%  plot(1e6*Rgrid.tForward, signalGB2, 'Color',     [1 0.5 0], 'LineWidth', 2);
 %%  plot(1e6*kgrid.t_array,  signalKW2, 'Color',           'k', 'LineWidth', 1.5);
 %%  box on; grid on;
-%%  legend('Sensor 2 - RT', 'Sensor 2 - kWave');
+%%  legend('Sensor 2 - RT', 'Sensor 2 - DRT', 'Sensor 2 - kWave');
 %%  xlabel('t [\mus]');
 %%  ylabel('Amplitude');
-%%  saveas(gcf, 'Example51_Sensor2_signal', 'png');
-%%  saveas(gcf, 'Example51_Sensor2_signal.fig'); 
+%%  set(gca,'FontSize',13)
+%%  set(gcf, 'pos', posForward);
+%%  saveas(gcf, 'Example51_Sensor2_signal_smooth', 'epsc');
+%%  saveas(gcf, 'Example51_Sensor2_signal_smooth.fig'); 
 %%  % Sensor 3
 %%  figure; hold on;
 %%  axis([0 40 -.6 1.2]);
 %%  plot(1e6*Rgrid.tForward, signalRT3, 'Color', colourMapV(3), 'LineWidth', 3);
+%%  plot(1e6*Rgrid.tForward, signalGB3, 'Color',     [1 0.5 0], 'LineWidth', 2);
 %%  plot(1e6*kgrid.t_array,  signalKW3, 'Color',           'k', 'LineWidth', 1.5);
 %%  box on; grid on;
-%%  legend('Sensor 3 - RT', 'Sensor 3 - kWave');
+%%  legend('Sensor 3 - RT', 'Sensor 3 - DRT', 'Sensor 3 - kWave');
 %%  xlabel('t [\mus]');
 %%  ylabel('Amplitude');
-%%  saveas(gcf, 'Example51_Sensor3_signal', 'png');
-%%  saveas(gcf, 'Example51_Sensor3_signal.fig'); 
+%%  set(gca,'FontSize',13)
+%%  set(gcf, 'pos', posForward);
+%%  saveas(gcf, 'Example51_Sensor3_signal_smooth', 'epsc');
+%%  saveas(gcf, 'Example51_Sensor3_signal_smooth.fig'); 
 %%  % Errors
 %%  error1 = signalRT1 - signalKW1;
 %%  error2 = signalRT2 - signalKW2;
 %%  error3 = signalRT3 - signalKW3;
-%%  figure; hold on;
-%%  axis([0 40 -.6 1.2]);
+%%  error4 = signalGB1 - signalKW1;
+%%  error5 = signalGB2 - signalKW2;
+%%  error6 = signalGB3 - signalKW3;
+%%  
+%%  figure; 
+%%  set(gcf, 'pos', posForward);
+%%  subplot(2, 1, 1); hold on;
+%%  axis([0 40 -.3 .5]);
 %%  plot(1e6*Rgrid.tForward, error1, 'Color', colourMapV(1), 'LineWidth', 2);
 %%  plot(1e6*Rgrid.tForward, error2, 'Color', colourMapV(2), 'LineWidth', 2);
 %%  plot(1e6*Rgrid.tForward, error3, 'Color', colourMapV(3), 'LineWidth', 2);
+%%  %legend('Error RT sensor 1', 'Error RT sensor 2', 'Error RT sensor 3');
 %%  box on; grid on;
-%%  legend('Error sensor 1', 'Error sensor 2', 'Error sensor 3');
 %%  xlabel('t [\mus]');
-%%  ylabel('Amplitude');
-%%  saveas(gcf, 'Example51_error_signal', 'png');
-%%  saveas(gcf, 'Example51_error_signal.fig'); 
+%%  ylabel('Error RT');
+%%  set(gca,'FontSize',13);
+%%  subplot(2, 1, 2); hold on;
+%%  axis([0 40 -.3 .5]);
+%%  plot(1e6*Rgrid.tForward, error4, 'Color', colourMapV(1), 'LineWidth', 2);
+%%  plot(1e6*Rgrid.tForward, error5, 'Color', colourMapV(2), 'LineWidth', 2);
+%%  plot(1e6*Rgrid.tForward, error6, 'Color', colourMapV(3), 'LineWidth', 2);
+%%  %legend('Error RT sensor 1', 'Error RT sensor 2', 'Error RT sensor 3');
+%%  box on; grid on;
+%%  xlabel('t [\mus]');
+%%  ylabel('Error DRT');
+%%  set(gca,'FontSize',13)
+%%  saveas(gcf, 'Example51_error_signal_smooth', 'epsc');
+%%  saveas(gcf, 'Example51_error_signal_smooth.fig'); 
+
 
 %==============================
 % Measure time
@@ -252,6 +308,6 @@ disp(['  total computation time ' num2str(etime(end_time, start_time))]);
 % Save results
 %save RgridRT.mat Rgrid nRays nSources x -v7.3;
 
-cd /cs/research/medim/projects2/projects/frullan/Documents/MATLAB/HighFreq/Examples;
+cd /cs/research/medim/projects2/projects/frullan/Documents/HighFreqCode/Examples;
 %cd /home/kiko/Documents/MATLAB/HighFreq/Examples;
 
