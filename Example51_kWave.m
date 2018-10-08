@@ -1,5 +1,6 @@
 % Heterogeneous Propagation Medium Example
-cd /cs/research/medim/projects2/projects/frullan/Documents/MATLAB/HighFreq/Examples/Ex51_reconstruction2D;
+%cd /cs/research/medim/projects2/projects/frullan/Documents/MATLAB/HighFreq/Examples/Ex51_reconstruction2D;
+cd /home/kiko/Documents/HighFreqCode/Examples/Ex51_reconstruction2D;
 
 %clear all;
 close all;
@@ -103,51 +104,51 @@ save recon_data_adjoint.mat kgrid medium source_adjoint sensor_adjoint p0_recon_
 %=========================================================================
 % VISUALISATION
 %=========================================================================
-cd /cs/research/medim/projects2/projects/frullan/Documents/MATLAB/HighFreq/Examples/Ex51_reconstruction2D;
-load sensor_data.mat;
-load recon_data.mat;
-load recon_data_adjoint.mat;
-
-X = 0:dx:(Nx-1)*dx;
-Y = 0:dy:(Ny-1)*dy;
-%==============================
-% Initial Pressure and Distr.
-%==============================
-figure;
-imagesc(kgrid.x_vec*1e3, kgrid.y_vec*1e3, fliplr(sourceKW.p0)' + fliplr(sensor.mask)', [-1 1]);
-colormap(getColorMap);
-ylabel('y-position [mm]');
-xlabel('x-position [mm]');
-axis image;
-saveas(gcf, 'Example51_U_kWave.fig');
-
-%==============================
-% Sound Speed
-%==============================
-figure;
-surf(X, Y, medium.sound_speed', 'EdgeColor', 'none');
-colorbar();
-view(2);
-saveas(gcf, 'Example51_C.fig'); 
-
-%==============================
-% Reconstruction Time Reversal
-%==============================
-p0_recon_norm = max(0, p0_recon)/max(p0_recon(:));
-figure;
-surf(X, Y, p0_recon_norm', 'EdgeColor', 'none');
-view(2);
-title('Reconstruction - Time reversal');
-
-%==============================
-% Reconstruction Adjoint
-%==============================
-p0_recon_adjoint_norm = max(0, p0_recon_adjoint.p_final)/max(p0_recon_adjoint.p_final(:));
-figure;
-surf(X, Y, p0_recon_adjoint_norm', 'EdgeColor', 'none');
-view(2);
-title('Reconstruction - Adjoint');
-saveas(gcf, 'Example51_kWave_recon_adjoint.fig'); 
-
-cd /cs/research/medim/projects2/projects/frullan/Documents/MATLAB/HighFreq/Examples/Ex51_reconstruction2D;
+% cd /cs/research/medim/projects2/projects/frullan/Documents/MATLAB/HighFreq/Examples/Ex51_reconstruction2D;
+% load sensor_data.mat;
+% load recon_data.mat;
+% load recon_data_adjoint.mat;
+% 
+% X = 0:dx:(Nx-1)*dx;
+% Y = 0:dy:(Ny-1)*dy;
+% %==============================
+% % Initial Pressure and Distr.
+% %==============================
+% figure;
+% imagesc(kgrid.x_vec*1e3, kgrid.y_vec*1e3, fliplr(sourceKW.p0)' + fliplr(sensor.mask)', [-1 1]);
+% colormap(getColorMap);
+% ylabel('y-position [mm]');
+% xlabel('x-position [mm]');
+% axis image;
+% saveas(gcf, 'Example51_U_kWave.fig');
+% 
+% %==============================
+% % Sound Speed
+% %==============================
+% figure;
+% surf(X, Y, medium.sound_speed', 'EdgeColor', 'none');
+% colorbar();
+% view(2);
+% saveas(gcf, 'Example51_C.fig'); 
+% 
+% %==============================
+% % Reconstruction Time Reversal
+% %==============================
+% p0_recon_norm = max(0, p0_recon)/max(p0_recon(:));
+% figure;
+% surf(X, Y, p0_recon_norm', 'EdgeColor', 'none');
+% view(2);
+% title('Reconstruction - Time reversal');
+% 
+% %==============================
+% % Reconstruction Adjoint
+% %==============================
+% p0_recon_adjoint_norm = max(0, p0_recon_adjoint.p_final)/max(p0_recon_adjoint.p_final(:));
+% figure;
+% surf(X, Y, p0_recon_adjoint_norm', 'EdgeColor', 'none');
+% view(2);
+% title('Reconstruction - Adjoint');
+% saveas(gcf, 'Example51_kWave_recon_adjoint.fig'); 
+% 
+% cd /cs/research/medim/projects2/projects/frullan/Documents/MATLAB/HighFreq/Examples/Ex51_reconstruction2D;
 %cd /home/kiko/Documents/MATLAB/HighFreq/Examples;

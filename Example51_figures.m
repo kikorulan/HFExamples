@@ -1,10 +1,13 @@
 
 
-cd /cs/research/medim/projects2/projects/frullan/Documents/HighFreqCode/Examples/Ex51_reconstruction2D;
+%cd /cs/research/medim/projects2/projects/frullan/Documents/HighFreqCode/Examples/Ex51_reconstruction2D;
+cd /home/kiko/Documents/HighFreqCode/Examples/Ex51_reconstruction2D;
 close all;
 
 drawForward = 0;
 drawAdjoint = 1;
+drawMix = 0;
+
 
 %===============================================================================================================
 %===============================================================================================================
@@ -268,11 +271,13 @@ end
 %===============================================================================================================
 if(drawAdjoint)
 
-load recon_data_adjoint.mat;
+%load recon_data_adjoint.mat;
+load gridRT_impulse;
 load adjointRT_smooth;
 load adjointRT_nonsmooth;
 load adjointGB_smooth;
 load adjointGB_nonsmooth;
+
 %========================================
 % Draw parameters
 %========================================
@@ -284,26 +289,27 @@ positionYBar = [700 700 390 630];
 set(0,'DefaultFigurePaperPositionMode','auto');
 
 %========================================
-% Reconstruction - kWave Adjoint
+% kWave Adjoint
 %========================================
-pixelKWave = max(0, p0_recon_adjoint.p_final/max(p0_recon_adjoint.p_final(:)));
-figure;
-surf(1e3*Rgrid.xAxis, 1e3*Rgrid.yAxis, pixelKWave', 'EdgeColor', 'none');
-view(2);
-axis(axisGrid);
-colorbar();
-box on;
-xlabel('x [mm]');
-%ylabel('y (m)');
-%set(gca, 'YTick', []);
-set(gcf, 'pos', positionYBar);
-saveas(gcf, 'Example51_kWave_recon', 'png');
-saveas(gcf, 'Example51_kWave_recon.fig');
+% pixelAReverse = p0_recon_adjoint.p_final;
+% pixelKWave = max(0, pixelAReverse/max(pixelAReverse(:)));
+% figure;
+% surf(1e3*Rgrid.xAxis, 1e3*Rgrid.yAxis, pixelKWave', 'EdgeColor', 'none');
+% view(2);
+% axis(axisGrid);
+% %colorbar();
+% box on;
+% xlabel('x [mm]');
+% ylabel('y [mm]');
+% %set(gca, 'YTick', []);
+% set(gcf, 'pos', positionY);
+% saveas(gcf, 'Example51_kWave_recon', 'png');
+% saveas(gcf, 'Example51_kWave_recon.fig');
 
 %========================================
-% RT 
+% RT nonsmooth
 %========================================
-pixelAReverse = adjointRT_smooth;
+pixelAReverse = adjointRT_nonsmooth;
 maxPixelRT = max(real(pixelAReverse(:)));
 pixelRT = max(0, real(pixelAReverse)/maxPixelRT);
 figure;
@@ -313,17 +319,114 @@ axis(axisGrid);
 %colorbar();
 box on;
 xlabel('x [mm]');
-ylabel('y [mm]');
-set(gcf, 'pos', positionY);
-saveas(gcf, 'Example51_RT_recon_smooth', 'png');
+%ylabel('y [mm]');
+set(gcf, 'pos', position);
+saveas(gcf, 'Example51_RT_recon_nonsmooth', 'png');
 saveas(gcf, 'Example51_RT_recon_nonsmooth.fig');
 
+%========================================
+% GB nonsmooth
+%========================================
+pixelAReverse = adjointGB_nonsmooth;
+maxPixelRT = max(real(pixelAReverse(:)));
+pixelRT = max(0, real(pixelAReverse)/maxPixelRT);
+figure;
+surf(1e3*Rgrid.xAxis, 1e3*Rgrid.yAxis, pixelRT', 'EdgeColor', 'none');
+view(2);
+axis(axisGrid);
+%colorbar();
+box on;
+xlabel('x [mm]');
+%ylabel('y [mm]');
+set(gcf, 'pos', position);
+saveas(gcf, 'Example51_GB_recon_nonsmooth', 'png');
+saveas(gcf, 'Example51_GB_recon_nonsmooth.fig');
+
+end
+
+
+%===============================================================================================================
+%===============================================================================================================
+%=====================             MIX ADJOINT PROBLEM              ============================================
+%===============================================================================================================
+%===============================================================================================================
+if(drawMix)
+    
+    
+load adjointKWaveForward_RT;
+load adjointKWaveForward_GB;
+load adjointRTForward_kWave;
+load adjointGBForward_kWave;
+%========================================
+% Draw parameters
+%========================================
+axisGrid = [0 1e3*(Rgrid.Nx-1)*Rgrid.dx 0 1e3*(Rgrid.Ny-1)*Rgrid.dy];
+position     = [700 700 300 630];
+positionY    = [700 700 320 630];
+positionBar  = [700 700 363 630];
+positionYBar = [700 700 390 630];
+set(0,'DefaultFigurePaperPositionMode','auto');
+
 
 %========================================
-% Reconstruction - kWave Adjoint
+% RT Adjoint - kWave data
 %========================================
-input_data = adjointKWaveForward_RT;
-pixelKWave = max(0, input_data/max(input_data(:)));
+pixelAReverse = real(adjointKWaveForward_RT);
+pixelKWave = max(0, pixelAReverse/max(pixelAReverse(:)));
+figure;
+surf(1e3*Rgrid.xAxis, 1e3*Rgrid.yAxis, pixelKWave', 'EdgeColor', 'none');
+view(2);
+axis(axisGrid);
+%colorbar();
+box on;
+xlabel('x [mm]');
+ylabel('y [mm]');
+%set(gca, 'YTick', []);
+set(gcf, 'pos', positionY);
+saveas(gcf, 'Example51_RT_recon_kWave_data', 'png');
+saveas(gcf, 'Example51_RT_recon_kWave_data.fig');
+
+%========================================
+% GB Adjoint - kWave data
+%========================================
+pixelAReverse = real(adjointKWaveForward_GB);
+pixelKWave = max(0, pixelAReverse/max(pixelAReverse(:)));
+figure;
+surf(1e3*Rgrid.xAxis, 1e3*Rgrid.yAxis, pixelKWave', 'EdgeColor', 'none');
+view(2);
+axis(axisGrid);
+%colorbar();
+box on;
+xlabel('x [mm]');
+%ylabel('y [mm]');
+%set(gca, 'YTick', []);
+set(gcf, 'pos', position);
+saveas(gcf, 'Example51_GB_recon_kWave_data', 'png');
+saveas(gcf, 'Example51_GB_recon_kWave_data.fig');
+
+%========================================
+% kWave Adjoint - RT data
+%========================================
+pixelAReverse = real(adjointRTForward_kWave);
+pixelKWave = max(0, pixelAReverse/max(pixelAReverse(:)));
+figure;
+surf(1e3*Rgrid.xAxis, 1e3*Rgrid.yAxis, pixelKWave', 'EdgeColor', 'none');
+view(2);
+axis(axisGrid);
+%colorbar();
+box on;
+xlabel('x [mm]');
+%ylabel('y [mm]');
+%set(gca, 'YTick', []);
+set(gcf, 'pos', position);
+saveas(gcf, 'Example51_kWave_recon_RT_data', 'png');
+saveas(gcf, 'Example51_kWave_recon_RT_data.fig');
+
+%========================================
+% kWave Adjoint - GB data
+%========================================
+pixelAReverse = real(adjointGBForward_kWave);
+pixelKWave = max(0, pixelAReverse/max(pixelAReverse(:)));
 figure;
 surf(1e3*Rgrid.xAxis, 1e3*Rgrid.yAxis, pixelKWave', 'EdgeColor', 'none');
 view(2);
@@ -331,13 +434,13 @@ axis(axisGrid);
 colorbar();
 box on;
 xlabel('x [mm]');
-%ylabel('y (m)');
+ylabel('y [mm]');
 %set(gca, 'YTick', []);
-set(gcf, 'pos', positionYBar);
-%saveas(gcf, 'Example51_kWave_recon', 'png');
-%saveas(gcf, 'Example51_kWave_recon.fig');
+set(gcf, 'pos', positionBar);
+saveas(gcf, 'Example51_kWave_recon_GB_data', 'png');
+saveas(gcf, 'Example51_kWave_recon_GB_data.fig');
 
-
-
-
+    
 end
+
+
