@@ -1,19 +1,30 @@
 #==================================================================================================================================
 # EXAMPLE 65 - WRAP IN PYTHON
 #==================================================================================================================================
+# Choose machine
+import socket
+host = socket.gethostname()
+if (host == "hannover"):
+    root_folder = "/home/wontek/sharedWK/"
+elif (host == "ember.cs.ucl.ac.uk" or host == "maryam.cs.ucl.ac.uk"):
+    root_folder = "/cs/research/medim/projects2/projects/frullan/Documents/HighFreqCode/"
+else:
+    raise ValueError("Unknown machine")
+
 # Add path
 import sys
-sys.path.append("/cs/research/medim/projects2/projects/frullan/Documents/HighFreqCode/HighFreq_3DRT/Build/bin")
+sys.path.append(root_folder + "HighFreq_3DRT/Build/bin")
+
 # Import libraries
 import numpy as np
 import pyrtgrid as rt
 from datetime import datetime
 import matplotlib.pyplot as plt
 # Folder
-folder = "/cs/research/medim/projects2/projects/frullan/Documents/HighFreqCode/Examples/Ex65_python/"
+folder = root_folder + "Examples/Ex65_python/"
 input_folder = folder + "input_data/"
 output_folder = folder + "output_data/"
-
+nSensors = 5
 #================================================================================
 # FORWARD PROBLEM
 #================================================================================
@@ -48,31 +59,46 @@ rtobj.load_sensors(sensors)
 #==============================
 # Forward operator
 #==============================
-sensor_array = np.arange(98)
+sensor_array = np.arange(nSensors)
 startTime = datetime.now() # time
 forward_signal = rtobj.forward_operator(sensor_array)
 endTime = datetime.now()
 print(endTime - startTime)
  
 #==============================
-# Plot
+# Plot - forward
 #==============================
 # Comparison 
 file_forward_signal = input_folder + "forwardSignal_98sensors.dat"
 forward_signal_cpp = np.loadtxt(file_forward_signal)
 
-for i in range(98):
+for i in range(nSensors):
     #plt.figure()
     error = forward_signal[i, :] - forward_signal_cpp[i+1, :]
     plt.plot(error)
 
 #plt.figure()
-#plt.show(block=False)
+plt.show(block=False)
 
+#==============================
+# Get filter
+#==============================
+filters = rtobj.get_filter()
+plt.imshow(filters)
+plt.show(block=False)
 
 #================================================================================
 # ADJOINT PROBLEM
 #================================================================================
+#==============================
+# Get signalConvolve
+#==============================
+nS = 1
+signal_convolve = rtobj.get_signalConvolve(nS, forward_signal[nS, :])
+plt.imshow(signal_convolve)
+plt.show(block=False)
+
+
 #==============================
 # Load data
 #==============================
@@ -85,7 +111,7 @@ adjoint_pressure = np.transpose(adjoint_pressure, (1, 2, 0)).copy()
 #==============================
 # Adjoint operator
 #==============================
-sensor_array = np.arange(98)
+sensor_array = np.arange(nSensors)
 startTime = datetime.now() # time
 adjoint_pressure_py = rtobj.adjoint_operator(sensor_array, forward_signal)
 endTime = datetime.now()
@@ -99,8 +125,7 @@ print(np.max(adjoint_pressure))
 print(np.max(adjoint_pressure_py - adjoint_pressure))
 
 
-
-for i in range(10):
+for i in range(2):
     plt.figure()
     plt.imshow(adjoint_pressure[:, :, i] - adjoint_pressure_py[:, :, i])
     plt.colorbar()
