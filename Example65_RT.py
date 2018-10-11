@@ -91,13 +91,30 @@ plt.show(block=False)
 # ADJOINT PROBLEM
 #================================================================================
 #==============================
-# Get signalConvolve
+# Get signal
 #==============================
 nS = 1
-signal_convolve = rtobj.get_signalConvolve(nS, forward_signal[nS, :])
-plt.imshow(signal_convolve)
+signal = np.random.random(1501).astype(np.float32)
+signal_host = rtobj.get_signal(nS, signal)
+plt.figure()
+plt.plot(signal_host - signal)
+plt.show(block=False)
+plt.figure()
+plt.plot(signal_host)
+plt.show(block=False)
+plt.figure()
+plt.plot(signal)
 plt.show(block=False)
 
+#==============================
+# Get signal convolve
+#==============================
+nS = 1
+signal = forward_signal[nS, :].astype(np.float32)
+signal_convolve = rtobj.get_signalConvolve(nS, signal)
+plt.figure()
+plt.imshow(signal_convolve)
+plt.show(block=False)
 
 #==============================
 # Load data
@@ -145,3 +162,4 @@ for i in range(2):
     plt.close()
     plt.close()
     plt.close()
+
