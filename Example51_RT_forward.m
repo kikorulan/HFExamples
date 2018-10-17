@@ -80,7 +80,8 @@ signalRT_nonsmooth = zeros(nSources, length(source(1).aForward));
 for n = 1:nSources
     signalRT_nonsmooth(n, :) = source(n).aForward;
 end
-%save signalRT_nonsmooth signalRT_nonsmooth;
+
+save signalRT_nonsmooth signalRT_nonsmooth;
 %========================================
 % Sensor Selection
 %========================================

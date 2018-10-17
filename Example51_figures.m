@@ -4,7 +4,7 @@ cd /cs/research/medim/projects2/projects/frullan/Documents/HighFreqCode/Examples
 %cd /home/kiko/Documents/HighFreqCode/Examples/Ex51_reconstruction2D;
 close all;
 
-drawForward = 0;
+drawForward = 1;
 drawAdjoint = 1;
 drawMix = 1;
 

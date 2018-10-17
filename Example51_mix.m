@@ -22,7 +22,7 @@ start_time = clock;
 %================================================================================
 
 % Assign data
-sensor_data_RT = signalGB_nonsmooth;
+sensor_data_RT = signalRT_nonsmooth;
 % assign the time reversal data
 sensor.time_reversal_boundary_data = sensor_data_RT;
 % reset the initial pressure
@@ -55,10 +55,10 @@ end
 pixelAReverseSensors = Rgrid.inverse_signal(source);
 
 
-adjointKWaveForward_GB = Rgrid.pixelAReverse;
-adjointGBForward_kWave = p0_recon_RT;
-save adjointKWaveForward_GB adjointKWaveForward_GB;
-save adjointGBForward_kWave adjointGBForward_kWave;
+adjointKWaveForward_RT = Rgrid.pixelAReverse;
+adjointRTForward_kWave = p0_recon_RT;
+save adjointKWaveForward_RT adjointKWaveForward_RT;
+save adjointRTForward_kWave adjointRTForward_kWave;
 
 %save RgridRT_recon.mat Rgrid -v7.3;
 %================================================================================

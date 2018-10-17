@@ -263,13 +263,26 @@ pixelPressureMatrix = importdata('output_data/PixelPressure.dat', ' ', 0);
 pixelPressure = max(0, matrix2cube(pixelPressureMatrix, Nz));
 %plot_pixel(initial_pressure, 5, 1, pixelPressure);
 %plot_pixel_subsample(pixelPressure, 1, 1);
-plot_pixel(pixelPressure, 10, dx);
+plot_pixel(pixelPressure, 7, dx);
 view(41, 6);
 ax = gca;
 ax.GridAlpha = 0.5;
 grid on;
-saveas(gcf, 'output_data/Example63_RT_recon.fig');
-saveas(gcf, 'output_data/Example63_RT_recon', 'png');
+%saveas(gcf, 'output_data/Example63_RT_recon.fig');
+%saveas(gcf, 'output_data/Example63_RT_recon', 'png');
+
+
+pixelPressureMatrix = importdata('output_data/PixelPressure_original.dat', ' ', 0);
+pixelPressure_o = max(0, matrix2cube(pixelPressureMatrix, Nz));
+%plot_pixel(initial_pressure, 5, 1, pixelPressure);
+%plot_pixel_subsample(pixelPressure, 1, 1);
+plot_pixel(pixelPressure_o, 5, dx);
+view(41, 6);
+ax = gca;
+ax.GridAlpha = 0.5;
+grid on;
+%saveas(gcf, 'output_data/Example63_RT_recon.fig');
+%saveas(gcf, 'output_data/Example63_RT_recon', 'png');
 
 %==================================================
 % Reconstruction - kWave

@@ -22,10 +22,10 @@ Rgrid = gridRT(Nx, dx, Ny, dy);
 Rgrid.setCMatrix(medium.sound_speed);
 
 % Set initial pressure
-inputIm = imread('/cs/research/medim/projects2/projects/frullan/Documents/HighFreqCode/HighFreq_2DRT/Phantoms/Veins_modified.jpg');
-u0 = double(255-inputIm)/255;
-Rgrid.setUMatrix(u0);
-%%  Rgrid.setUMatrix(sourceKW.p0);
+%%  inputIm = imread('/cs/research/medim/projects2/projects/frullan/Documents/HighFreqCode/HighFreq_2DRT/Phantoms/Veins_modified.jpg');
+%%  u0 = double(255-inputIm)/255;
+%%  Rgrid.setUMatrix(u0);
+Rgrid.setUMatrix(sourceKW.p0);
 
 %========================================
 % Impulse Response
@@ -75,12 +75,12 @@ for n = 1:Rgrid.Nx
     x{n+Rgrid.Nx+2*(Rgrid.Ny-2)} = cat(3, (n-1)*Rgrid.dx, (Rgrid.Ny-1)*Rgrid.dy);
 end
 source = Rgrid.computeForwardParallel(x, 0, 2*pi-0.01, nRays, tStep, tMax, 'g', true);
-signalGB_nonsmooth = zeros(nSources, length(source(1).aForward));
+signalGB_smooth = zeros(nSources, length(source(1).aForward));
 for n = 1:nSources
-    signalGB_nonsmooth(n, :) = source(n).aForward;
+    signalGB_smooth(n, :) = source(n).aForward;
 end
 
-%save signalGB_nonsmooth signalGB_nonsmooth;
+save signalGB_smooth signalGB_smooth;
 
 %========================================
 % Sensor Selection

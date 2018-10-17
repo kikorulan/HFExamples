@@ -36,8 +36,8 @@ end
 
 pixelAReverseSensors = Rgrid.inverse_signal(source);
 
-adjointGB_nonsmooth = Rgrid.pixelAReverse;
-save adjointGB_nonsmooth adjointGB_nonsmooth;
+adjointGB_smooth = Rgrid.pixelAReverse;
+save adjointGB_smooth adjointGB_smooth;
 
 %================================================================================
 % VISUALISATION

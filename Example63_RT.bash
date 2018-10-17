@@ -20,7 +20,7 @@ export SENSORS="sensors.dat"
 export FORWARD_SIGNAL="forwardSignal_98sensors.dat"
 
 # Mode
-export MODE="-f"
+export MODE="-a"
 
 # Generate dimensions file
 Nx=128 dx=0.0001
@@ -33,8 +33,8 @@ EOF
 
 # Parameters
 nSensorsArray=5
-nRaysPhi=1000
-nRaysTheta=300
+nRaysPhi=1000  # 1000 
+nRaysTheta=300 # 300
 dt=1e-8
 tMax=1.5e-5
 # Generate sensor file
@@ -87,4 +87,12 @@ done
 # Call RT solver
 export OMP_NUM_THREADS=26
 #RTsolver_CPU $MODE $INPUT_FOLDER$DIMENSIONS $INPUT_FOLDER$SOUND_SPEED $INPUT_FOLDER$INITIAL_PRESSURE $INPUT_FOLDER$SENSORS $OUTPUT_FOLDER $INPUT_FOLDER$FORWARD_SIGNAL
-RTsolver_GPU $MODE $INPUT_FOLDER$DIMENSIONS $INPUT_FOLDER$SOUND_SPEED $INPUT_FOLDER$INITIAL_PRESSURE $INPUT_FOLDER$SENSORS $OUTPUT_FOLDER $INPUT_FOLDER$FORWARD_SIGNAL
+#RTsolver_GPU $MODE $INPUT_FOLDER$DIMENSIONS $INPUT_FOLDER$SOUND_SPEED $INPUT_FOLDER$INITIAL_PRESSURE $INPUT_FOLDER$SENSORS $OUTPUT_FOLDER $INPUT_FOLDER$FORWARD_SIGNAL
+
+#====================
+# CUDA MEMCHECK
+#====================
+#/opt/cuda/cuda-8.0/bin/cuda-memcheck \
+RTsolver_GPU $MODE $INPUT_FOLDER$DIMENSIONS $INPUT_FOLDER$SOUND_SPEED \
+                                                  $INPUT_FOLDER$INITIAL_PRESSURE $INPUT_FOLDER$SENSORS \
+                                                  $OUTPUT_FOLDER $INPUT_FOLDER$FORWARD_SIGNAL

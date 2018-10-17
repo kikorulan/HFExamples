@@ -102,19 +102,19 @@ set(0,'DefaultFigurePaperPositionMode','auto');
 %========================================
 % Reconstruction - RT
 %========================================
-%%  pixelAReverse = Rgrid.pixelAReverse;
-%%  maxPixelRT = max(real(pixelAReverse(:)));
-%%  pixelRT = max(0, real(pixelAReverse)/maxPixelRT);
-%%  figure;
-%%  surf(1e3*Rgrid.xAxis, 1e3*Rgrid.yAxis, pixelRT', 'EdgeColor', 'none');
-%%  view(2);
-%%  axis(axisGrid);
-%%  %colorbar();
-%%  box on;
-%%  xlabel('x [mm]');
-%%  ylabel('y [mm]');
-%%  set(gcf, 'pos', positionY);
-%%  %title('Reconstruction RT');
+pixelAReverse = Rgrid.pixelAReverse;
+maxPixelRT = max(real(pixelAReverse(:)));
+pixelRT = max(0, real(pixelAReverse)/maxPixelRT);
+figure;
+surf(1e3*Rgrid.xAxis, 1e3*Rgrid.yAxis, pixelRT', 'EdgeColor', 'none');
+view(2);
+axis(axisGrid);
+%colorbar();
+box on;
+xlabel('x [mm]');
+ylabel('y [mm]');
+set(gcf, 'pos', positionY);
+%title('Reconstruction RT');
 %%  saveas(gcf, 'Example51_RT_recon_nonsmooth', 'png');
 %%  saveas(gcf, 'Example51_RT_recon_nonsmooth.fig');
 
