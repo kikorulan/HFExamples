@@ -4,7 +4,7 @@ cd /cs/research/medim/projects2/projects/frullan/Documents/HighFreqCode/Examples
 %cd /home/kiko/Documents/HighFreqCode/Examples/Ex51_reconstruction2D;
 close all;
 
-drawForward = 1;
+drawForward = 0;
 drawAdjoint = 1;
 drawMix = 1;
 
@@ -164,10 +164,11 @@ surf(1e6*Rgrid.tForward, 1:nSources, signalRT_nonsmooth_norm, 'EdgeColor', 'none
 axis([0 40 1 nSources]);
 view(2);
 box on;
+colorbar();
 caxis([-0.4 1]);
 xlabel('t [\mus]');
 set(gca,'FontSize',fontSize);
-set(gcf, 'pos', positionNoYNoBar);
+set(gcf, 'pos', positionNoYBar);
 saveas(gcf, 'Example51_RT_f2D_nonsmooth.fig');
 saveas(gcf, 'Example51_RT_f2D_nonsmooth', 'png');
 % GB smooth
@@ -226,10 +227,11 @@ surf(1e6*Rgrid.tForward, 1:nSources, error_RTnonsmooth, 'EdgeColor', 'none');
 axis([0 40 1 nSources]);
 view(2);
 box on;
+colorbar();
 caxis([-0.5 0.5]);
 xlabel('t [\mus]');
 set(gca,'FontSize',fontSize);
-set(gcf, 'pos', positionNoYNoBar);
+set(gcf, 'pos', positionNoYBar);
 saveas(gcf, 'Example51_error_RT_f2D_nonsmooth.fig');
 saveas(gcf, 'Example51_error_RT_f2D_nonsmooth', 'png');
 % GB smooth
@@ -340,9 +342,9 @@ axis(axisGrid);
 %colorbar();
 box on;
 xlabel('x [mm]');
-ylabel('y [mm]');
+%ylabel('y [mm]');
 set(gca,'FontSize',fontSize);
-set(gcf, 'pos', positionY);
+set(gcf, 'pos', position);
 saveas(gcf, 'Example51_RT_recon_nonsmooth', 'png');
 saveas(gcf, 'Example51_RT_recon_nonsmooth.fig');
 
@@ -379,10 +381,10 @@ axis(axisGrid);
 caxis([-.5 .5]);
 box on;
 xlabel('x [mm]');
-ylabel('y [mm]');
+%ylabel('y [mm]');
 %set(gca, 'YTick', []);
 set(gca,'FontSize',fontSize);
-set(gcf, 'pos', positionY);
+set(gcf, 'pos', position);
 saveas(gcf, 'Example51_error_RT', 'png');
 saveas(gcf, 'Example51_error_RT.fig');
 
@@ -445,13 +447,13 @@ figure;
 surf(1e3*Rgrid.xAxis, 1e3*Rgrid.yAxis, pixelKWave', 'EdgeColor', 'none');
 view(2);
 axis(axisGrid);
-%colorbar();
+colorbar();
 box on;
 xlabel('x [mm]');
 %ylabel('y [mm]');
 %set(gca, 'YTick', []);
 set(gca,'FontSize',fontSize);
-set(gcf, 'pos', position);
+set(gcf, 'pos', positionBar);
 saveas(gcf, 'Example51_RT_recon_kWave_data', 'png');
 saveas(gcf, 'Example51_RT_recon_kWave_data.fig');
 
@@ -477,7 +479,7 @@ saveas(gcf, 'Example51_GB_recon_kWave_data.fig');
 %========================================
 % kWave Adjoint - RT data
 %========================================
-pixelAReverse = real(adjointRTForward_kWave);
+pixelAReverse = real(adjointRTForward_kWave.p_final);
 pixelKWave = max(0, pixelAReverse/max(pixelAReverse(:)));
 figure;
 surf(1e3*Rgrid.xAxis, 1e3*Rgrid.yAxis, pixelKWave', 'EdgeColor', 'none');
@@ -486,10 +488,10 @@ axis(axisGrid);
 %colorbar();
 box on;
 xlabel('x [mm]');
-%ylabel('y [mm]');
+ylabel('y [mm]');
 %set(gca, 'YTick', []);
 set(gca,'FontSize',fontSize);
-set(gcf, 'pos', position);
+set(gcf, 'pos', positionY);
 saveas(gcf, 'Example51_kWave_recon_RT_data', 'png');
 saveas(gcf, 'Example51_kWave_recon_RT_data.fig');
 
@@ -523,14 +525,14 @@ figure;
 surf(1e3*Rgrid.xAxis, 1e3*Rgrid.yAxis, pixelKWave', 'EdgeColor', 'none');
 view(2);
 axis(axisGrid);
-%colorbar();
+colorbar();
 caxis([-.5 .5]);
 box on;
 xlabel('x [mm]');
 %ylabel('y [mm]');
 %set(gca, 'YTick', []);
 set(gca,'FontSize',fontSize);
-set(gcf, 'pos', position);
+set(gcf, 'pos', positionBar);
 saveas(gcf, 'Example51_mix_error_RT', 'png');
 saveas(gcf, 'Example51_mix_error_RT.fig');
 

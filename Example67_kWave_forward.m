@@ -1,5 +1,5 @@
 % Heterogeneous Propagation Medium Example
-cd /cs/research/medim/projects2/projects/frullan/Documents/HighFreqCode/Examples/Ex63_3D_veins;
+cd /cs/research/medim/projects2/projects/frullan/Documents/HighFreqCode/Examples/Ex67_3D_veins_homo;
 
 clear all;
 close all;
@@ -20,6 +20,8 @@ kgrid = makeGrid(Nx, dx, Ny, dy, Nz, dz);
 %==============================
 % define the properties of the propagation medium
 %==============================
+c = 1500*ones(Nx*Nz, Ny);
+dlmwrite('input_data/sound_speed.dat', c, 'delimiter', ' ');
 % Load sound speed
 cMatrix = importdata('input_data/sound_speed.dat', ' ', 0);
 c = matrix2cube(cMatrix, Nz);
@@ -38,8 +40,6 @@ u0 = matrix2cube(u0Matrix, Nz);
 % smooth the initial pressure distribution and restore the magnitude
 source.p0 = smooth(kgrid, u0, true);
 source.p0 = max(0, source.p0);
-initial_pressure_veins_smooth = source.p0;
-save input_data/initial_pressure_veins_smooth initial_pressure_veins_smooth;
 
 %=========================================================================
 % SIMULATION
@@ -78,22 +78,21 @@ numberSensors = sum(sensor.mask(:))
 % grid; switch off p0 smoothing within kspaceFirstOrder2D
 input_args = {'PMLInside', false, 'PlotPML', false, 'Smooth', false};
 
-
-save input_data/sensor_data_veins.mat kgrid medium source sensor input_args;
 % Save to disk
-filename = 'input_data/Example63_forward_input_98sensors.h5';
+filename = 'input_data/Example67_forward_input.h5';
 %kspaceFirstOrder3D(kgrid, medium, source, sensor, input_args{:}, 'SaveToDisk', filename);
 kspaceFirstOrder3D(kgrid, medium, source, sensor, input_args{:}, 'SaveToDisk', filename);
 
 % Call C++ code
 setenv LD_LIBRARY_PATH '/cs/research/medim/projects2/projects/frullan/lib/root/lib64';
-system('../kspaceFirstOrder3D-OMP -i input_data/Example63_forward_input_98sensors.h5 -o output_data/Example63_forward_output_98sensors.h5');
-%system('../kspaceFirstOrder3D-CUDA -i input_data/Example63_forward_input.h5 -o output_data/Example63_forward_output.h5');
+system('../kspaceFirstOrder3D-OMP -i input_data/Example67_forward_input.h5 -o output_data/Example67_forward_output.h5');
+%system('../kspaceFirstOrder3D-CUDA -i input_data/Example67_forward_input.h5 -o output_data/Example67_forward_output.h5');
+%save input_data/sensor_data_veins.mat kgrid medium source sensor input_args;
 
 %=========================================================================
 % VISUALISATION
 %=========================================================================
-%%  cd /cs/research/medim/projects2/projects/frullan/Documents/HighFreqCode/Examples/Ex63_3D_veins;
+%%  cd /cs/research/medim/projects2/projects/frullan/Documents/HighFreqCode/Examples/Ex67_3D_veins_homo;
 %%  
 %%  % Axis
 %%  x_axis = 0:dx:(Nx-1)*dx;
@@ -111,8 +110,8 @@ system('../kspaceFirstOrder3D-OMP -i input_data/Example63_forward_input_98sensor
 %%  xlabel('y (m)');
 %%  ylabel('x (m)');
 %%  title('Sound Speed');
-%%  saveas(gcf, 'output_data/Example63_C', 'png');
-%%  saveas(gcf, 'output_data/Example63_C.fig');
+%%  saveas(gcf, 'output_data/Example67_C', 'png');
+%%  saveas(gcf, 'output_data/Example67_C.fig');
 %%  
 %%  % 3D plot
 %%  plot_cube(medium.sound_speed);
@@ -127,15 +126,16 @@ system('../kspaceFirstOrder3D-OMP -i input_data/Example63_forward_input_98sensor
 %%  xlabel('y (m)');
 %%  ylabel('x (m)');
 %%  title('Initial pressure');
-%%  saveas(gcf, 'output_data/Example63_U', 'png');
-%%  saveas(gcf, 'output_data/Example63_U.fig');
+%%  saveas(gcf, 'output_data/Example67_U', 'png');
+%%  saveas(gcf, 'output_data/Example67_U.fig');
 %%  
 %%  %==================================================
 %%  % TIME SIGNAL - kWave
 %%  %==================================================
-%%  sensor_data = h5read('output_data/Example63_forward_output.h5', '/p');
+%%  sensor_data = h5read('output_data/Example67_forward_output.h5', '/p');
 %%  
 %%  figure;
 %%  imagesc(sensor_data);
 %%  box on;
 
+cd /cs/research/medim/projects2/projects/frullan/Documents/HighFreqCode/Examples/Ex67_3D_veins_homo;

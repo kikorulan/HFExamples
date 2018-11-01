@@ -1,5 +1,5 @@
 % Heterogeneous Propagation Medium Example
-cd /cs/research/medim/projects2/projects/frullan/Documents/HighFreqCode/Examples/Ex63_3D_veins;
+cd /cs/research/medim/projects2/projects/frullan/Documents/HighFreqCode/Examples/Ex66_3D_veins;
 
 clear all;
 close all;
@@ -38,8 +38,6 @@ u0 = matrix2cube(u0Matrix, Nz);
 % smooth the initial pressure distribution and restore the magnitude
 source.p0 = smooth(kgrid, u0, true);
 source.p0 = max(0, source.p0);
-initial_pressure_veins_smooth = source.p0;
-save input_data/initial_pressure_veins_smooth initial_pressure_veins_smooth;
 
 %=========================================================================
 % SIMULATION
@@ -49,51 +47,35 @@ save input_data/initial_pressure_veins_smooth initial_pressure_veins_smooth;
 %==============================
 % Define the sensors
 sensor.mask = zeros(Nx, Ny, Nz);
-numberSensorsArray = 5;
+numberSensorsArray = 128;
 xArray = round(1:(Nx-1)/(numberSensorsArray-1):Nx);
 yArray = round(1:(Ny-1)/(numberSensorsArray-1):Ny);
 zArray = round(1:(Nz-1)/(numberSensorsArray-1):Nz);
-% XY faces
-[X, Y] = meshgrid(xArray, yArray);
-sensorXY1 = X(:) + Nx*(Y(:)-1) + Nx*Ny*   (1-1);
-sensorXY2 = X(:) + Nx*(Y(:)-1) + Nx*Ny*  (Nz-1);
-sensor.mask(sensorXY1) = 1;
-sensor.mask(sensorXY2) = 1;
-% XZ faces
-[X, Z] = meshgrid(xArray, zArray);
-sensorXZ1 = X(:) + Nx*   (1-1) + Nx*Ny*(Z(:)-1);
-sensorXZ2 = X(:) + Nx*  (Ny-1) + Nx*Ny*(Z(:)-1);
-sensor.mask(sensorXZ1) = 1;
-sensor.mask(sensorXZ2) = 1;
-% XZ faces
+% YZ faces
 [Y, Z] = meshgrid(yArray, zArray);
 sensorYZ1 = 1    + Nx*(Y(:)-1) + Nx*Ny*(Z(:)-1);
-sensorYZ2 = Nx   + Nx*(Y(:)-1) + Nx*Ny*(Z(:)-1);
 sensor.mask(sensorYZ1) = 1;
-sensor.mask(sensorYZ2) = 1;
 % Number of sensors
 numberSensors = sum(sensor.mask(:))
 
 % set the input arguments: force the PML to be outside the computational
 % grid; switch off p0 smoothing within kspaceFirstOrder2D
 input_args = {'PMLInside', false, 'PlotPML', false, 'Smooth', false};
+save input_data/sensor_data_mask.mat kgrid medium source sensor input_args;
 
-
-save input_data/sensor_data_veins.mat kgrid medium source sensor input_args;
 % Save to disk
-filename = 'input_data/Example63_forward_input_98sensors.h5';
+filename = 'input_data/Example66_forward_input.h5';
 %kspaceFirstOrder3D(kgrid, medium, source, sensor, input_args{:}, 'SaveToDisk', filename);
 kspaceFirstOrder3D(kgrid, medium, source, sensor, input_args{:}, 'SaveToDisk', filename);
 
 % Call C++ code
 setenv LD_LIBRARY_PATH '/cs/research/medim/projects2/projects/frullan/lib/root/lib64';
-system('../kspaceFirstOrder3D-OMP -i input_data/Example63_forward_input_98sensors.h5 -o output_data/Example63_forward_output_98sensors.h5');
-%system('../kspaceFirstOrder3D-CUDA -i input_data/Example63_forward_input.h5 -o output_data/Example63_forward_output.h5');
+system('../kspaceFirstOrder3D-OMP -i input_data/Example66_forward_input.h5 -o output_data/Example66_forward_output.h5');
 
 %=========================================================================
 % VISUALISATION
 %=========================================================================
-%%  cd /cs/research/medim/projects2/projects/frullan/Documents/HighFreqCode/Examples/Ex63_3D_veins;
+%%  cd /cs/research/medim/projects2/projects/frullan/Documents/HighFreqCode/Examples/Ex66_3D_veins;
 %%  
 %%  % Axis
 %%  x_axis = 0:dx:(Nx-1)*dx;
@@ -111,8 +93,8 @@ system('../kspaceFirstOrder3D-OMP -i input_data/Example63_forward_input_98sensor
 %%  xlabel('y (m)');
 %%  ylabel('x (m)');
 %%  title('Sound Speed');
-%%  saveas(gcf, 'output_data/Example63_C', 'png');
-%%  saveas(gcf, 'output_data/Example63_C.fig');
+%%  saveas(gcf, 'output_data/Example66_C', 'png');
+%%  saveas(gcf, 'output_data/Example66_C.fig');
 %%  
 %%  % 3D plot
 %%  plot_cube(medium.sound_speed);
@@ -127,15 +109,16 @@ system('../kspaceFirstOrder3D-OMP -i input_data/Example63_forward_input_98sensor
 %%  xlabel('y (m)');
 %%  ylabel('x (m)');
 %%  title('Initial pressure');
-%%  saveas(gcf, 'output_data/Example63_U', 'png');
-%%  saveas(gcf, 'output_data/Example63_U.fig');
+%%  saveas(gcf, 'output_data/Example66_U', 'png');
+%%  saveas(gcf, 'output_data/Example66_U.fig');
 %%  
 %%  %==================================================
 %%  % TIME SIGNAL - kWave
 %%  %==================================================
-%%  sensor_data = h5read('output_data/Example63_forward_output.h5', '/p');
+%%  sensor_data = h5read('output_data/Example66_forward_output.h5', '/p');
 %%  
 %%  figure;
 %%  imagesc(sensor_data);
 %%  box on;
 
+cd /cs/research/medim/projects2/projects/frullan/Documents/HighFreqCode/Examples;

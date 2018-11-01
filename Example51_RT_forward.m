@@ -75,32 +75,32 @@ end
 for n = 1:Rgrid.Nx
     x{n+Rgrid.Nx+2*(Rgrid.Ny-2)} = cat(3, (n-1)*Rgrid.dx, (Rgrid.Ny-1)*Rgrid.dy);
 end
-source = Rgrid.computeForwardParallel(x, 0, 2*pi-0.01, nRays, tStep, tMax, 'p', true);
-signalRT_nonsmooth = zeros(nSources, length(source(1).aForward));
-for n = 1:nSources
-    signalRT_nonsmooth(n, :) = source(n).aForward;
-end
-
-save signalRT_nonsmooth signalRT_nonsmooth;
+%%  source = Rgrid.computeForwardParallel(x, 0, 2*pi-0.01, nRays, tStep, tMax, 'p', true);
+%%  signalRT_nonsmooth = zeros(nSources, length(source(1).aForward));
+%%  for n = 1:nSources
+%%      signalRT_nonsmooth(n, :) = source(n).aForward;
+%%  end
+%%  
+%%  save signalRT_nonsmooth signalRT_nonsmooth;
 %========================================
 % Sensor Selection
 %========================================
-%%  % Sources locations
-%%  n1 = round(Rgrid.Nx + 2*(round(Rgrid.Ny/3) - 2)   + 2);     % 1st sensor: Nx + 2*(Ny/3-2)   + 2
-%%  n2 = round(Rgrid.Nx + 2*(round(2*Rgrid.Ny/3) - 2) + 1);     % 2nd sensor: Nx + 2*(2*Ny/3-2) + 1
-%%  n3 = round(Rgrid.Nx + 2*(Rgrid.Ny - 2) + round(Rgrid.Nx/2)); % 3rd sensor: Nx + 2*(Ny-2)     + Nx/2
-%%  sensor1 = x{n1};
-%%  sensor2 = x{n2};
-%%  sensor3 = x{n3};
-%%  sourceSel(1) = Rgrid.newSource(sensor1, pi/2, 3*pi/2, nRays, tStep, tMax);
-%%  sourceSel(2) = Rgrid.newSource(sensor2, -pi/2, pi/2, nRays, tStep, tMax);
-%%  sourceSel(3) = Rgrid.newSource(sensor3, pi, 2*pi, nRays, tStep, tMax);
+% Sources locations
+n1 = round(Rgrid.Nx + 2*(round(Rgrid.Ny/3) - 2)   + 2);     % 1st sensor: Nx + 2*(Ny/3-2)   + 2
+n2 = round(Rgrid.Nx + 2*(round(2*Rgrid.Ny/3) - 2) + 1);     % 2nd sensor: Nx + 2*(2*Ny/3-2) + 1
+n3 = round(Rgrid.Nx + 2*(Rgrid.Ny - 2) + round(Rgrid.Nx/2)); % 3rd sensor: Nx + 2*(Ny-2)     + Nx/2
+sensor1 = x{n1};
+sensor2 = x{n2};
+sensor3 = x{n3};
+sourceSel(1) = Rgrid.newSource(sensor1, pi/2, 3*pi/2, nRays, tStep, tMax);
+sourceSel(2) = Rgrid.newSource(sensor2, -pi/2, pi/2, nRays, tStep, tMax);
+sourceSel(3) = Rgrid.newSource(sensor3, pi, 2*pi, nRays, tStep, tMax);
 %%  sourceSel(4) = Rgrid.newSource(sensor1, pi/2, 3*pi/2, nRays, tStep, tMax);
 %%  sourceSel(5) = Rgrid.newSource(sensor2, -pi/2, pi/2, nRays, tStep, tMax);
 %%  sourceSel(6) = Rgrid.newSource(sensor3, pi, 2*pi, nRays, tStep, tMax);
-%%  Rgrid.computeHamil(sourceSel(1), 'p');
-%%  Rgrid.computeHamil(sourceSel(2), 'p');
-%%  Rgrid.computeHamil(sourceSel(3), 'p');
+Rgrid.computeHamil(sourceSel(1), 'p');
+Rgrid.computeHamil(sourceSel(2), 'p');
+Rgrid.computeHamil(sourceSel(3), 'p');
 %%  Rgrid.computeHamil(sourceSel(4), 'g');
 %%  Rgrid.computeHamil(sourceSel(5), 'g');
 %%  Rgrid.computeHamil(sourceSel(6), 'g');
@@ -298,6 +298,87 @@ cd /cs/research/medim/projects2/projects/frullan/Documents/HighFreqCode/Examples
 %%  saveas(gcf, 'Example51_error_signal_smooth', 'epsc');
 %%  saveas(gcf, 'Example51_error_signal_smooth.fig'); 
 
+%==============================
+% Time Signals - ONLY RT
+%==============================
+posForward = [700 700 600 400];
+set(0,'DefaultFigurePaperPositionMode','auto');
+
+load signalRT_smooth;
+load sensor_data;
+
+%normRT = max(sourceSel(2).aForward);
+%normKWave = max(sensor_data(n2, :));
+normRT = max(signalRT_smooth(:));
+normKWave = max(sensor_data(:));
+
+% Signals
+signalRT1 = sourceSel(1).aForward/normRT;
+signalRT2 = sourceSel(2).aForward/normRT;
+signalRT3 = sourceSel(3).aForward/normRT;
+signalKW1 = sensor_data(n1, :)/normKWave;
+signalKW2 = sensor_data(n2, :)/normKWave;
+signalKW3 = sensor_data(n3, :)/normKWave;
+
+% Sensor 1
+figure; hold on;
+axis([0 40 -.4 .8]);
+plot(1e6*Rgrid.tForward, signalRT1, 'Color', colourMapV(1), 'LineWidth', 3);
+plot(1e6*kgrid.t_array,  signalKW1, 'Color',           'k', 'LineWidth', 2);
+box on; grid on;
+legend('Sensor 1 - HG', 'Sensor 1 - kWave');
+xlabel('t [\mus]');
+ylabel('Amplitude');
+set(gca,'FontSize',13);
+set(gcf, 'pos', posForward);
+saveas(gcf, 'Example51_Sensor1_signal_RTnonsmooth', 'epsc');
+saveas(gcf, 'Example51_Sensor1_signal_RTnonsmooth.fig'); 
+% Sensor 2;
+figure; hold on;
+axis([0 40 -.4 .8]);
+plot(1e6*Rgrid.tForward, signalRT2, 'Color', colourMapV(2), 'LineWidth', 3);
+plot(1e6*kgrid.t_array,  signalKW2, 'Color',           'k', 'LineWidth', 2);
+box on; grid on;
+legend('Sensor 2 - HG', 'Sensor 2 - kWave');
+xlabel('t [\mus]');
+ylabel('Amplitude');
+set(gca,'FontSize',13)
+set(gcf, 'pos', posForward);
+saveas(gcf, 'Example51_Sensor2_signal_RTnonsmooth', 'epsc');
+saveas(gcf, 'Example51_Sensor2_signal_RTnonsmooth.fig'); 
+% Sensor 3
+figure; hold on;
+axis([0 40 -.4 .8]);
+plot(1e6*Rgrid.tForward, signalRT3, 'Color', colourMapV(3), 'LineWidth', 3);
+plot(1e6*kgrid.t_array,  signalKW3, 'Color',           'k', 'LineWidth', 2);
+box on; grid on;
+legend('Sensor 3 - HG', 'Sensor 3 - kWave');
+xlabel('t [\mus]');
+ylabel('Amplitude');
+set(gca,'FontSize',13)
+set(gcf, 'pos', posForward);
+saveas(gcf, 'Example51_Sensor3_signal_RTnonsmooth', 'epsc');
+saveas(gcf, 'Example51_Sensor3_signal_RTnonsmooth.fig'); 
+% Errors
+error1 = signalRT1 - signalKW1;
+error2 = signalRT2 - signalKW2;
+error3 = signalRT3 - signalKW3;
+
+figure; 
+set(gcf, 'pos', posForward);
+axis([0 40 -.2 .3]);
+hold on;
+plot(1e6*Rgrid.tForward, error1, 'Color', colourMapV(1), 'LineWidth', 2);
+plot(1e6*Rgrid.tForward, error2, 'Color', colourMapV(2), 'LineWidth', 2);
+plot(1e6*Rgrid.tForward, error3, 'Color', colourMapV(3), 'LineWidth', 2);
+legend('Sensor 1', 'Sensor 2', 'Sensor 3');
+box on; grid on;
+xlabel('t [\mus]');
+ylabel('Error HG');
+set(gca,'FontSize',13);
+saveas(gcf, 'Example51_error_signal_RTnonsmooth', 'epsc');
+saveas(gcf, 'Example51_error_signal_RTnonsmooth.fig'); 
+
 
 %==============================
 % Measure time
@@ -309,6 +390,6 @@ disp(['  total computation time ' num2str(etime(end_time, start_time))]);
 % Save results
 %save RgridRT.mat Rgrid nRays nSources x -v7.3;
 
-cd /cs/research/medim/projects2/projects/frullan/Documents/HighFreqCode/Examples;
+cd /cs/research/medim/projects2/projects/frullan/Documents/HighFreqCode/Examples/Ex51_reconstruction2D;
 %cd /home/kiko/Documents/MATLAB/HighFreq/Examples;
 

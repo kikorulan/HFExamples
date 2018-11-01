@@ -63,13 +63,19 @@ x{1} = cat(3, (gridR.Nx-1)/2*gridR.dx, 0);
 source(1) = gridR.newSource(x{1}, pi/4, 3*pi/4, nRays, tStep, tMax);
 source(2) = gridR.newSource(x{1}, pi/4, 3*pi/4, nRays, tStep, tMax);
 source(3) = gridR.newSource(x{1}, pi/4, 3*pi/4, nRays, tStep, tMax);
+source(4) = gridR.newSource(x{1}, pi/4, 3*pi/4, nRays, tStep, tMax);
+source(5) = gridR.newSource(x{1}, pi/4, 3*pi/4, nRays, tStep, tMax);
+source(6) = gridR.newSource(x{1}, pi/4, 3*pi/4, nRays, tStep, tMax);
 % Set initial pressure
 gridR.setUMatrix(source_low.p0);
-gridR.computeHamil(source(1));
+gridR.computeHamil(source(1), 'p');
+gridR.computeHamil(source(4), 'g');
 gridR.setUMatrix(source_mid.p0);
-gridR.computeHamil(source(2));
+gridR.computeHamil(source(2), 'p');
+gridR.computeHamil(source(5), 'g');
 gridR.setUMatrix(source_high.p0);
-gridR.computeHamil(source(3));
+gridR.computeHamil(source(3), 'p');
+gridR.computeHamil(source(6), 'g');
 
 %%  clear source;
 %%  source = gridR.computeForwardParallel(x, 0, pi, nRays, tStep, tMax, false);
@@ -469,48 +475,52 @@ saveas(gcf, 'Example46_rays.fig');
 %==============================
 % Time Signals
 %==============================
-%%  %source = sourceRT;
-%%  source = sourceGB;
-%%  % Norms
-%%  normRT = max(real(source(1).aForward));
-%%  normRT_2 = max(real(sourceRT(1).aForward));
-%%  normKWave = max(sensor_data_low(1, :));
-%%  figure;
-%%  % Subplot 1
-%%  subplot(2, 1, 1);
-%%  hold on;
-%%  axis([0 2e-5 -1.5 2]);
-%%  grid on;
-%%  box on;
-%%  plot(gridR.tForward, source(1).aForward/normRT, 'Color', 'r', 'LineWidth', 2);
-%%  plot(kgrid.t_array, sensor_data_low(1, :)/normKWave, 'Color', [0.8 0.2 0.2]);
-%%  plot(gridR.tForward, source(2).aForward/normRT, 'Color', 'g', 'LineWidth', 2);
-%%  plot(kgrid.t_array, sensor_data_mid(1, :)/normKWave, 'Color', [0.2 0.8 0.2]);
-%%  plot(gridR.tForward, source(3).aForward/normRT, 'Color', 'b', 'LineWidth', 2);
-%%  plot(gridR.tForward, sourceRT(3).aForward/normRT_2, 'Color', 'k', 'LineWidth', 2, 'LineStyle', '--');
-%%  plot(kgrid.t_array, sensor_data_high(1, :)/normKWave, 'Color', [0.2 0.2 0.8]);
-%%  %legend('RT - bottom', 'kWave - bottom', 'RT - middle', 'kWave - middle', 'RT - top', 'kWave - top');
-%%  legend('GB - bottom', 'kWave - bottom', 'GB - middle', 'kWave - middle', 'GB - top', 'RT - top', 'kWave - top');
-%%  xlabel('t (s)');
-%%  ylabel('Amplitude');
-%%  title('Forward data - RT (Gaussian Beam) vs k-Wave');
-%%  % Subplot 2
-%%  subplot(2, 1, 2);
-%%  hold on;
-%%  axis([0 2e-5 -1 1]);
-%%  grid on;
-%%  box on;
-%%  plot(gridR.tForward, source(1).aForward/normRT - sensor_data_low(1, :)/normKWave, 'Color', 'r', 'LineWidth', 2);
-%%  plot(gridR.tForward, source(2).aForward/normRT - sensor_data_mid(1, :)/normKWave, 'Color', 'g', 'LineWidth', 2);
-%%  plot(gridR.tForward, source(3).aForward/normRT - sensor_data_high(1, :)/normKWave, 'Color', 'b', 'LineWidth', 2);
-%%  plot(gridR.tForward, sourceRT(3).aForward/normRT_2 - sensor_data_high(1, :)/normKWave, 'Color', 'k', 'LineWidth', 2, 'LineStyle', '--');
-%%  legend('Error - bottom', 'Error - middle', 'Error - top', 'Error (RT) - top');
-%%  xlabel('t (s)');
-%%  ylabel('Amplitude');
-%%  title('Error - RT ');
-%%  set(gcf, 'pos', [700 700 1200 800]);
-%%  saveas(gcf, 'Example46_signalsGB_error', 'png');
-%%  saveas(gcf, 'Example46_signalsGB_error.fig');
+%source = sourceRT;
+%source = sourceGB;
+% Norms
+normRT = max(real(source(1).aForward));
+normDRT = max(real(source(4).aForward));
+%normRT_2 = max(real(sourceRT(1).aForward));
+normKWave = max(sensor_data_low(1, :));
+figure;
+% Subplot 1
+subplot(2, 1, 1);
+hold on;
+axis([0 2e-5 -1.5 2]);
+grid on;
+box on;
+plot(gridR.tForward, source(1).aForward/normRT, 'Color', 'r', 'LineWidth', 2);
+plot(gridR.tForward, source(4).aForward/normDRT, 'Color', 'r', 'LineWidth', 2, 'LineStyle', '--');
+plot(kgrid.t_array, sensor_data_low(1, :)/normKWave, 'Color', [0.8 0.2 0.2]);
+plot(gridR.tForward, source(2).aForward/normRT, 'Color', 'g', 'LineWidth', 2);
+plot(gridR.tForward, source(5).aForward/normDRT, 'Color', 'g', 'LineWidth', 2, 'LineStyle', '--');
+plot(kgrid.t_array, sensor_data_mid(1, :)/normKWave, 'Color', [0.2 0.8 0.2]);
+plot(gridR.tForward, source(3).aForward/normRT, 'Color', 'b', 'LineWidth', 2);
+plot(gridR.tForward, source(6).aForward/normDRT, 'Color', 'b', 'LineWidth', 2, 'LineStyle', '--');
+plot(kgrid.t_array, sensor_data_high(1, :)/normKWave, 'Color', [0.2 0.2 0.8]);
+legend('RT - bottom', 'DRT - bottom', 'kWave - bottom', 'RT - middle', 'DRT - middle', 'kWave - middle', 'RT - top', 'DRT - top', 'kWave - top');
+xlabel('t (s)');
+ylabel('Amplitude');
+title('Forward data - RT vs DRT vs k-Wave');
+% Subplot 2
+subplot(2, 1, 2);
+hold on;
+axis([0 2e-5 -1 1]);
+grid on;
+box on;
+plot(gridR.tForward, source(1).aForward/normRT - sensor_data_low(1, :)/normKWave, 'Color', 'r', 'LineWidth', 2);
+plot(gridR.tForward, source(4).aForward/normDRT - sensor_data_low(1, :)/normKWave, 'Color', 'r', 'LineWidth', 2, 'LineStyle', '--');
+plot(gridR.tForward, source(2).aForward/normRT - sensor_data_mid(1, :)/normKWave, 'Color', 'g', 'LineWidth', 2);
+plot(gridR.tForward, source(5).aForward/normDRT - sensor_data_mid(1, :)/normKWave, 'Color', 'g', 'LineWidth', 2, 'LineStyle', '--');
+plot(gridR.tForward, source(3).aForward/normRT - sensor_data_high(1, :)/normKWave, 'Color', 'b', 'LineWidth', 2);
+plot(gridR.tForward, source(6).aForward/normDRT - sensor_data_high(1, :)/normKWave, 'Color', 'b', 'LineWidth', 2, 'LineStyle', '--');
+legend('Error RT - bottom', 'Error DRT - bottom', 'Error RT - middle', 'Error DRT - middle', 'Error RT - top', 'Error DRT - top');
+xlabel('t (s)');
+ylabel('Amplitude');
+title('Error - RT vs DRT');
+set(gcf, 'pos', [700 700 1200 800]);
+saveas(gcf, 'Example46_signalsRTvsDRT_error', 'png');
+saveas(gcf, 'Example46_signalsRTvsDRT_error.fig');
 
 %%  %==============================
 %%  % Beam Signals
@@ -570,6 +580,6 @@ disp(['  total computation time ' num2str(etime(end_time, start_time))]);
 % Save results
 %save gridRT.mat grid nRays nSources x -v7.3;
 
-cd /cs/research/medim/projects2/projects/frullan/Documents/HighFreqCode/Examples;
+cd /cs/research/medim/projects2/projects/frullan/Documents/HighFreqCode/Examples/Ex46_caustics;
 %cd /home/kiko/Documents/MATLAB/HighFreq/Examples;
 

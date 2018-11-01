@@ -1,5 +1,5 @@
 % Read data from files
-cd /cs/research/medim/projects2/projects/frullan/Documents/HighFreqCode/Examples/Ex63_3D_veins;
+cd /cs/research/medim/projects2/projects/frullan/Documents/HighFreqCode/Examples/Ex67_3D_veins;
 %clear all;
 close all;
 
@@ -54,21 +54,6 @@ positionYBar = [700 700 500 350];
 %%  end
 
 %==================================================
-% BEAM SIGNAL
-%==================================================
-%%  % Y
-%%  y = [];
-%%  for i = 0:97
-%%      y_k = importdata(['output_data/y_', int2str(i), '.dat'], ' ', 0);
-%%      y = [y; y_k];
-%%  end
-%%  figure;
-%%  surf(y, 'EdgeColor', 'none');
-%%  view(2);
-%%  colorbar();
-
-
-%==================================================
 % TIME SIGNAL - RT
 %==================================================
 % Import data
@@ -83,19 +68,17 @@ colorbar();
 %==================================================
 % TIME SIGNAL - kWave
 %==================================================
-sensor_data = h5read('output_data/Example63_forward_output_98sensors.h5', '/p');
+sensor_data = h5read('output_data/Example67_forward_output.h5', '/p');
 % Plot
 figure;
 imagesc(sensor_data);
 box on;
-colorbar();
 
 %==================================================
 % COMPARISON WITH K-WAVE
 %==================================================
 % Import data
-%load input_data/sensor_data_4balls;
-sensor_data = h5read('output_data/Example63_forward_output_98sensors.h5', '/p');
+sensor_data = h5read('output_data/Example67_forward_output.h5', '/p');
 filenameData = 'output_data/ForwardSignal.dat';
 timeSignal = importdata(filenameData, ' ', 0);
 % Input
@@ -137,8 +120,8 @@ for i = 1:length(vecS)
     ax.GridAlpha = 0.5;
     grid on;
     title(['RT vs kWave - ', int2str(i)]);
-    %saveas(gcf, ['Example60_forwardSignal_sensor', int2str(i), '.fig']);
-    %saveas(gcf, ['Example60_forwardSignal_sensor', int2str(i)], 'png');
+    %saveas(gcf, ['Example67_forwardSignal_sensor', int2str(i), '.fig']);
+    %saveas(gcf, ['Example67_forwardSignal_sensor', int2str(i)], 'png');
 end
 
 for i = 1:length(vecS)
@@ -159,19 +142,19 @@ for i = 1:length(vecS)
     ax.GridAlpha = 0.5;
     grid on;
     title(['Error RT vs kWave - ', int2str(i)]);
-    %saveas(gcf, ['Example60_forwardSignal_error', int2str(i), '.fig']);
-    %saveas(gcf, ['Example60_forwardSignal_error', int2str(i)], 'png');
+    %saveas(gcf, ['Example67_forwardSignal_error', int2str(i), '.fig']);
+    %saveas(gcf, ['Example67_forwardSignal_error', int2str(i)], 'png');
 end
 
 %============================================================================================================================================
-% ADJOINT PROBLEM
+% INVERSE PROBLEM
 %============================================================================================================================================
 % Position
 position     = [700 700 300 630];
 positionY    = [700 700 320 630];
 positionBar  = [700 700 363 630];
 positionYBar = [700 700 390 630];
-set(0,'DefaultFigurePaperPositionMode','auto');
+
 %==================================================
 % IMPORT DATA
 %==================================================
@@ -256,62 +239,40 @@ set(0,'DefaultFigurePaperPositionMode','auto');
 %%  
 %%  end
 
-
-%==================================================
-% INITIAL PRESSURE
-%==================================================
-% Load Initial Pressure
-u0Matrix = importdata('input_data/initial_pressure_veins.dat', ' ', 0);
-u0 = matrix2cube(u0Matrix, Nz);
-h = plot_projection(u0, dx);
-saveas(gcf, 'output_data/Example63_initial_pressure', 'png');
-saveas(gcf, 'output_data/Example63_initial_pressure.fig');
-% Load Initial Pressure
-load input_data/initial_pressure_veins_smooth;
-plot_projection(initial_pressure_veins_smooth, dx);
-saveas(gcf, 'output_data/Example63_initial_pressure_smooth', 'png');
-saveas(gcf, 'output_data/Example63_initial_pressure_smooth.fig');
-
-%==================================================
-% Reconstruction - kWave
-%==================================================
-p0_recon_PML = h5read('output_data/Example63_adjoint_output.h5', '/p_final');
-PML_size = 10;
-p0_recon = max(0, p0_recon_PML(1+PML_size:end-PML_size, 1+PML_size:end-PML_size, 1+PML_size:end-PML_size));
-p0_recon = p0_recon/max(p0_recon(:));
-plot_projection(p0_recon, dx);
-saveas(gcf, 'output_data/Example63_kWave_adjoint', 'png');
-saveas(gcf, 'output_data/Example63_kWave_adjoint.fig');
-
-%%  sortCube = sort(p0_recon(:));
-%%  maxCube = sortCube(end-128);
-%%  p0_recon = p0_recon/maxCube;
-%%  plot_pixel(p0_recon, 10, dx);
-%%  view(41, 6);
-%%  ax = gca;
-%%  ax.GridAlpha = 0.5;
-%%  grid on;
-%%  saveas(gcf, 'output_data/Example63_kWave_recon.fig');
-%%  saveas(gcf, 'output_data/Example63_kWave_recon', 'png');
-
 %==================================================
 % Reconstruction - RT
 %==================================================
 % Import data
 pixelPressureMatrix = importdata('output_data/PixelPressure.dat', ' ', 0);
 pixelPressure = max(0, matrix2cube(pixelPressureMatrix, Nz));
-plot_projection(pixelPressure, dx);
-saveas(gcf, 'output_data/Example63_RT_adjoint', 'png');
-saveas(gcf, 'output_data/Example63_RT_adjoint.fig');
+%plot_pixel(initial_pressure, 5, 1, pixelPressure);
+%plot_pixel_subsample(pixelPressure, 1, 1);
+plot_pixel(pixelPressure, 7, dx);
+view(41, 6);
+ax = gca;
+ax.GridAlpha = 0.5;
+grid on;
+%saveas(gcf, 'output_data/Example67_RT_recon.fig');
+%saveas(gcf, 'output_data/Example67_RT_recon', 'png');
 
 
-%%  plot_pixel(pixelPressure, 7, dx);
-%%  view(41, 6);
-%%  ax = gca;
-%%  ax.GridAlpha = 0.5;
-%%  grid on;
-%%  %saveas(gcf, 'output_data/Example63_RT_recon.fig');
-%%  %saveas(gcf, 'output_data/Example63_RT_recon', 'png');
+%==================================================
+% Reconstruction - kWave
+%==================================================
+p0_recon_PML = h5read('output_data/Example67_adjoint_output.h5', '/p_final');
+PML_size = 10;
+p0_recon = max(0, p0_recon_PML(1+PML_size:end-PML_size, 1+PML_size:end-PML_size, 1+PML_size:end-PML_size));
+%p0_recon = p0_recon/max(p0_recon(:));
+sortCube = sort(p0_recon(:));
+maxCube = sortCube(end-128);
+p0_recon = p0_recon/maxCube;
+plot_pixel(p0_recon, 10, dx);
+view(41, 6);
+ax = gca;
+ax.GridAlpha = 0.5;
+grid on;
+%saveas(gcf, 'output_data/Example67_kWave_recon.fig');
+%saveas(gcf, 'output_data/Example67_kWave_recon', 'png');
 
 %==================================================
 % Comparison

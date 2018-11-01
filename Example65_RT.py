@@ -65,33 +65,33 @@ rtobj.load_sensors(sensors)
 #==============================
 # Forward operator
 #==============================
-##  sensor_array = np.arange(nSensors)
-##  startTime = datetime.now() # time
-##  forward_signal = rtobj.forward_operator(sensor_array)
-##  endTime = datetime.now()
-##  print(endTime - startTime)
+sensor_array = np.arange(nSensors)
+startTime = datetime.now() # time
+forward_signal = rtobj.forward_operator(sensor_array)
+endTime = datetime.now()
+print(endTime - startTime)
  
 #==============================
 # Plot - forward
 #==============================
-##  # Comparison 
-##  file_forward_signal = input_folder + "forwardSignal_98sensors.dat"
-##  forward_signal_cpp = np.loadtxt(file_forward_signal)
-##  
-##  for i in range(nSensors):
-##      #plt.figure()
-##      error = forward_signal[i, :] - forward_signal_cpp[i+1, :]
-##      plt.plot(error)
-##  
-##  #plt.figure()
-##  plt.show(block=False)
-##  
-##  
-##  for i in range(5):
-##      plt.figure()
-##      plt.plot(forward_signal_cpp[i+1, :])
-##      plt.plot(forward_signal[i, :])
-##      plt.show(block=False)
+# Comparison 
+file_forward_signal = input_folder + "forwardSignal_98sensors.dat"
+forward_signal_cpp = np.loadtxt(file_forward_signal)
+
+for i in range(nSensors):
+    #plt.figure()
+    error = forward_signal[i, :] - forward_signal_cpp[i+1, :]
+    plt.plot(error)
+
+#plt.figure()
+plt.show(block=False)
+
+
+for i in range(5):
+    plt.figure()
+    plt.plot(forward_signal_cpp[i+1, :])
+    plt.plot(forward_signal[i, :])
+    plt.show(block=False)
 
 #==============================
 # Plot sound speed
@@ -169,7 +169,6 @@ print(endTime - startTime)
 print(np.max(adjoint_pressure_py))
 print(np.max(adjoint_pressure))
 print(np.max(adjoint_pressure_py - adjoint_pressure))
-
 
 for i in range(4):
     plt.figure()

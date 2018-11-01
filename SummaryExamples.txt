@@ -159,10 +159,11 @@
     - Heterogeneous domain
 %%%% EXAMPLE 45
     - Photo contest
-%%%% EXAMPLE 59                        %===================================================
-    - Heterogeneous sound speed        %=== REFERENCE EXAMPLE - RECONSTRUCTION - HETEROGENEOUS
-    - 4 balls                          %===================================================
+%%%% EXAMPLE 59                        
+    - Heterogeneous sound speed 
+    - 4 balls                          
 %%%% EXAMPLE 60                        
-    - Iterative reconstruction
-%%%% EXAMPLE 63
-    - Reconstruction veins
+    - Iterative reconstruction         
+%%%% EXAMPLE 63                        %===================================================   
+    - Reconstruction veins             %=== REFERENCE EXAMPLE - RECONSTRUCTION - HETEROGENEOUS
+                                       %===================================================   
