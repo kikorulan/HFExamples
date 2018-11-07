@@ -1,6 +1,6 @@
 % Read data from files
 cd /cs/research/medim/projects2/projects/frullan/Documents/HighFreqCode/Examples/Ex63_3D_veins;
-%clear all;
+clear all;
 close all;
 
 % Read files
@@ -275,7 +275,7 @@ saveas(gcf, 'output_data/Example63_initial_pressure_smooth.fig');
 %==================================================
 % Reconstruction - kWave
 %==================================================
-p0_recon_PML = h5read('output_data/Example63_adjoint_output.h5', '/p_final');
+p0_recon_PML = h5read('output_data/Example63_adjoint_output_98sensors.h5', '/p_final');
 PML_size = 10;
 p0_recon = max(0, p0_recon_PML(1+PML_size:end-PML_size, 1+PML_size:end-PML_size, 1+PML_size:end-PML_size));
 p0_recon = p0_recon/max(p0_recon(:));
@@ -298,7 +298,7 @@ saveas(gcf, 'output_data/Example63_kWave_adjoint.fig');
 % Reconstruction - RT
 %==================================================
 % Import data
-pixelPressureMatrix = importdata('output_data/PixelPressure.dat', ' ', 0);
+pixelPressureMatrix = importdata('output_data/PixelPressure_2168sensors.dat', ' ', 0);
 pixelPressure = max(0, matrix2cube(pixelPressureMatrix, Nz));
 plot_projection(pixelPressure, dx);
 saveas(gcf, 'output_data/Example63_RT_adjoint', 'png');

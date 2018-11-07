@@ -89,8 +89,11 @@ plt.show(block=False)
 
 for i in range(5):
     plt.figure()
+    plt.subplot(2, 1, 1)
     plt.plot(forward_signal_cpp[i+1, :])
-    plt.plot(forward_signal[i, :])
+    plt.subplot(2, 1, 2)
+    plt.plot(forward_signal[i, :], color='g')
+    plt.legend()
     plt.show(block=False)
 
 #==============================

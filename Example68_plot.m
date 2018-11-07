@@ -1,0 +1,227 @@
+% Read data from files
+cd /cs/research/medim/projects2/projects/frullan/Documents/HighFreqCode/Examples/Ex68_3D_veins_resize;
+
+clear all;
+close all;
+
+% Read files
+delimiterIn = ' ';
+headerlinesIn = 0;
+
+
+%==================================================
+% Dimensions
+%==================================================
+% Import dimensions
+dim = importdata('input_data/dimensions.dat', ' ', 0);
+Nx = dim(1, 1); dx = dim(2, 1);
+Ny = dim(1, 2); dy = dim(2, 2);
+Nz = dim(1, 3); dz = dim(2, 3);
+
+%============================================================================================================================================
+% FORWARD PROBLEM
+%============================================================================================================================================
+% Axis
+x_axis = 0:dx:(Nx-1)*dx;
+y_axis = 0:dy:(Ny-1)*dy;
+
+% Positions
+position     = [700 700 360 350];
+positionY    = [700 700 370 350];
+positionBar  = [700 700 390 350];
+positionYBar = [700 700 500 350];
+
+%==================================================
+% TIME SIGNAL - RT
+%==================================================
+% Import data
+filenameData = 'output_data/ForwardSignal.dat';
+timeSignal = importdata(filenameData, ' ', 0);
+timeRT = timeSignal(1, :);
+inputRT = timeSignal(2:end, :);
+% Plot
+figure;
+imagesc(inputRT);
+box on;
+colorbar();
+
+%==================================================
+% TIME SIGNAL - kWave
+%==================================================
+sensor_data = h5read('output_data/Example68_forward_output_1600sensors.h5', '/p');
+inputKWave = sensor_data(:, :);
+% Plot
+figure;
+imagesc(inputKWave);
+box on;
+colorbar();
+
+%==================================================
+% COMPARISON IMAGE
+%==================================================
+dcol_pos = @(x, n) [x(:, end-(n-1):end) x(:, 1:end-n)];
+dcol_neg = @(x, n) [x(:, n+1:end) x(:, 1:n)];
+%timeKWave = kgrid.t_array;
+nSensors = size(sensor_data, 1);
+normRT = max(inputRT(1,:));
+normKWave = max(inputKWave(1,:));
+
+for n = 1:10
+    % Plot
+    figure;
+    imagesc(inputKWave/normKWave - dcol_pos(inputRT, n)/normRT);
+    box on;
+    colorbar();
+end
+
+for n = 1:10
+    figure;
+    imagesc(inputKWave/normKWave - dcol_neg(inputRT, n)/normRT);
+    box on;
+    colorbar();
+end
+
+%==================================================
+% COMPARISON WITH K-WAVE
+%==================================================
+% Import data
+%load input_data/sensor_data_4balls;
+sensor_data = h5read('output_data/Example68_forward_output_1600sensors.h5', '/p');
+filenameData = 'output_data/ForwardSignal.dat';
+timeSignal = importdata(filenameData, ' ', 0);
+% Input
+timeRT = timeSignal(1, :);
+inputRT = timeSignal(2:end, :);
+%timeKWave = kgrid.t_array;
+inputKWave = sensor_data;
+nSensors = size(sensor_data, 1);
+
+normRT = max(inputRT(1,:));
+normKWave = max(inputKWave(1,:));
+
+% Norm difference
+difNorm = norm(inputRT(:)/normRT - inputKWave(:)/normKWave);
+
+% Plot all sensors
+vecS = 1:100:1600;
+for i = 1:length(vecS)
+    % Normalisation - RT
+    signalRT = inputRT(vecS(i), :)/normRT;
+    % Normalisation - kWave
+    signalKWave = inputKWave(vecS(i), :)/normKWave;
+    % Plot
+    figure;
+    plot(timeRT, signalRT, 'Color', 'r', 'LineWidth', 2);
+    hold on;
+    set(gca,'FontSize',18);
+    plot(timeRT, signalKWave, 'Color', 'blue', 'LineWidth', 2);
+    axis([0 1.5e-5 -1.8 1.8]);
+    legend('RT', 'k-Wave');
+    xlabel('time (s)');
+    ylabel('amplitude');
+    ax = gca;
+    ax.GridAlpha = 0.5;
+    grid on;
+    title(['RT vs kWave - ', int2str(i)]);
+end
+
+for i = 1:length(vecS)
+    % Error
+    signalRT = inputRT(vecS(i), :)/normRT;
+    signalKWave = inputKWave(vecS(i), :)/normKWave;
+    % Spline
+    signalKWave_spline = spline(timeRT, signalKWave, timeRT);
+    error = signalRT - signalKWave_spline;
+    figure;
+    plot(timeRT, error, 'Color', 'r', 'LineWidth', 2);
+    set(gca,'FontSize',18);
+    axis([0 1.5e-5 -.2 .2]);
+    legend('error');
+    xlabel('time (s)');
+    ylabel('error');
+    ax = gca;
+    ax.GridAlpha = 0.5;
+    grid on;
+    title(['Error RT vs kWave - ', int2str(i)]);
+end
+
+
+%==================================================
+% TIME SIGNAL - RT
+%==================================================
+nS = 1;
+% Import data - 1
+timeSignal_dt1 = importdata('input_data/forwardSignal_9sensors_dt1.6e-9_lowres.dat', ' ', 0);
+timeRT_dt1 = timeSignal_dt1(1, :);
+inputRT_dt1 = timeSignal_dt1(2:end, :);
+normDT1 = max(inputRT_dt1(nS, :));
+% Import data - 2
+timeSignal_dt2 = importdata('input_data/forwardSignal_9sensors_dt8e-9_lowres.dat', ' ', 0);
+timeRT_dt2 = timeSignal_dt2(1, :);
+inputRT_dt2 = timeSignal_dt2(2:end, :);
+normDT2 = max(inputRT_dt2(nS, :));
+% Import data - 3
+timeSignal_dt3 = importdata('input_data/forwardSignal_1600sensors_dt1.6e-8_lowres.dat', ' ', 0);
+timeRT_dt3 = timeSignal_dt3(1, :);
+inputRT_dt3 = timeSignal_dt3(2:end, :);
+normDT3 = max(inputRT_dt3(nS, :));
+% k-Wave
+sensor_data = h5read('output_data/Example68_forward_output_1600sensors.h5', '/p');
+normKW = max(sensor_data(nS, :));
+% Plot
+figure;
+hold on;
+plot(timeRT_dt1, inputRT_dt1(nS, :)/normDT1, 'Color', 'r');
+plot(timeRT_dt2, inputRT_dt2(nS, :)/normDT2, 'Color', 'g');
+plot(timeRT_dt3, inputRT_dt3(nS, :)/normDT3, 'Color', 'b');
+plot(timeRT_dt1, sensor_data(nS, :)/normKW, 'Color', 'm');
+%legend('1.6e-8', '8e-9', '4e-9', 'kWave');
+%legend('8e-9', '4e-9', 'kWave');
+legend('1.6e-8 9 sensors', '8e-9 lowres', '1.6e-8 lowres', 'kWave');
+%============================================================================================================================================
+% ADJOINT PROBLEM
+%============================================================================================================================================
+% Position
+position     = [700 700 300 630];
+positionY    = [700 700 320 630];
+positionBar  = [700 700 363 630];
+positionYBar = [700 700 390 630];
+set(0,'DefaultFigurePaperPositionMode','auto');
+
+%==================================================
+% INITIAL PRESSURE
+%==================================================
+% Load Initial Pressure
+u0Matrix = importdata('input_data/initial_pressure_veins_80x240x240.dat', ' ', 0);
+u0 = matrix2cube(u0Matrix, Nz);
+h = plot_projection(u0, dx);
+% Load Initial Pressure
+load ./input_data/initial_pressure_veins_smooth;
+plot_projection(initial_pressure_veins_smooth, dx);
+
+%==================================================
+% Reconstruction - kWave
+%==================================================
+p0_recon_PML = h5read('output_data/Example68_adjoint_output_1600sensors.h5', '/p_final');
+PML_size = 10;
+p0_recon = max(0, p0_recon_PML(1+PML_size:end-PML_size, 1+PML_size:end-PML_size, 1+PML_size:end-PML_size));
+p0_recon = p0_recon/max(p0_recon(:));
+plot_projection(p0_recon, dx);
+
+%==================================================
+% Reconstruction - RT
+%==================================================
+% Import data
+pixelPressureMatrix = importdata('output_data/PixelPressure.dat', ' ', 0);
+%pixelPressureMatrix = importdata('output_data/PixelPressure_dt8e-9.dat', ' ', 0);
+pixelPressure = max(0, matrix2cube(pixelPressureMatrix, Nz));
+plot_projection(pixelPressure, dx);
+
+%==================================================
+% Reconstruction - RT
+%==================================================
+% Import data
+pixelPressureMatrix = importdata('output_data/pixelPressure_x_k.dat', ' ', 0);
+pixelPressure = max(0, matrix2cube(pixelPressureMatrix, Nz));
+plot_projection(pixelPressure, dx);
+
