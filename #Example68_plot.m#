@@ -270,7 +270,7 @@ pixelPressureMatrix = importdata('output_data/pixelPressure_x_k.dat', ' ', 0);
 pixelPressure = max(0, matrix2cube(pixelPressureMatrix, Nz));
 plot_projection(pixelPressure, dx);
 % Import data
-pixelPressureMatrix = importdata('output_data/pixelPressure_SGD_2.dat', ' ', 0);
+pixelPressureMatrix = importdata('output_data/pixelPressure_SGD_4.dat', ' ', 0);
 pixelPressure = max(0, matrix2cube(pixelPressureMatrix, Nz));
 plot_projection(pixelPressure, dx);
 

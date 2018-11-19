@@ -16,11 +16,11 @@ cd $EXAMPLE_FOLDER
 export DIMENSIONS="dimensions.dat"
 export SOUND_SPEED="sound_speed.dat"
 export INITIAL_PRESSURE="initial_pressure_veins_80x240x240.dat"
-export SENSORS="sensors_subsampled_1600.dat" 
+export SENSORS="sensors_subsampled_57600.dat" 
 export FORWARD_SIGNAL="forwardSignal_reference_1600sensors.dat"
 
 # Mode
-export MODE="-a"
+export MODE="-f"
 
 # Generate dimensions file
 Nx=80  dx=0.000053
@@ -32,7 +32,7 @@ $dx $dy $dz
 EOF
 
 # Parameters
-nSensorsArray=40
+nSensorsArray=240
 nRaysPhi=1024 
 nRaysTheta=1024
 dt=1.6667e-8

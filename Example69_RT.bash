@@ -7,7 +7,7 @@
 #================================================================================
 
 # Output folder
-export EXAMPLE_FOLDER="/cs/research/medim/projects2/projects/frullan/Documents/HighFreqCode/Examples/Ex68_3D_veins_resize/"
+export EXAMPLE_FOLDER="/cs/research/medim/projects2/projects/frullan/Documents/HighFreqCode/Examples/Ex69_3D_RT_norm/"
 export INPUT_FOLDER=$EXAMPLE_FOLDER"input_data/"
 export OUTPUT_FOLDER=$EXAMPLE_FOLDER"03/"
 cd $EXAMPLE_FOLDER
@@ -15,9 +15,9 @@ cd $EXAMPLE_FOLDER
 # Assign files
 export DIMENSIONS="dimensions.dat"
 export SOUND_SPEED="sound_speed.dat"
-export INITIAL_PRESSURE="initial_pressure_veins_80x240x240.dat"
-export SENSORS="sensors_subsampled_1600.dat" 
-export FORWARD_SIGNAL="forwardSignal_reference_1600sensors.dat"
+export INITIAL_PRESSURE="pixelPressure_iter0.dat"
+export SENSORS="sensors_subsampled_1600sensors.dat" 
+export FORWARD_SIGNAL="forwardSignal_iter1.dat"
 
 # Mode
 export MODE="-a"
@@ -52,14 +52,6 @@ for ((k=0; k<nSensorsArray; k++)); do
 done 
 
 # Call RT solver
-export OMP_NUM_THREADS=26
-#RTsolver_CPU $MODE $INPUT_FOLDER$DIMENSIONS $INPUT_FOLDER$SOUND_SPEED $INPUT_FOLDER$INITIAL_PRESSURE $INPUT_FOLDER$SENSORS $OUTPUT_FOLDER $INPUT_FOLDER$FORWARD_SIGNAL
-#RTsolver_GPU $MODE $INPUT_FOLDER$DIMENSIONS $INPUT_FOLDER$SOUND_SPEED $INPUT_FOLDER$INITIAL_PRESSURE $INPUT_FOLDER$SENSORS $OUTPUT_FOLDER $INPUT_FOLDER$FORWARD_SIGNAL
-
-#====================
-# CUDA MEMCHECK
-#====================
-#/opt/cuda/cuda-8.0/bin/cuda-memcheck \
 RTsolver_GPU $MODE $INPUT_FOLDER$DIMENSIONS $INPUT_FOLDER$SOUND_SPEED \
                                                   $INPUT_FOLDER$INITIAL_PRESSURE $INPUT_FOLDER$SENSORS \
                                                   $OUTPUT_FOLDER $INPUT_FOLDER$FORWARD_SIGNAL
