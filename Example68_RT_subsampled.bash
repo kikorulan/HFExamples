@@ -20,7 +20,7 @@ export SENSORS="sensors_subsampled_1600.dat"
 export FORWARD_SIGNAL="forwardSignal_reference_1600sensors.dat"
 
 # Mode
-export MODE="-a"
+export MODE="-f"
 
 # Generate dimensions file
 Nx=80  dx=0.000053

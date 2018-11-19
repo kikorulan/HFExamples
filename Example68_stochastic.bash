@@ -7,7 +7,11 @@
 #================================================================================
 
 # Output folder
-export EXAMPLE_FOLDER="/cs/research/medim/projects2/projects/frullan/Documents/HighFreqCode/Examples/Ex68_3D_veins_resize/"
+if [ "$HOSTNAME" = "maryam.cs.ucl.ac.uk" ]; then
+    export EXAMPLE_FOLDER="/cs/research/medim/projects2/projects/frullan/Documents/HighFreqCode/Examples/Ex68_3D_veins_resize/"
+elif [ "$HOSTNAME" = "hannover" ]; then
+    export EXAMPLE_FOLDER="/home/wontek/sharedWK/Examples/Ex68_3D_veins_resize/"
+fi
 export INPUT_FOLDER=$EXAMPLE_FOLDER"input_data/"
 export OUTPUT_FOLDER=$EXAMPLE_FOLDER"output_data/"
 cd $EXAMPLE_FOLDER
@@ -30,7 +34,7 @@ export PIXEL_PRESSURE="pressure_kWave_adjoint_57600sensors.dat"
 if [ "$1" = "-G" ]; then
     echo "=================== GRADIENT DESCENT ===================="
     # Regularization parameters - WORKS
-    TAU=1e12
+    TAU=1e18
     LAMBDA=1e-2 # 1e-2
     NITER=50
     RTiterative_GPU $1 $INPUT_FOLDER$DIMENSIONS $INPUT_FOLDER$SOUND_SPEED $INPUT_FOLDER$INITIAL_PRESSURE \
@@ -42,8 +46,8 @@ if [ "$1" = "-G" ]; then
 elif [ "$1" = "-g" ]; then
     echo "=================== STOCHASTIC GRADIENT DESCENT ===================="
     # Regularization parameters
-    TAU=3e12
-    LAMBDA=1e-1 #3.5e-2
+    TAU=1e18
+    LAMBDA=4e-2 #3.5e-2
     NITER=50
     RTiterative_GPU $1 $INPUT_FOLDER$DIMENSIONS $INPUT_FOLDER$SOUND_SPEED $INPUT_FOLDER$INITIAL_PRESSURE \
                     $INPUT_FOLDER$SENSORS $INPUT_FOLDER$FORWARD_SIGNAL $INPUT_FOLDER$PIXEL_PRESSURE $TAU $LAMBDA $NITER
@@ -54,7 +58,7 @@ elif [ "$1" = "-g" ]; then
 elif [ "$1" = "-F" ]; then
     echo "=================== FISTA ===================="
     # Regularization parameters
-    TAU=1e12
+    TAU=1e18
     LAMBDA=1e-2
     NITER=50
     RTiterative_GPU $1 $INPUT_FOLDER$DIMENSIONS $INPUT_FOLDER$SOUND_SPEED $INPUT_FOLDER$INITIAL_PRESSURE \
@@ -66,7 +70,7 @@ elif [ "$1" = "-F" ]; then
 elif [ "$1" = "-f" ]; then
     echo "=================== STOCHASTIC FISTA ===================="
     # Regularization parameters
-    TAU=3e12    # 1e12
+    TAU=2e18    # 1e12
     LAMBDA=4e-2 # 1e-2
     NITER=50
     RTiterative_GPU $1 $INPUT_FOLDER$DIMENSIONS $INPUT_FOLDER$SOUND_SPEED $INPUT_FOLDER$INITIAL_PRESSURE \

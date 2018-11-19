@@ -36,6 +36,17 @@ imagesc(inputRT);
 box on;
 colorbar();
 
+% Import data
+filenameData = 'input_data/forwardSignal_reference_1600sensors';
+timeSignal = importdata(filenameData, ' ', 0);
+timeRT = timeSignal(1, :);
+inputRT = timeSignal(2:end, :);
+% Plot
+figure;
+imagesc(inputRT);
+box on;
+colorbar();
+
 %==================================================
 % TIME SIGNAL - kWave
 %==================================================
@@ -270,7 +281,7 @@ pixelPressureMatrix = importdata('output_data/pixelPressure_x_k.dat', ' ', 0);
 pixelPressure = max(0, matrix2cube(pixelPressureMatrix, Nz));
 plot_projection(pixelPressure, dx);
 % Import data
-pixelPressureMatrix = importdata('output_data/pixelPressure_SGD_2.dat', ' ', 0);
+pixelPressureMatrix = importdata('output_data/pixelPressure_SGD_0.dat', ' ', 0);
 pixelPressure = max(0, matrix2cube(pixelPressureMatrix, Nz));
 plot_projection(pixelPressure, dx);
 

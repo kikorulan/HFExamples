@@ -36,6 +36,17 @@ imagesc(inputRT);
 box on;
 colorbar();
 
+% Import data
+filenameData = 'input_data/forwardSignal_reference_1600sensors.dat';
+timeSignal = importdata(filenameData, ' ', 0);
+timeRT = timeSignal(1, :);
+inputRT = timeSignal(2:end, :);
+% Plot
+figure;
+imagesc(inputRT);
+box on;
+colorbar();
+
 %==================================================
 % TIME SIGNAL - kWave
 %==================================================
