@@ -1,5 +1,5 @@
 % Heterogeneous Propagation Medium Example
-cd /cs/research/medim/projects2/projects/frullan/Documents/HighFreqCode/Examples/Ex68_3D_veins_resize;
+cd /cs/research/medim/projects2/projects/frullan/Documents/HighFreqCode/Examples/Ex72_3D_veins_heterogeneous;
 
 clear all;
 close all;
@@ -18,15 +18,9 @@ kgrid = makeGrid(Nx, dx, Ny, dy, Nz, dz);
 %==============================
 % define the properties of the propagation medium
 %==============================
-% Load sound speed
-c0 = 1580.00001;
-medium.sound_speed = c0;
-medium.density = 1;
-
 % compute time
-dt = 1.6667e-8;
-Nt = 486;
-tMax = dt*(Nt-1);
+dt = 1.3e-8;
+tMax = 8.0836e-06;
 kgrid.t_array = 0:dt:tMax;
 
 % Load Initial Pressure
@@ -38,11 +32,31 @@ source.p0 = max(0, source.p0);
 initial_pressure_veins_smooth = source.p0;
 save input_data/initial_pressure_veins_smooth initial_pressure_veins_smooth;
 
-%%  % Sound speed
-%%  c = c0*ones(Nx, Ny, Nz);
-%%  c_matrix = cube2matrix(c);
-%%  dlmwrite('input_data/sound_speed.dat', c_matrix, 'delimiter', ' ');
+%=========================================================================
+% BUILD SOUND SPEED
+%=========================================================================
+gridR = gridRT(Nx, 1, Ny, 1, Nz, 1);
+% Set sound speed
+c0 = 1580.00001;
+c = c0*ones(Nx, Ny, Nz);
+gridR.setCMatrix(c);
+inc = 0.05;
+rng(1);
+gridR.randomiseC(.15, inc);
 
+%==============================
+% Plot sound speed
+%==============================
+plot_cube(gridR.c);
+% Save data
+c0_matrix = cube2matrix(gridR.c);
+dlmwrite('input_data/sound_speed.dat', c0_matrix, 'delimiter', ' ');
+
+%==============================
+% Assign
+%==============================
+medium.sound_speed = gridR.c;
+medium.density = 1;
 
 %=========================================================================
 % SIMULATION
@@ -68,9 +82,9 @@ numberSensors = sum(sensor.mask(:))
 input_args = {'PMLInside', false, 'PlotPML', false, 'Smooth', false};
 save input_data/sensor_data_veins_1600sensors.mat kgrid medium source sensor input_args;
 % Save to disk
-filename = 'input_data/Example68_forward_input_1600sensors.h5';
+filename = 'input_data/Example72_forward_input_1600sensors.h5';
 kspaceFirstOrder3D(kgrid, medium, source, sensor, input_args{:}, 'SaveToDisk', filename);
 
 % Call C++ code
 setenv LD_LIBRARY_PATH '/cs/research/medim/projects2/projects/frullan/lib/root/lib64';
-system('../kspaceFirstOrder3D-OMP -i input_data/Example68_forward_input_1600sensors.h5 -o output_data/Example68_forward_output_1600sensors.h5');
+system('../kspaceFirstOrder3D-OMP -i input_data/Example72_forward_input_1600sensors.h5 -o output_data/Example72_forward_output_1600sensors.h5');

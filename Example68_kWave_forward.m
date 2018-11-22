@@ -38,10 +38,10 @@ source.p0 = max(0, source.p0);
 initial_pressure_veins_smooth = source.p0;
 save input_data/initial_pressure_veins_smooth initial_pressure_veins_smooth;
 
-%%  % Sound speed
-%%  c = c0*ones(Nx, Ny, Nz);
-%%  c_matrix = cube2matrix(c);
-%%  dlmwrite('input_data/sound_speed.dat', c_matrix, 'delimiter', ' ');
+% Sound speed
+c = c0*ones(Nx, Ny, Nz);
+c_matrix = cube2matrix(c);
+dlmwrite('input_data/sound_speed.dat', c_matrix, 'delimiter', ' ');
 
 
 %=========================================================================

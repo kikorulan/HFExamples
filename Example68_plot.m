@@ -37,7 +37,7 @@ box on;
 colorbar();
 
 % Import data
-filenameData = 'input_data/forwardSignal_reference_1600sensors';
+filenameData = 'input_data/forwardSignal_reference_1600sensors.dat';
 timeSignal = importdata(filenameData, ' ', 0);
 timeRT = timeSignal(1, :);
 inputRT = timeSignal(2:end, :);
@@ -281,7 +281,17 @@ pixelPressureMatrix = importdata('output_data/pixelPressure_x_k.dat', ' ', 0);
 pixelPressure = max(0, matrix2cube(pixelPressureMatrix, Nz));
 plot_projection(pixelPressure, dx);
 % Import data
-pixelPressureMatrix = importdata('output_data/pixelPressure_SGD_0.dat', ' ', 0);
+pixelPressureMatrix = importdata('results/pixelPressure_GD_50iter_tau1e12_lambda1e-2.dat', ' ', 0);
+pixelPressure = max(0, matrix2cube(pixelPressureMatrix, Nz));
+plot_projection(pixelPressure, dx);
+
+% Import data
+pixelPressureMatrix = importdata('results/pixelPressure_FISTA_tau1e18_lambda1e0_iter50.dat', ' ', 0);
+pixelPressure = max(0, matrix2cube(pixelPressureMatrix, Nz));
+plot_projection(pixelPressure, dx);
+
+% Import data
+pixelPressureMatrix = importdata('output_data/pixelPressure_SGD_1_v2.dat', ' ', 0);
 pixelPressure = max(0, matrix2cube(pixelPressureMatrix, Nz));
 plot_projection(pixelPressure, dx);
 
@@ -289,29 +299,6 @@ plot_projection(pixelPressure, dx);
 pixelPressureMatrix = importdata('output_data/pixelPressure_TVdenoised_1e-14-3000.dat', ' ', 0);
 pixelPressure = max(0, matrix2cube(pixelPressureMatrix, Nz));
 plot_projection(pixelPressure, dx);
-
-
-% PLOT
-pixelPressureMatrix = importdata('output_data/results/pixelPressure_GD_50iter_tau1e12_lambda1e-2.dat', ' ', 0);
-pixelPressure = max(0, matrix2cube(pixelPressureMatrix, Nz));
-plot_projection(pixelPressure, dx);
-saveas(gcf, 'figures/Example68_GD_50iter_tau1e12_lambda1e-2');
-% PLOT
-pixelPressureMatrix = importdata('output_data/results/pixelPressure_S-GD_50iter_tau3e12_lambda5e-2.dat', ' ', 0);
-pixelPressure = max(0, matrix2cube(pixelPressureMatrix, Nz));
-plot_projection(pixelPressure, dx);
-saveas(gcf, 'figures/Example68_S-GD_50iter_tau3e12_lambda5e-2');
-% PLOT
-pixelPressureMatrix = importdata('output_data/results/pixelPressure_FISTA_50iter_tau1e12_lambda1e-2.dat', ' ', 0);
-pixelPressure = max(0, matrix2cube(pixelPressureMatrix, Nz));
-plot_projection(pixelPressure, dx);
-saveas(gcf, 'figures/Example68_FISTA_50iter_tau1e12_lambda1e-2');
-% PLOT
-pixelPressureMatrix = importdata('output_data/results/pixelPressure_S-FISTA_16iter_tau1e12_lambda1e-2.dat', ' ', 0);
-pixelPressure = max(0, matrix2cube(pixelPressureMatrix, Nz));
-plot_projection(pixelPressure, dx);
-saveas(gcf, 'figures/Example68_S-FISTA_16iter_tau1e12_lambda1e-2');
-
 
 %==================================================
 % Gradient descent
