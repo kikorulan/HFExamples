@@ -79,7 +79,7 @@ elif [ "$1" = "-f" ]; then
     echo "=================== STOCHASTIC FISTA ===================="
     # Regularization parameters
     TAU=1e18   
-    LAMBDA=5e-4
+    LAMBDA=1e-3
     NITER=50
     RTiterative_GPU $1 $INPUT_FOLDER$DIMENSIONS $INPUT_FOLDER$SOUND_SPEED $INPUT_FOLDER$INITIAL_PRESSURE \
                     $INPUT_FOLDER$SENSORS $INPUT_FOLDER$FORWARD_SIGNAL $INPUT_FOLDER$PIXEL_PRESSURE $TAU $LAMBDA $NITER > $OUTPUT_FOLDER$STDOUT

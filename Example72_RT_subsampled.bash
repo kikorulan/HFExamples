@@ -37,15 +37,15 @@ export OUTPUT_FOLDER=$EXAMPLE_FOLDER"output_data/"
 cd $EXAMPLE_FOLDER
 
 # Choose GPU
-export GPU_INDEX=0
+export GPU_INDEX=1
 
 # Assign files
 export DIMENSIONS="dimensions.dat"
 export SOUND_SPEED="sound_speed.dat"
 export INITIAL_PRESSURE="initial_pressure_veins_80x240x240.dat"
-export SENSORS="sensors_subsampled_1600.dat" 
-export FORWARD_SIGNAL="forwardSignal_reference_1600sensors.dat"
-export STDOUT="stdout-adjoint-1600sensors.txt"
+export SENSORS="sensors_subsampled_57600.dat" 
+export FORWARD_SIGNAL="forwardSignal_reference_57600sensors.dat"
+export STDOUT="stdout-adjoint-57600sensors.txt"
 
 # Mode
 export MODE="-a"
@@ -62,7 +62,7 @@ EOF
 #==============================
 # SENSORS
 #==============================
-nSensorsArray=40
+nSensorsArray=240
 nRaysPhi=1024 
 nRaysTheta=1024
 dt=1.3e-8

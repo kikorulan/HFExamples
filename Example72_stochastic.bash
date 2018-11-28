@@ -34,7 +34,7 @@ export PIXEL_PRESSURE="pressure_adjoint_kWave_57600sensors.dat"
 export STDOUT="stdout"$1".txt"
 
 # Choose GPU
-export GPU_INDEX=1
+export GPU_INDEX=0
 
 #================================================================================
 #=======   GRADIENT DESCENT
@@ -42,7 +42,7 @@ export GPU_INDEX=1
 if [ "$1" = "-G" ]; then
     echo "=================== GRADIENT DESCENT ===================="
     # Regularization parameters
-    TAU=2e18
+    TAU=5e18
     LAMBDA=1e-2
     NITER=50
     RTiterative_GPU $1 $INPUT_FOLDER$DIMENSIONS $INPUT_FOLDER$SOUND_SPEED $INPUT_FOLDER$INITIAL_PRESSURE \
@@ -54,7 +54,7 @@ if [ "$1" = "-G" ]; then
 elif [ "$1" = "-g" ]; then
     echo "=================== STOCHASTIC GRADIENT DESCENT ===================="
     # Regularization parameters
-    TAU=3e18
+    TAU=5e18
     LAMBDA=3e-4
     NITER=50
     RTiterative_GPU $1 $INPUT_FOLDER$DIMENSIONS $INPUT_FOLDER$SOUND_SPEED $INPUT_FOLDER$INITIAL_PRESSURE \
@@ -66,7 +66,7 @@ elif [ "$1" = "-g" ]; then
 elif [ "$1" = "-F" ]; then
     echo "=================== FISTA ===================="
     # Regularization parameters
-    TAU=2e18
+    TAU=5e18
     LAMBDA=1e-2
     NITER=50
     RTiterative_GPU $1 $INPUT_FOLDER$DIMENSIONS $INPUT_FOLDER$SOUND_SPEED $INPUT_FOLDER$INITIAL_PRESSURE \
@@ -78,8 +78,8 @@ elif [ "$1" = "-F" ]; then
 elif [ "$1" = "-f" ]; then
     echo "=================== STOCHASTIC FISTA ===================="
     # Regularization parameters
-    TAU=3e18   
-    LAMBDA=1e-3
+    TAU=5e18   
+    LAMBDA=3e-3
     NITER=50
     RTiterative_GPU $1 $INPUT_FOLDER$DIMENSIONS $INPUT_FOLDER$SOUND_SPEED $INPUT_FOLDER$INITIAL_PRESSURE \
                     $INPUT_FOLDER$SENSORS $INPUT_FOLDER$FORWARD_SIGNAL $INPUT_FOLDER$PIXEL_PRESSURE $TAU $LAMBDA $NITER > $OUTPUT_FOLDER$STDOUT
@@ -91,7 +91,7 @@ elif [ "$1" = "-P" ]; then
     echo "=================== PDHG ===================="
     # Regularization parameters
     SIGMA=1e0
-    TAU=1e18       # 1e10
+    TAU=5e18       # 1e10
     THETA=1        # 1
     LAMBDA=1e-2    # 1e-4
     NITER=50

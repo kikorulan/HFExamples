@@ -4,8 +4,8 @@
 # QSUB
 #====================
 
-#$ -l tmem=3G
-#$ -l h_vmem=3G
+#$ -l tmem=2G
+#$ -l h_vmem=2G
 #$ -l h_rt=3:00:00
 #$ -l gpu=1
 
@@ -41,8 +41,8 @@ cd $EXAMPLE_FOLDER
 export DIMENSIONS="dimensions.dat"
 export SOUND_SPEED="sound_speed.dat"
 export INITIAL_PRESSURE="initial_pressure_veins_80x240x240.dat"
-export SENSORS="sensors_subsampled_100.dat" 
-export FORWARD_SIGNAL="forwardSignal_reference_100sensors.dat"
+export SENSORS="sensors_subsampled_57600.dat" 
+export FORWARD_SIGNAL="forwardSignal_reference_57600sensors.dat"
 export STDOUT="stdout-forward.txt"
 
 # Mode
@@ -60,7 +60,7 @@ EOF
 #==============================
 # SENSORS
 #==============================
-nSensorsArray=10
+nSensorsArray=240
 nRaysPhi=1024 
 nRaysTheta=1024
 dt=1.6667e-8
@@ -83,5 +83,4 @@ done
 # RUN 
 #====================
 RTsolver_GPU $MODE $INPUT_FOLDER$DIMENSIONS $INPUT_FOLDER$SOUND_SPEED $INPUT_FOLDER$INITIAL_PRESSURE \
-             $INPUT_FOLDER$SENSORS $OUTPUT_FOLDER $INPUT_FOLDER$FORWARD_SIGNAL 
-#> $OUTPUT_FOLDER$STDOUT
+             $INPUT_FOLDER$SENSORS $OUTPUT_FOLDER $INPUT_FOLDER$FORWARD_SIGNAL > $OUTPUT_FOLDER$STDOUT
