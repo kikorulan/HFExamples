@@ -216,6 +216,10 @@ set(0,'DefaultFigurePaperPositionMode','auto');
 u0Matrix = importdata('input_data/initial_pressure_veins_80x240x240.dat', ' ', 0);
 u0 = matrix2cube(u0Matrix, Nz);
 h = plot_projection(u0, dx);
+a = axes;
+t = title('Initial Pressure');
+a.Visible = 'off'; 
+t.Visible = 'on'; 
 saveas(gcf, 'figures/Example68_initial_pressure.fig');
 % Load Initial Pressure
 load ./input_data/initial_pressure_veins_smooth;
@@ -229,7 +233,11 @@ PML_size = 10;
 p0_recon = max(0, p0_recon_PML(1+PML_size:end-PML_size, 1+PML_size:end-PML_size, 1+PML_size:end-PML_size));
 p0_recon = p0_recon/max(p0_recon(:));
 plot_projection(p0_recon, dx);
-saveas(gcf, 'figures/Example68_kWave_adjoint_1600sensors.fig');
+a = axes;
+t = title('k-Wave adjoint projection');
+a.Visible = 'off'; 
+t.Visible = 'on'; 
+saveas(gcf, 'figures/Example68_kWave_adjoint_57600sensors.fig');
 %==================================================
 % Reconstruction - RT
 %==================================================
@@ -274,34 +282,7 @@ legend('u0', 'kW', 'RT delay 0, 0', 'RT delay 2, 0', 'RT delay 2, -1');
 saveas(gcf, 'figures/Example68_line_xdim');
 
 %==================================================
-% Reconstruction - RT
-%==================================================
-% Import data
-pixelPressureMatrix = importdata('output_data/pixelPressure_x_k.dat', ' ', 0);
-pixelPressure = max(0, matrix2cube(pixelPressureMatrix, Nz));
-plot_projection(pixelPressure, dx);
-% Import data
-pixelPressureMatrix = importdata('results/pixelPressure_GD_50iter_tau1e12_lambda1e-2.dat', ' ', 0);
-pixelPressure = max(0, matrix2cube(pixelPressureMatrix, Nz));
-plot_projection(pixelPressure, dx);
-
-% Import data
-pixelPressureMatrix = importdata('results/pixelPressure_FISTA_tau1e18_lambda1e0_iter50.dat', ' ', 0);
-pixelPressure = max(0, matrix2cube(pixelPressureMatrix, Nz));
-plot_projection(pixelPressure, dx);
-
-% Import data
-pixelPressureMatrix = importdata('output_data/pixelPressure_SGD_1_v2.dat', ' ', 0);
-pixelPressure = max(0, matrix2cube(pixelPressureMatrix, Nz));
-plot_projection(pixelPressure, dx);
-
-% Import data
-pixelPressureMatrix = importdata('output_data/pixelPressure_TVdenoised_1e-14-3000.dat', ' ', 0);
-pixelPressure = max(0, matrix2cube(pixelPressureMatrix, Nz));
-plot_projection(pixelPressure, dx);
-
-%==================================================
-% Gradient descent
+% ADJOINT
 %==================================================
 % Import data
 pixelPressureMatrix = importdata('input_data/pressure_kWave_adjoint_57600sensors.dat', ' ', 0);
@@ -314,11 +295,89 @@ pixelPressure_adjoint = matrix2cube(pixelPressureMatrix, Nz);
 plot_projection(p, dx);
 plot_projection(-pixelPressure_adjoint, dx);
 
+%==================================================
+% ITERATIVE RECONSTRUCTION
+%==================================================
+% Gradient
+pixelPressureMatrix = importdata('results/pixelPressure_GD_tau1e18_lambda1e-2_iter50.dat', ' ', 0);
+pixelPressure = max(0, matrix2cube(pixelPressureMatrix, Nz));
+plot_projection(pixelPressure, dx);
+a = axes;
+t = title('GD - t = 1e18, l = 1e-2, iter = 50 - homogeneous SS');
+a.Visible = 'off'; 
+t.Visible = 'on'; 
+saveas(gcf, 'figures/Example68_GD_tau1e18_lambda1e-2_iter50.fig');
 
-% Difference
-tau = 1e12;
-lambda = 0.005;
-u_k_1 = softThresh(pixelPressure + 2*tau*pixelPressure_adjoint, lambda);
-plot_projection(u_k_1, dx);
-u_k = softThresh(pixelPressure - 2*10*p, lambda);
-plot_projection(u_k, dx);
+% Stochastic gradient
+pixelPressureMatrix = importdata('results/pixelPressure_S-GD_tau2e18_lambda3e-4_epoch50.dat', ' ', 0);
+pixelPressure = max(0, matrix2cube(pixelPressureMatrix, Nz));
+plot_projection(pixelPressure, dx);
+a = axes;
+t = title('S-GD - t = 2e18, l = 3e-4, iter = 50 - homogeneous SS');
+a.Visible = 'off'; 
+t.Visible = 'on'; 
+saveas(gcf, 'figures/Example68_S-GD_tau2e18_lambda3e-4_iter50.fig');
+
+% FISTA
+pixelPressureMatrix = importdata('results/pixelPressure_FISTA_tau1e18_lambda1e-2_iter50.dat', ' ', 0);
+pixelPressure = max(0, matrix2cube(pixelPressureMatrix, Nz));
+plot_projection(pixelPressure, dx);
+a = axes;
+t = title('FISTA - t = 1e18, l = 1e-2, iter = 50 - homogeneous SS');
+a.Visible = 'off'; 
+t.Visible = 'on'; 
+saveas(gcf, 'figures/Example68_FISTA_tau1e18_lambda1e-2_iter50.fig');
+
+% Stochastic FISTA
+%pixelPressureMatrix = importdata('results/pixelPressure_S-FISTA_tau1e18_lambda5e-4_epoch50.dat', ' ', 0);
+%pixelPressure = max(0, matrix2cube(pixelPressureMatrix, Nz));
+%plot_projection(pixelPressure, dx);
+%a = axes;
+%t = title('GD - t = 1e18, l = 1e-2, iter = 50 - homogeneous SS');
+%a.Visible = 'off'; 
+%t.Visible = 'on'; 
+%saveas(gcf, 'Example68_GD_tau1e18_lambda1e-2_iter50.fig');
+
+% PDHG
+pixelPressureMatrix = importdata('results/pixelPressure_PDHG_sigma1_tau1e18_theta1_lambda1e-2_iter50.dat', ' ', 0);
+pixelPressure = max(0, matrix2cube(pixelPressureMatrix, Nz));
+plot_projection(pixelPressure, dx);
+a = axes;
+t = title('PDHG - s = 1, t = 1e18, l = 1e-2, iter = 50 - homogeneous SS');
+a.Visible = 'off'; 
+t.Visible = 'on'; 
+saveas(gcf, 'figures/Example68_PDHG_sigma1_tau1e18_lambda1e-2_iter50.fig');
+
+%==================================================
+% AUXILIAR RECONSTRUCTION
+%==================================================
+% Import data
+pixelPressureMatrix = importdata('output_data/pixelPressure_GD_49.dat', ' ', 0);
+pixelPressure = max(0, matrix2cube(pixelPressureMatrix, Nz));
+plot_projection(pixelPressure, dx);
+
+% Import data
+pixelPressureMatrix = importdata('output_data/pixelPressure_SGD_49.dat', ' ', 0);
+pixelPressure = max(0, matrix2cube(pixelPressureMatrix, Nz));
+plot_projection(pixelPressure, dx);
+
+% Import data
+pixelPressureMatrix = importdata('output_data/pixelPressure_FISTA_22.dat', ' ', 0);
+pixelPressure = max(0, matrix2cube(pixelPressureMatrix, Nz));
+plot_projection(pixelPressure, dx);
+
+% Import data
+pixelPressureMatrix = importdata('output_data/pixelPressure_S-FISTA_29.dat', ' ', 0);
+pixelPressure = max(0, matrix2cube(pixelPressureMatrix, Nz));
+plot_projection(pixelPressure, dx);
+
+% Import data
+pixelPressureMatrix = importdata('output_data/pixelPressure_PDHG_48.dat', ' ', 0);
+pixelPressure = max(0, matrix2cube(pixelPressureMatrix, Nz));
+plot_projection(pixelPressure, dx);
+
+% Import data
+pixelPressureMatrix = importdata('output_data/pixelPressure_TVdenoised_1e-14-3000.dat', ' ', 0);
+pixelPressure = max(0, matrix2cube(pixelPressureMatrix, Nz));
+plot_projection(pixelPressure, dx);
+

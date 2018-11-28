@@ -15,12 +15,13 @@ load ./input_data/sensor_data_veins_1600sensors.mat;
 PML_size = 10;
 %u_PML = h5read('output_data/Example68_adjoint_output_1600sensors.h5', '/p_final');
 u_PML = h5read('output_data/Example68_adjoint_output_57600sensors.h5', '/p_final');
-u_k = max(0, u_PML(1+PML_size:end-PML_size, 1+PML_size:end-PML_size, 1+PML_size:end-PML_size));
+u_k_neg = u_PML(1+PML_size:end-PML_size, 1+PML_size:end-PML_size, 1+PML_size:end-PML_size);
+u_k = max(0, u_k_neg);
 
 
-%%  % Save pressure
-%%  u_matrix = cube2matrix(u_k);
-%%  dlmwrite('input_data/pressure_adjoint_kWave_57600sensors.dat', u_matrix, 'delimiter', ' ');
+% Save pressure
+u_matrix = cube2matrix(u_k_neg);
+dlmwrite('input_data/pressure_adjoint_kWave_57600sensors.dat', u_matrix, 'delimiter', ' ');
 
 
 %============================================================

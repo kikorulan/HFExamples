@@ -22,7 +22,7 @@
 #================================================================================
 #The code you want to run now goes here.
 export PATH="/home/frullan/HighFreqCode/HighFreq_3DRT/Build/bin:$PATH"
-export EXAMPLE="Ex68_3D_veins_resize/"
+export EXAMPLE="Ex74_3D_thinveins/"
 # Output folder
 if [ "$HOSTNAME" = "maryam.cs.ucl.ac.uk" ]; then
     export HOST_FOLDER="/cs/research/medim/projects2/projects/frullan/Documents/HighFreqCode/Examples/"
@@ -60,7 +60,7 @@ EOF
 #==============================
 # SENSORS
 #==============================
-nSensorsArray=10
+nSensorsArray=40
 nRaysPhi=1024 
 nRaysTheta=1024
 dt=1.6667e-8

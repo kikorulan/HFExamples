@@ -6,7 +6,7 @@
 # Compute the forward signal for sensors placed in the boundary of the cube
 #================================================================================
 
-export EXAMPLE="Ex68_3D_veins_resize/"
+export EXAMPLE="Ex72_3D_veins_heterogeneous/"
 
 # Output folder
 if [ "$HOSTNAME" = "maryam.cs.ucl.ac.uk" ]; then
@@ -42,8 +42,8 @@ export GPU_INDEX=1
 if [ "$1" = "-G" ]; then
     echo "=================== GRADIENT DESCENT ===================="
     # Regularization parameters
-    TAU=1e18
-    LAMBDA=1e-2 # 1e-2
+    TAU=2e18
+    LAMBDA=1e-2
     NITER=50
     RTiterative_GPU $1 $INPUT_FOLDER$DIMENSIONS $INPUT_FOLDER$SOUND_SPEED $INPUT_FOLDER$INITIAL_PRESSURE \
                     $INPUT_FOLDER$SENSORS $INPUT_FOLDER$FORWARD_SIGNAL $INPUT_FOLDER$PIXEL_PRESSURE $TAU $LAMBDA $NITER > $OUTPUT_FOLDER$STDOUT
@@ -54,7 +54,7 @@ if [ "$1" = "-G" ]; then
 elif [ "$1" = "-g" ]; then
     echo "=================== STOCHASTIC GRADIENT DESCENT ===================="
     # Regularization parameters
-    TAU=2e18
+    TAU=3e18
     LAMBDA=3e-4
     NITER=50
     RTiterative_GPU $1 $INPUT_FOLDER$DIMENSIONS $INPUT_FOLDER$SOUND_SPEED $INPUT_FOLDER$INITIAL_PRESSURE \
@@ -66,7 +66,7 @@ elif [ "$1" = "-g" ]; then
 elif [ "$1" = "-F" ]; then
     echo "=================== FISTA ===================="
     # Regularization parameters
-    TAU=1e18
+    TAU=2e18
     LAMBDA=1e-2
     NITER=50
     RTiterative_GPU $1 $INPUT_FOLDER$DIMENSIONS $INPUT_FOLDER$SOUND_SPEED $INPUT_FOLDER$INITIAL_PRESSURE \
@@ -78,8 +78,8 @@ elif [ "$1" = "-F" ]; then
 elif [ "$1" = "-f" ]; then
     echo "=================== STOCHASTIC FISTA ===================="
     # Regularization parameters
-    TAU=1e18   
-    LAMBDA=5e-4
+    TAU=3e18   
+    LAMBDA=1e-3
     NITER=50
     RTiterative_GPU $1 $INPUT_FOLDER$DIMENSIONS $INPUT_FOLDER$SOUND_SPEED $INPUT_FOLDER$INITIAL_PRESSURE \
                     $INPUT_FOLDER$SENSORS $INPUT_FOLDER$FORWARD_SIGNAL $INPUT_FOLDER$PIXEL_PRESSURE $TAU $LAMBDA $NITER > $OUTPUT_FOLDER$STDOUT

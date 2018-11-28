@@ -13,14 +13,16 @@ setenv LD_LIBRARY_PATH '/cs/research/medim/projects2/projects/frullan/lib/root/l
 load ./input_data/sensor_data_veins_1600sensors.mat;
 % smooth the initial pressure distribution and restore the magnitude
 PML_size = 10;
-%u_PML = h5read('output_data/Example72_adjoint_output_1600sensors.h5', '/p_final');
-u_PML = h5read('output_data/Example72_adjoint_output_57600sensors.h5', '/p_final');
-u_k = max(0, u_PML(1+PML_size:end-PML_size, 1+PML_size:end-PML_size, 1+PML_size:end-PML_size));
+u_PML = h5read('output_data/Example72_adjoint_output_1600sensors.h5', '/p_final');
+%u_PML = h5read('output_data/Example72_adjoint_output_57600sensors.h5', '/p_final');
+u_k_neg = u_PML(1+PML_size:end-PML_size, 1+PML_size:end-PML_size, 1+PML_size:end-PML_size);
+u_k = max(0, u_k_neg);
 
 
-%%  % Save pressure
-%%  u_matrix = cube2matrix(u_k);
-%%  dlmwrite('input_data/pressure_adjoint_kWave_57600sensors.dat', u_matrix, 'delimiter', ' ');
+% Save pressure
+u_matrix = cube2matrix(u_k);
+dlmwrite('input_data/pressure_adjoint_kWave_1600sensors.dat', u_matrix, 'delimiter', ' ');
+%dlmwrite('input_data/pressure_adjoint_kWave_57600sensors.dat', u_matrix, 'delimiter', ' ');
 
 
 %============================================================
