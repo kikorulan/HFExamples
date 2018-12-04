@@ -16,13 +16,13 @@
 #$ -N RTsolver
 
 #================================================================================
-# EXAMPLE 68
+# EXAMPLE 75
 # 3D domain. 
 # Compute the forward signal for sensors placed in the boundary of the cube
 #================================================================================
 #The code you want to run now goes here.
 export PATH="/home/frullan/HighFreqCode/HighFreq_3DRT/Build/bin:$PATH"
-export EXAMPLE="Ex74_3D_thinveins/"
+export EXAMPLE="Ex75_3D_thinveins_het/"
 # Output folder
 if [ "$HOSTNAME" = "maryam.cs.ucl.ac.uk" ]; then
     export HOST_FOLDER="/cs/research/medim/projects2/projects/frullan/Documents/HighFreqCode/Examples/"
@@ -41,13 +41,13 @@ cd $EXAMPLE_FOLDER
 export DIMENSIONS="dimensions.dat"
 export SOUND_SPEED="sound_speed.dat"
 export INITIAL_PRESSURE="initial_pressure_veins_80x240x240.dat"
-export SENSORS="sensors_subsampled_100.dat" 
-export FORWARD_SIGNAL="forwardSignal_reference_100sensors.dat"
-export STDOUT="stdout-forward.txt"
+export SENSORS="sensors_subsampled_14400.dat" 
+export FORWARD_SIGNAL="forwardSignal_reference_14400sensors.dat"
+export STDOUT="stdout-adjoint.txt"
 
 # Mode
-export MODE="-f"
-export GPU_INDEX=1
+export MODE="-a"
+export GPU_INDEX=0
 # Generate dimensions file
 Nx=80  dx=0.000053
 Ny=240 dy=0.000053
@@ -60,10 +60,10 @@ EOF
 #==============================
 # SENSORS
 #==============================
-nSensorsArray=40
+nSensorsArray=120
 nRaysPhi=1024 
 nRaysTheta=1024
-dt=1.6667e-8
+dt=1.5e-8
 tMax=8.0836e-06
 # Generate sensor file
 cat > $INPUT_FOLDER$SENSORS<<EOF
@@ -83,5 +83,4 @@ done
 # RUN 
 #====================
 RTsolver_GPU $MODE $INPUT_FOLDER$DIMENSIONS $INPUT_FOLDER$SOUND_SPEED $INPUT_FOLDER$INITIAL_PRESSURE \
-             $INPUT_FOLDER$SENSORS $OUTPUT_FOLDER $INPUT_FOLDER$FORWARD_SIGNAL 
-#> $OUTPUT_FOLDER$STDOUT
+             $INPUT_FOLDER$SENSORS $OUTPUT_FOLDER $INPUT_FOLDER$FORWARD_SIGNAL > $OUTPUT_FOLDER$STDOUT

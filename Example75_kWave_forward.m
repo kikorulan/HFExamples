@@ -1,5 +1,5 @@
 % Heterogeneous Propagation Medium Example
-cd /cs/research/medim/projects2/projects/frullan/Documents/HighFreqCode/Examples/Ex74_3D_thinveins;
+cd /cs/research/medim/projects2/projects/frullan/Documents/HighFreqCode/Examples/Ex75_3D_thinveins_het;
 
 clear all;
 close all;
@@ -18,13 +18,14 @@ kgrid = makeGrid(Nx, dx, Ny, dy, Nz, dz);
 %==============================
 % define the properties of the propagation medium
 %==============================
+cMatrix = importdata('input_data/sound_speed.dat', ' ', 0);
+c = matrix2cube(cMatrix, Nz);
 % Load sound speed
-c0 = 1580.00001;
-medium.sound_speed = c0;
+medium.sound_speed = c;
 medium.density = 1;
 
 % compute time
-dt = 1.6667e-8;
+dt = 1.5e-8;
 Nt = 486;
 tMax = dt*(Nt-1);
 kgrid.t_array = 0:dt:tMax;
@@ -40,12 +41,6 @@ u0_smooth = cube2matrix(initial_pressure_veins_smooth);
 dlmwrite('input_data/initial_pressure_veins_80x240x240_smooth.dat', u0_smooth, 'delimiter', ' ');
 save input_data/initial_pressure_veins_smooth initial_pressure_veins_smooth;
 plot_projection(initial_pressure_veins_smooth, dx);
-
-% Sound speed
-c = c0*ones(Nx, Ny, Nz);
-c_matrix = cube2matrix(c);
-dlmwrite('input_data/sound_speed.dat', c_matrix, 'delimiter', ' ');
-
 
 %=========================================================================
 % SIMULATION
@@ -71,9 +66,9 @@ numberSensors = sum(sensor.mask(:))
 input_args = {'PMLInside', false, 'PlotPML', false, 'Smooth', false};
 save input_data/sensor_data_veins_14400sensors.mat kgrid medium source sensor input_args;
 % Save to disk
-filename = 'input_data/Example74_forward_input_14400sensors.h5';
+filename = 'input_data/Example75_forward_input_14400sensors.h5';
 kspaceFirstOrder3D(kgrid, medium, source, sensor, input_args{:}, 'SaveToDisk', filename);
 
 % Call C++ code
 setenv LD_LIBRARY_PATH '/cs/research/medim/projects2/projects/frullan/lib/root/lib64';
-system('../kspaceFirstOrder3D-OMP -i input_data/Example74_forward_input_14400sensors.h5 -o output_data/Example74_forward_output_14400sensors.h5');
+system('../kspaceFirstOrder3D-OMP -i input_data/Example75_forward_input_14400sensors.h5 -o output_data/Example75_forward_output_14400sensors.h5');
