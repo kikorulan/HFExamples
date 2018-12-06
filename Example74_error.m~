@@ -18,147 +18,9 @@ Nx = dim(1, 1); dx = dim(2, 1);
 Ny = dim(1, 2); dy = dim(2, 2);
 Nz = dim(1, 3); dz = dim(2, 3);
 
-%============================================================================================================================================
-% FORWARD PROBLEM
-%============================================================================================================================================
-
-%==================================================
-% TIME SIGNAL - RT
-%==================================================
-% Import data
-filenameData = 'output_data/ForwardSignal.dat';
-timeSignal = importdata(filenameData, ' ', 0);
-timeRT = timeSignal(1, :);
-inputRT = timeSignal(2:end, :);
-% Plot
-figure;
-imagesc(inputRT);
-box on;
-colorbar();
-
-% Import data
-filenameData = 'input_data/forwardSignal_reference_1600sensors.dat';
-timeSignal = importdata(filenameData, ' ', 0);
-timeRT = timeSignal(1, :);
-inputRT = timeSignal(2:end, :);
-% Plot
-figure;
-imagesc(inputRT);
-box on;
-colorbar();
-
-%==================================================
-% TIME SIGNAL - kWave
-%==================================================
-sensor_data = h5read('output_data/Example74_forward_output_1600sensors.h5', '/p');
-inputKWave = sensor_data(:, :);
-% Plot
-figure;
-imagesc(inputKWave);
-box on;
-colorbar();
-
-%==================================================
-% COMPARISON IMAGE
-%==================================================
-dcol_pos = @(x, n) [x(:, end-(n-1):end) x(:, 1:end-n)];
-dcol_neg = @(x, n) [x(:, n+1:end) x(:, 1:n)];
-%timeKWave = kgrid.t_array;
-nSensors = size(sensor_data, 1);
-normRT = max(inputRT(1,:));
-normKWave = max(inputKWave(1,:));
-
-for n = 1:10
-    % Plot
-    figure;
-    imagesc(inputKWave/normKWave - dcol_pos(inputRT, n)/normRT);
-    box on;
-    colorbar();
-end
-
-for n = 1:10
-    figure;
-    imagesc(inputKWave/normKWave - dcol_neg(inputRT, n)/normRT);
-    box on;
-    colorbar();
-end
-
-%==================================================
-% COMPARISON WITH K-WAVE
-%==================================================
-% Import data
-sensor_data = h5read('output_data/Example74_forward_output_1600sensors.h5', '/p');
-filenameData = 'output_data/ForwardSignal.dat';
-timeSignal = importdata(filenameData, ' ', 0);
-% Input
-timeRT = timeSignal(1, :);
-inputRT = timeSignal(2:end, :);
-%timeKWave = kgrid.t_array;
-inputKWave = sensor_data;
-nSensors = size(sensor_data, 1);
-
-normRT = max(inputRT(1,:));
-normKWave = max(inputKWave(1,:));
-
-% Norm difference
-difNorm = norm(inputRT(:)/normRT - inputKWave(:)/normKWave);
-
-% Plot all sensors
-vecS = 1:100:1600;
-for i = 1:length(vecS)
-    % Normalisation - RT
-    signalRT = inputRT(vecS(i), :)/normRT;
-    % Normalisation - kWave
-    signalKWave = inputKWave(vecS(i), :)/normKWave;
-    % Plot
-    figure;
-    plot(timeRT, signalRT, 'Color', 'r', 'LineWidth', 2);
-    hold on;
-    set(gca,'FontSize',18);
-    plot(timeRT, signalKWave, 'Color', 'blue', 'LineWidth', 2);
-    axis([0 1.5e-5 -1.8 1.8]);
-    legend('RT', 'k-Wave');
-    xlabel('time (s)');
-    ylabel('amplitude');
-    ax = gca;
-    ax.GridAlpha = 0.5;
-    grid on;
-    title(['RT vs kWave - ', int2str(i)]);
-end
-
-for i = 1:length(vecS)
-    % Error
-    signalRT = inputRT(vecS(i), :)/normRT;
-    signalKWave = inputKWave(vecS(i), :)/normKWave;
-    % Spline
-    signalKWave_spline = spline(timeRT, signalKWave, timeRT);
-    error = signalRT - signalKWave_spline;
-    figure;
-    plot(timeRT, error, 'Color', 'r', 'LineWidth', 2);
-    set(gca,'FontSize',18);
-    axis([0 1.5e-5 -.2 .2]);
-    legend('error');
-    xlabel('time (s)');
-    ylabel('error');
-    ax = gca;
-    ax.GridAlpha = 0.5;
-    grid on;
-    title(['Error RT vs kWave - ', int2str(i)]);
-end
-
-%============================================================================================================================================
-% ADJOINT PROBLEM
-%============================================================================================================================================
-% Position
-position     = [700 700 300 630];
-positionY    = [700 700 320 630];
-positionBar  = [700 700 363 630];
-positionYBar = [700 700 390 630];
-set(0,'DefaultFigurePaperPositionMode','auto');
-
-%==================================================
+%========================================================================================================================
 % INITIAL PRESSURE
-%==================================================
+%========================================================================================================================
 % Load Initial Pressure
 u0Matrix = importdata('input_data/initial_pressure_veins_80x240x240.dat', ' ', 0);
 u0 = matrix2cube(u0Matrix, Nz);
@@ -167,116 +29,7 @@ a = axes;
 t = title('Initial Pressure');
 a.Visible = 'off'; 
 t.Visible = 'on'; 
-saveas(gcf, 'figures/Example74_initial_pressure.fig');
-% Load Initial Pressure
-load ./input_data/initial_pressure_veins_smooth;
-plot_projection(initial_pressure_veins_smooth, dx);
-
-%==================================================
-% Reconstruction - kWave
-%==================================================
-PML_size = 10;
-% 14400 sensors
-p0_recon_PML = h5read('output_data/Example74_adjoint_output_14400sensors.h5', '/p_final');
-p0_recon = max(0, p0_recon_PML(1+PML_size:end-PML_size, 1+PML_size:end-PML_size, 1+PML_size:end-PML_size));
-p0_recon = p0_recon/max(p0_recon(:));
-plot_projection(p0_recon, dx);
-a = axes;
-t = title('k-Wave adjoint projection');
-a.Visible = 'off'; 
-t.Visible = 'on'; 
-saveas(gcf, 'figures/Example74_kWave_adjoint_14400sensors.fig');
-
-% 1600 sensors
-p0_recon_PML = h5read('output_data/Example74_adjoint_output_1600sensors.h5', '/p_final');
-p0_recon = max(0, p0_recon_PML(1+PML_size:end-PML_size, 1+PML_size:end-PML_size, 1+PML_size:end-PML_size));
-p0_recon = p0_recon/max(p0_recon(:));
-plot_projection(p0_recon, dx);
-a = axes;
-t = title('k-Wave adjoint projection');
-a.Visible = 'off'; 
-t.Visible = 'on'; 
-saveas(gcf, 'figures/Example74_kWave_adjoint_1600sensors.fig');
-
-
-%==================================================
-% ADJOINT k-Wave
-%==================================================
-pixelPressureMatrix = importdata('input_data/pressure_adjoint_kWave_14400sensors.dat', ' ', 0);
-pixelPressure = max(0, matrix2cube(pixelPressureMatrix, Nz));
-plot_projection(pixelPressure, dx);
-
-pixelPressureMatrix = importdata('input_data/pixelPressure_adjoint_kWave_1600sensors.dat', ' ', 0);
-pixelPressure_adjoint = matrix2cube(pixelPressureMatrix, Nz);
-plot_projection(pixelPressure_adjoint, dx);
-
-%==================================================
-% ADJOINT RT
-%==================================================
-% 1600
-pixelPressureMatrix = importdata('input_data/pixelPressure_adjoint_RT_1600sensors.dat', ' ', 0);
-pixelPressure = matrix2cube(pixelPressureMatrix, Nz);
-plot_projection(pixelPressure, dx);
-
-% 14400
-pixelPressureMatrix = importdata('input_data/pixelPressure_adjoint_RT_14400sensors.dat', ' ', 0);
-normRT = 5e17;
-pixelPressureMatrix_norm = pixelPressureMatrix*normRT;
-dlmwrite('input_data/pixelPressure_adjoint_RT_14400sensors_norm.dat', pixelPressureMatrix_norm, 'delimiter', ' ');
-pixelPressure = matrix2cube(pixelPressureMatrix, Nz);
-plot_projection(pixelPressure, dx);
-pixelPressureMatrix_norm = pixelPressureMatrix*0;
-dlmwrite('input_data/pixelPressure_0.dat', pixelPressureMatrix_norm, 'delimiter', ' ');
-
-% 14400 norm
-pixelPressureMatrix = importdata('input_data/pixelPressure_adjoint_RT_14400sensors_norm.dat', ' ', 0);
-pixelPressure = matrix2cube(pixelPressureMatrix, Nz);
-plot_projection(pixelPressure, dx);
-
-% 0
-pixelPressureMatrix = importdata('input_data/pixelPressure_0.dat', ' ', 0);
-pixelPressure = matrix2cube(pixelPressureMatrix, Nz);
-plot_projection(pixelPressure, dx);
-
-
-%==================================================
-% AUXILIAR RECONSTRUCTION
-%==================================================
-% Import data
-pixelPressureMatrix = importdata('output_data/pixelPressure_GD_2.dat', ' ', 0);
-pixelPressure = max(0, matrix2cube(pixelPressureMatrix, Nz));
-plot_projection(pixelPressure, dx);
-
-% Import data
-pixelPressureMatrix = importdata('output_data/pixelPressure_S-GD_14.dat', ' ', 0);
-pixelPressure = max(0, matrix2cube(pixelPressureMatrix, Nz));
-plot_projection(pixelPressure, dx);
-
-% Import data
-pixelPressureMatrix = importdata('output_data/pixelPressure_FISTA_1.dat', ' ', 0);
-pixelPressure = max(0, matrix2cube(pixelPressureMatrix, Nz));
-plot_projection(pixelPressure, dx);
-
-% Import data
-pixelPressureMatrix = importdata('output_data/pixelPressure_S-FISTA_29.dat', ' ', 0);
-pixelPressure = max(0, matrix2cube(pixelPressureMatrix, Nz));
-plot_projection(pixelPressure, dx);
-
-% Import data
-pixelPressureMatrix = importdata('output_data/pixelPressure_PDHG_1.dat', ' ', 0);
-pixelPressure = max(0, matrix2cube(pixelPressureMatrix, Nz));
-plot_projection(pixelPressure, dx);
-
-% Import data
-pixelPressureMatrix = importdata('output_data/pixelPressure_S-PDHG_12.dat', ' ', 0);
-pixelPressure = max(0, matrix2cube(pixelPressureMatrix, Nz));
-plot_projection(pixelPressure, dx);
-
-% Import data
-pixelPressureMatrix = importdata('output_data/pixelPressure_TVdenoised_1e-14-3000.dat', ' ', 0);
-pixelPressure = max(0, matrix2cube(pixelPressureMatrix, Nz));
-plot_projection(pixelPressure, dx);
-
+saveas(gcf, './figures/Example74_initial_pressure.fig');
 
 %========================================================================================================================
 % ITERATIVE RECONSTRUCTION
@@ -287,7 +40,7 @@ iter = 1;
 %============================================================
 % GD *************************************
 GD = [];
-GD.tau    = '1e18';
+GD.tau    = '4e17';
 GD.lambda = '1e-2';
 GD.iter   = int2str(iter);
 % S-GD ***********************************
@@ -298,7 +51,7 @@ SGD.batch  = '90';
 SGD.epoch  = int2str(iter);
 % FISTA **********************************
 FISTA = [];
-FISTA.tau    = '1e18';
+FISTA.tau    = '2e17';
 FISTA.lambda = '1e-2';
 FISTA.iter   = int2str(iter);
 % PDHG ***********************************
@@ -381,4 +134,33 @@ t.Visible = 'on';
 %========================================================================================================================
 % PRIMAL DISTANCE ERROR
 %========================================================================================================================
+primal_distance = @(x, y) sum((x(:) - y(:)).*(x(:) - y(:)));
 
+% Gradient descent
+GD_error_pd = primal_distance(u0, 0*u0);
+GD_ssim     = ssim(u0, 0*u0);
+for iter = 1:5
+    disp(iter)
+    ppmatrix = importdata(['./results/pixelPressure_GD_tau', GD.tau, '_lambda', GD.lambda, '_iter', int2str(iter), '.dat'], ' ', 0);
+    pp = max(0, matrix2cube(ppmatrix, Nz));
+    GD_error_pd = [GD_error_pd primal_distance(u0, pp)];
+    GD_ssim     = [GD_ssim ssim(u0, pp)];
+end
+
+% Stochastic Gradient descent
+SGD_error_pd = primal_distance(u0, 0*u0);
+SGD_ssim     = ssim(u0, 0*u0);
+for iter = 1:5
+    ppmatrix = importdata(['./results/pixelPressure_S-GD_tau', SGD.tau, '_lambda', SGD.lambda, '_batch', SGD.batch, '_epoch', int2str(iter), '.dat'], ' ', 0);
+    pp = max(0, matrix2cube(ppmatrix, Nz));
+    SGD_error_pd = [SGD_error_pd primal_distance(u0, pp)];
+    SGD_ssim     = [SGD_ssim ssim(u0, pp)];
+end
+
+% FISTA
+FISTA_error_pd = [];
+for iter = 1:5
+    ppmatrix = importdata(['./results/pixelPressure_FISTA_tau', FISTA.tau, '_lambda', FISTA.lambda, '_iter', int2str(iter), '.dat'], ' ', 0);
+    pp = max(0, matrix2cube(ppmatrix, Nz));
+    FISTA_error_pd = [FISTA_error_pd primal_distance(u0, pp)];
+end

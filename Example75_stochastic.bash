@@ -1,5 +1,20 @@
 #!/bin/bash
 
+#====================
+# QSUB
+#====================
+
+#$ -P gpu
+#$ -l gpu=1
+#$ -l h_rt=24:00:00
+#$ -l tmem=3G
+#$ -N RTiter_ex75
+#$ -wd /home/frullan/HighFreqCode/Examples/Ex75_3D_thinveins_het
+#$ -S /bin/bash
+
+# -o RTiter.txt
+#$ -j y
+
 #================================================================================
 # EXAMPLE for STOCHASTIC PDHG
 # 3D domain. 
@@ -13,7 +28,7 @@ if [ "$HOSTNAME" = "maryam.cs.ucl.ac.uk" ]; then
     export HOST_FOLDER="/cs/research/medim/projects2/projects/frullan/Documents/HighFreqCode/Examples/"
 elif [ "$HOSTNAME" = "hannover" ]; then
     export HOST_FOLDER="/home/wontek/sharedWK/Examples/"
-elif [ "$HOSTNAME" = "miller.local" ] || [ "$HOSTNAME" = "armstrong.local" ]; then
+else
     export HOST_FOLDER="/home/frullan/HighFreqCode/Examples/"
 fi
 export EXAMPLE_FOLDER=$HOST_FOLDER$EXAMPLE
@@ -31,87 +46,100 @@ export INITIAL_PRESSURE="initial_pressure_veins_80x240x240.dat"
 export SENSORS="sensors_subsampled_14400.dat" 
 export FORWARD_SIGNAL="forwardSignal_reference_14400sensors.dat"
 export PIXEL_PRESSURE="pixelPressure_0.dat"
-export STDOUT="stdout"$1".txt"
 
 # Choose GPU
-export GPU_INDEX=2
+export GPU_INDEX=0
+# Choose mode
+export MODE='-P'
 
 #================================================================================
 #=======   GRADIENT DESCENT
 #================================================================================
-if [ "$1" = "-G" ]; then
+if [ "$MODE" = "-G" ]; then
     echo "=================== GRADIENT DESCENT ===================="
     # Regularization parameters
     TAU=1e18
     LAMBDA=1e-2 # 1e-2
     NITER=5
-    RTiterative_GPU $1 $INPUT_FOLDER$DIMENSIONS $INPUT_FOLDER$SOUND_SPEED $INPUT_FOLDER$INITIAL_PRESSURE \
+    # Output
+    export STDOUT="stdout_GD_tau"$TAU"_lambda"$LAMBDA$"_iter"$NITER".txt"
+    RTiterative_GPU $MODE $INPUT_FOLDER$DIMENSIONS $INPUT_FOLDER$SOUND_SPEED $INPUT_FOLDER$INITIAL_PRESSURE \
                     $INPUT_FOLDER$SENSORS $INPUT_FOLDER$FORWARD_SIGNAL $INPUT_FOLDER$PIXEL_PRESSURE $TAU $LAMBDA $NITER > $OUTPUT_FOLDER$STDOUT
 #================================================================================
 #=======   STOCHASTIC GRADIENT DESCENT
 #================================================================================
-elif [ "$1" = "-g" ]; then
+elif [ "$MODE" = "-g" ]; then
     echo "=================== STOCHASTIC GRADIENT DESCENT ===================="
     # Regularization parameters
     TAU=8e18
     LAMBDA=3e-4
     BATCH_SIZE=90
     N_EPOCHS=5
-    RTiterative_GPU $1 $INPUT_FOLDER$DIMENSIONS $INPUT_FOLDER$SOUND_SPEED $INPUT_FOLDER$INITIAL_PRESSURE \
+    # Output
+    export STDOUT="stdout_S-GD_tau"$TAU"_lambda"$LAMBDA"_batch"$BATCH_SIZE"_epochs"$N_EPOCHS".txt"
+    RTiterative_GPU $MODE $INPUT_FOLDER$DIMENSIONS $INPUT_FOLDER$SOUND_SPEED $INPUT_FOLDER$INITIAL_PRESSURE \
                     $INPUT_FOLDER$SENSORS $INPUT_FOLDER$FORWARD_SIGNAL $INPUT_FOLDER$PIXEL_PRESSURE $TAU $LAMBDA $BATCH_SIZE $N_EPOCHS > $OUTPUT_FOLDER$STDOUT
 #================================================================================
 #=======   FISTA
 #================================================================================
-elif [ "$1" = "-F" ]; then
+elif [ "$MODE" = "-F" ]; then
     echo "=================== FISTA ===================="
     # Regularization parameters
     TAU=1e18
     LAMBDA=1e-2
     NITER=5
-    RTiterative_GPU $1 $INPUT_FOLDER$DIMENSIONS $INPUT_FOLDER$SOUND_SPEED $INPUT_FOLDER$INITIAL_PRESSURE \
+    # Output
+    export STDOUT="stdout_FISTA_tau"$TAU"_lambda"$LAMBDA"_iter"$NITER".txt"
+    RTiterative_GPU $MODE $INPUT_FOLDER$DIMENSIONS $INPUT_FOLDER$SOUND_SPEED $INPUT_FOLDER$INITIAL_PRESSURE \
                     $INPUT_FOLDER$SENSORS $INPUT_FOLDER$FORWARD_SIGNAL $INPUT_FOLDER$PIXEL_PRESSURE $TAU $LAMBDA $NITER > $OUTPUT_FOLDER$STDOUT
 #================================================================================
 #=======   STOCHASTIC FISTA
 #================================================================================
-elif [ "$1" = "-f" ]; then
+elif [ "$MODE" = "-f" ]; then
     echo "=================== STOCHASTIC FISTA ===================="
     # Regularization parameters
     TAU=1e18   
     LAMBDA=1e-3
-    NITER=50
-    RTiterative_GPU $1 $INPUT_FOLDER$DIMENSIONS $INPUT_FOLDER$SOUND_SPEED $INPUT_FOLDER$INITIAL_PRESSURE \
-                    $INPUT_FOLDER$SENSORS $INPUT_FOLDER$FORWARD_SIGNAL $INPUT_FOLDER$PIXEL_PRESSURE $TAU $LAMBDA $NITER > $OUTPUT_FOLDER$STDOUT
+    BATCH_SIZE=90
+    N_EPOCHS=5
+    # Output
+    export STDOUT="stdout_S-FISTA_tau"$TAU"_lambda"$LAMBDA"_batch"$BATCH_SIZE"_epochs"$N_EPOCHS".txt"
+    RTiterative_GPU $MODE $INPUT_FOLDER$DIMENSIONS $INPUT_FOLDER$SOUND_SPEED $INPUT_FOLDER$INITIAL_PRESSURE \
+                    $INPUT_FOLDER$SENSORS $INPUT_FOLDER$FORWARD_SIGNAL $INPUT_FOLDER$PIXEL_PRESSURE $TAU $LAMBDA $BATCH_SIZE $N_EPOCHS> $OUTPUT_FOLDER$STDOUT
 #================================================================================
 #=======   PRIMAL DUAL HYBRID GRADIENT
 #================================================================================
-elif [ "$1" = "-P" ]; then
+elif [ "$MODE" = "-P" ]; then
     echo "=================== PDHG ===================="
     # Regularization parameters
-    SIGMA=2e1
-    TAU=1e18     
+    SIGMA=1e1
+    TAU=8e17     
     THETA=1      
     LAMBDA=1e-2  
     NITER=5
-    RTiterative_GPU $1 $INPUT_FOLDER$DIMENSIONS $INPUT_FOLDER$SOUND_SPEED $INPUT_FOLDER$INITIAL_PRESSURE \
+    # Output
+    export STDOUT="stdout_PDHG_sigma"$SIGMA"_tau"$TAU"_theta"$THETA"_lambda"$LAMBDA"_iter"$NITER".txt"
+    RTiterative_GPU $MODE $INPUT_FOLDER$DIMENSIONS $INPUT_FOLDER$SOUND_SPEED $INPUT_FOLDER$INITIAL_PRESSURE \
                     $INPUT_FOLDER$SENSORS $INPUT_FOLDER$FORWARD_SIGNAL $INPUT_FOLDER$PIXEL_PRESSURE $SIGMA $TAU $THETA $LAMBDA $NITER > $OUTPUT_FOLDER$STDOUT
 #================================================================================
 #=======   STOCHASTIC PRIMAL DUAL HYBRID GRADIENT
 #================================================================================
-elif [ "$1" = "-p" ]; then
+elif [ "$MODE" = "-p" ]; then
     echo "=================== S-PDHG ===================="
     # Regularization parameters
-    SIGMA=2e1
-    TAU=12e18
+    SIGMA=15
+    TAU=8e18
     THETA=1    
     LAMBDA=3e-4
     BATCH_SIZE=90
     N_EPOCHS=5
-    # RUN
-    RTiterative_GPU $1 $INPUT_FOLDER$DIMENSIONS $INPUT_FOLDER$SOUND_SPEED $INPUT_FOLDER$INITIAL_PRESSURE \
+    # Output
+    export STDOUT="stdout_PDHG_sigma"$SIGMA"_tau"$TAU"_theta"$THETA"_lambda"$LAMBDA"_batch"$BATCH_SIZE"_epochs"$N_EPOCHS".txt"
+    RTiterative_GPU $MODE $INPUT_FOLDER$DIMENSIONS $INPUT_FOLDER$SOUND_SPEED $INPUT_FOLDER$INITIAL_PRESSURE \
                     $INPUT_FOLDER$SENSORS $INPUT_FOLDER$FORWARD_SIGNAL $INPUT_FOLDER$PIXEL_PRESSURE $SIGMA $TAU $THETA $LAMBDA $BATCH_SIZE $N_EPOCHS > $OUTPUT_FOLDER$STDOUT
-elif [ "$1" = "-r" ]; then
+elif [ "$MODE" = "-r" ]; then
     echo "============  SINGLE FORWARD ADJOINT  ============"
-    RTiterative_GPU $1 $INPUT_FOLDER$DIMENSIONS $INPUT_FOLDER$SOUND_SPEED $INPUT_FOLDER$INITIAL_PRESSURE \
+    RTiterative_GPU $MODE $INPUT_FOLDER$DIMENSIONS $INPUT_FOLDER$SOUND_SPEED $INPUT_FOLDER$INITIAL_PRESSURE \
                     $INPUT_FOLDER$SENSORS $INPUT_FOLDER$FORWARD_SIGNAL $INPUT_FOLDER$PIXEL_PRESSURE
 else
     echo "Non supported mode"

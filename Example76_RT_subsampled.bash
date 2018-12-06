@@ -4,16 +4,16 @@
 # QSUB
 #====================
 
-#$ -P gpu
-#$ -l gpu=1
-#$ -l h_rt=10:50:0
 #$ -l tmem=3G
-#$ -N RTsolver
-#$ -wd /home/frullan/C++
-#$ -S /bin/bash
+#$ -l h_vmem=3G
+#$ -l h_rt=3:00:00
+#$ -l gpu=1
 
-#$ -o RTsolver.txt
+# OPTIONAL
+
+#$ -S /bin/bash
 #$ -j y
+#$ -N RTsolver
 
 #================================================================================
 # EXAMPLE 74
@@ -22,7 +22,7 @@
 #================================================================================
 #The code you want to run now goes here.
 export PATH="/home/frullan/HighFreqCode/HighFreq_3DRT/Build/bin:$PATH"
-export EXAMPLE="Ex74_3D_thinveins/"
+export EXAMPLE="Ex76_3D_40x120x120/"
 # Output folder
 if [ "$HOSTNAME" = "maryam.cs.ucl.ac.uk" ]; then
     export HOST_FOLDER="/cs/research/medim/projects2/projects/frullan/Documents/HighFreqCode/Examples/"
@@ -40,18 +40,18 @@ cd $EXAMPLE_FOLDER
 # Assign files
 export DIMENSIONS="dimensions.dat"
 export SOUND_SPEED="sound_speed.dat"
-export INITIAL_PRESSURE="initial_pressure_veins_80x240x240.dat"
-export SENSORS="sensors_subsampled_14400.dat" 
-export FORWARD_SIGNAL="forwardSignal_reference_14400sensors.dat"
+export INITIAL_PRESSURE="initial_pressure_veins_40x120x120.dat"
+export SENSORS="sensors_subsampled_3600.dat" 
+export FORWARD_SIGNAL="forwardSignal_reference_3600sensors.dat"
 export STDOUT="stdout-forward.txt"
 
 # Mode
 export MODE="-f"
-export GPU_INDEX=0
+export GPU_INDEX=1
 # Generate dimensions file
-Nx=80  dx=0.000053
-Ny=240 dy=0.000053
-Nz=240 dz=0.000053
+Nx=40  dx=0.000053
+Ny=120 dy=0.000053
+Nz=120 dz=0.000053
 cat > $INPUT_FOLDER$DIMENSIONS <<EOF
 $Nx $Ny $Nz
 $dx $dy $dz
@@ -60,11 +60,11 @@ EOF
 #==============================
 # SENSORS
 #==============================
-nSensorsArray=120
-nRaysPhi=1024 
-nRaysTheta=1024
+nSensorsArray=60
+nRaysPhi=256
+nRaysTheta=256
 dt=1.6667e-8
-tMax=8.0836e-06
+tMax=4.0836e-06
 # Generate sensor file
 cat > $INPUT_FOLDER$SENSORS<<EOF
 EOF

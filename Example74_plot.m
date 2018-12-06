@@ -26,7 +26,7 @@ Nz = dim(1, 3); dz = dim(2, 3);
 % TIME SIGNAL - RT
 %==================================================
 % Import data
-filenameData = 'output_data/ForwardSignal.dat';
+filenameData = './output_data/ForwardSignal.dat';
 timeSignal = importdata(filenameData, ' ', 0);
 timeRT = timeSignal(1, :);
 inputRT = timeSignal(2:end, :);
@@ -37,13 +37,20 @@ box on;
 colorbar();
 
 % Import data
-filenameData = 'input_data/forwardSignal_reference_1600sensors.dat';
+filenameData = './input_data/forwardSignal_reference_14400sensors.dat';
 timeSignal = importdata(filenameData, ' ', 0);
 timeRT = timeSignal(1, :);
-inputRT = timeSignal(2:end, :);
+inputRT2 = timeSignal(2:end, :);
 % Plot
 figure;
-imagesc(inputRT);
+imagesc(inputRT2);
+box on;
+colorbar();
+
+
+% Difference
+figure
+imagesc(inputRT-inputRT2);
 box on;
 colorbar();
 
@@ -253,7 +260,7 @@ pixelPressure = max(0, matrix2cube(pixelPressureMatrix, Nz));
 plot_projection(pixelPressure, dx);
 
 % Import data
-pixelPressureMatrix = importdata('output_data/pixelPressure_FISTA_1.dat', ' ', 0);
+pixelPressureMatrix = importdata('./output_data/pixelPressure_FISTA_4.dat', ' ', 0);
 pixelPressure = max(0, matrix2cube(pixelPressureMatrix, Nz));
 plot_projection(pixelPressure, dx);
 
@@ -263,12 +270,12 @@ pixelPressure = max(0, matrix2cube(pixelPressureMatrix, Nz));
 plot_projection(pixelPressure, dx);
 
 % Import data
-pixelPressureMatrix = importdata('./output_data/pixelPressure_PDHG_4.dat', ' ', 0);
+pixelPressureMatrix = importdata('./output_data/pixelPressure_PDHG_1.dat', ' ', 0);
 pixelPressure = max(0, matrix2cube(pixelPressureMatrix, Nz));
 plot_projection(pixelPressure, dx);
 
 % Import data
-pixelPressureMatrix = importdata('./output_data/pixelPressure_S-PDHG_5.dat', ' ', 0);
+pixelPressureMatrix = importdata('./output_data/pixelPressure_S-GD_tau4e18_lambda3e-4_batch90_epoch5.dat', ' ', 0);
 pixelPressure = max(0, matrix2cube(pixelPressureMatrix, Nz));
 plot_projection(pixelPressure, dx);
 

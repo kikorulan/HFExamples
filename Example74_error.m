@@ -138,6 +138,7 @@ primal_distance = @(x, y) sum((x(:) - y(:)).*(x(:) - y(:)));
 
 % Gradient descent
 GD_error_pd = primal_distance(u0, 0*u0);
+
 GD_ssim     = ssim(u0, 0*u0);
 for iter = 1:5
     disp(iter)
