@@ -63,11 +63,8 @@ saveas(gcf, './figures/pID_sound_speed', 'png');
 u0Matrix = importdata('input_data/initial_pressure_veins_80x240x240.dat', ' ', 0);
 u0 = matrix2cube(u0Matrix, Nz);
 h = plot_projection(u0, dx);
-a = axes;
-%t = title('Initial Pressure');
-a.Visible = 'off'; 
-t.Visible = 'on'; 
-saveas(gcf, 'figures/Example75_initial_pressure.fig');
+saveas(gcf, './figures/pID_initial_pressure.fig');
+saveas(gcf, './figures/pID_initial_pressure', 'png');
 % Load Initial Pressure
 load ./input_data/initial_pressure_veins_smooth;
 plot_projection(initial_pressure_veins_smooth, dx);
@@ -78,65 +75,32 @@ plot_projection(initial_pressure_veins_smooth, dx);
 PML_size = 10;
 % 14400 sensors
 p0_recon_PML = h5read('output_data/Example75_adjoint_output_14400sensors.h5', '/p_final');
-p0_recon = max(0, p0_recon_PML(1+PML_size:end-PML_size, 1+PML_size:end-PML_size, 1+PML_size:end-PML_size));
-p0_recon = p0_recon/max(p0_recon(:));
+p0_recon = p0_recon_PML(1+PML_size:end-PML_size, 1+PML_size:end-PML_size, 1+PML_size:end-PML_size);
 plot_projection(p0_recon, dx);
-a = axes;
-t = title('k-Wave adjoint projection');
-a.Visible = 'off'; 
-t.Visible = 'on'; 
-saveas(gcf, 'figures/Example75_kWave_adjoint_14400sensors.fig');
+saveas(gcf, './figures/pID_kWave_adjoint_14400sensors.fig');
+saveas(gcf, './figures/pID_kWave_adjoint_14400sensors', 'png');
 
 % 1600 sensors
 p0_recon_PML = h5read('output_data/Example75_adjoint_output_1600sensors.h5', '/p_final');
-p0_recon = max(0, p0_recon_PML(1+PML_size:end-PML_size, 1+PML_size:end-PML_size, 1+PML_size:end-PML_size));
-p0_recon = p0_recon/max(p0_recon(:));
+p0_recon = p0_recon_PML(1+PML_size:end-PML_size, 1+PML_size:end-PML_size, 1+PML_size:end-PML_size);
 plot_projection(p0_recon, dx);
-a = axes;
-t = title('k-Wave adjoint projection');
-a.Visible = 'off'; 
-t.Visible = 'on'; 
-saveas(gcf, 'figures/Example75_kWave_adjoint_1600sensors.fig');
-
-
-%==================================================
-% ADJOINT k-Wave
-%==================================================
-pixelPressureMatrix = importdata('input_data/pressure_adjoint_kWave_14400sensors.dat', ' ', 0);
-pixelPressure = max(0, matrix2cube(pixelPressureMatrix, Nz));
-plot_projection(pixelPressure, dx);
-
-pixelPressureMatrix = importdata('input_data/pixelPressure_adjoint_kWave_1600sensors.dat', ' ', 0);
-pixelPressure_adjoint = matrix2cube(pixelPressureMatrix, Nz);
-plot_projection(pixelPressure_adjoint, dx);
+saveas(gcf, './figures/pID_kWave_adjoint_1600sensors.fig');
+saveas(gcf, './figures/pID_kWave_adjoint_1600sensors', 'png');
 
 %==================================================
 % ADJOINT RT
 %==================================================
-% 1600
-pixelPressureMatrix = importdata('input_data/pixelPressure_adjoint_RT_1600sensors.dat', ' ', 0);
-pixelPressure = matrix2cube(pixelPressureMatrix, Nz);
-plot_projection(pixelPressure, dx);
-
 % 14400
 pixelPressureMatrix = importdata('input_data/pixelPressure_adjoint_RT_14400sensors.dat', ' ', 0);
 pixelPressure = matrix2cube(pixelPressureMatrix, Nz);
 plot_projection(pixelPressure, dx);
-normRT = 1e18;
 pixelPressureMatrix_norm = pixelPressureMatrix*normRT;
 dlmwrite('input_data/pixelPressure_adjoint_RT_14400sensors_norm1e18.dat', pixelPressureMatrix_norm, 'delimiter', ' ');
 
-% 14400 norm
-pixelPressureMatrix = importdata('input_data/pixelPressure_adjoint_RT_14400sensors_norm1e18.dat', ' ', 0);
+% 1600
+pixelPressureMatrix = importdata('input_data/pixelPressure_adjoint_RT_1600sensors.dat', ' ', 0);
 pixelPressure = matrix2cube(pixelPressureMatrix, Nz);
 plot_projection(pixelPressure, dx);
-
-% 0
-pixelPressureMatrix = importdata('input_data/pixelPressure_adjoint_RT_14400sensors.dat', ' ', 0);
-pixelPressure = matrix2cube(pixelPressureMatrix, Nz);
-normRT = 0;
-pixelPressureMatrix_norm = pixelPressureMatrix*normRT;
-dlmwrite('input_data/pixelPressure_0.dat', pixelPressureMatrix_norm, 'delimiter', ' ');
 
 %==================================================
 % ITERATIVE RECONSTRUCTION

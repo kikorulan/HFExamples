@@ -250,7 +250,7 @@ plot_projection(pixelPressure, dx);
 % AUXILIAR RECONSTRUCTION
 %==================================================
 % Import data
-pixelPressureMatrix = importdata('./results/pixelPressure_S-PDHG_sigma2e1_tau8e18_theta1_lambda3e-4_batch90_epoch5.dat', ' ', 0);
+pixelPressureMatrix = importdata('./output_data/pixelPressure_PDHG_sigma5_tau8e17_theta1_lambda1e-2_iter1.dat', ' ', 0);
 pixelPressure = max(0, matrix2cube(pixelPressureMatrix, Nz));
 plot_projection(pixelPressure, dx);
 
