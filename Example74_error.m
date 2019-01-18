@@ -27,7 +27,7 @@ a = axes;
 t = title('Initial Pressure');
 a.Visible = 'off'; 
 t.Visible = 'on'; 
-%saveas(gcf, './figures/Example74_initial_pressure.fig');
+saveas(gcf, './figures/Example74_initial_pressure.fig');
 
 % Forward signal
 time_signal = importdata(['./input_data/forwardSignal_reference_14400sensors.dat'], ' ', 0);
@@ -58,24 +58,24 @@ FISTA.lambda = '1e-2';
 FISTA.iter   = int2str(iter);
 % PDHG ***********************************
 PDHG = [];
-PDHG.sigma  = '1e1';
-PDHG.tau    = '2e17';
+PDHG.sigma  = '2';
+PDHG.tau    = '8e17';
 PDHG.theta  = '1';
 PDHG.lambda = '1e-2';
 PDHG.iter   = int2str(iter);
 % S-PDHG *********************************
 SPDHG = [];
-SPDHG.sigma  = '15';
-SPDHG.tau    = '5e18';
+SPDHG.sigma  = '2';
+SPDHG.tau    = '6e18';
 SPDHG.theta  = '1';
-SPDHG.lambda = '3e-4';
+SPDHG.lambda = '1e-4';
 SPDHG.batch  = '90';
 SPDHG.epoch  = int2str(iter);
 
 %==============================
 % Gradient Descent
 %==============================
-pixelPressureMatrix = importdata(['./results/pixelPressure_GD_tau', GD.tau, '_lambda', GD.lambda, '_iter', GD.iter, '.dat'], ' ', 0);
+pixelPressureMatrix = importdata(['./results/adjoint/FB/pixelPressure_GD_tau', GD.tau, '_lambda', GD.lambda, '_iter', GD.iter, '.dat'], ' ', 0);
 pixelPressure = max(0, matrix2cube(pixelPressureMatrix, Nz));
 plot_projection(pixelPressure, dx);
 a = axes;
@@ -87,7 +87,7 @@ saveas(gcf, ['./figures/Example74_GD_tau', GD.tau, '_lambda', GD.lambda, '_iter'
 %==============================
 % Stochastic Gradient Descent
 %==============================
-pixelPressureMatrix = importdata(['./results/pixelPressure_S-GD_tau', SGD.tau, '_lambda', SGD.lambda, '_batch', SGD.batch, '_epoch', SGD.epoch, '.dat'], ' ', 0);
+pixelPressureMatrix = importdata(['./results/adjoint/S-FB/pixelPressure_S-GD_tau', SGD.tau, '_lambda', SGD.lambda, '_batch', SGD.batch, '_epoch', SGD.epoch, '.dat'], ' ', 0);
 pixelPressure = max(0, matrix2cube(pixelPressureMatrix, Nz));
 plot_projection(pixelPressure, dx);
 a = axes;
@@ -99,7 +99,7 @@ saveas(gcf, ['./figures/Example74_S-GD_tau', SGD.tau, '_lambda', SGD.lambda, '_b
 %==============================
 % FISTA
 %==============================
-pixelPressureMatrix = importdata(['./results/pixelPressure_FISTA_tau', FISTA.tau, '_lambda', FISTA.lambda, '_iter', FISTA.iter, '.dat'], ' ', 0);
+pixelPressureMatrix = importdata(['./results/adjoint/AFB/pixelPressure_FISTA_tau', FISTA.tau, '_lambda', FISTA.lambda, '_iter', FISTA.iter, '.dat'], ' ', 0);
 pixelPressure = max(0, matrix2cube(pixelPressureMatrix, Nz));
 plot_projection(pixelPressure, dx);
 a = axes;
@@ -111,7 +111,7 @@ saveas(gcf, ['./figures/Example74_FISTA_tau', FISTA.tau, '_lambda', FISTA.lambda
 %==============================
 % PDHG
 %==============================
-pixelPressureMatrix = importdata(['./results/pixelPressure_PDHG_sigma', PDHG.sigma, '_tau', PDHG.tau, '_theta', PDHG.theta, '_lambda', PDHG.lambda, '_iter', PDHG.iter, '.dat'], ' ', 0);
+pixelPressureMatrix = importdata(['./results/adjoint/PDHG/pixelPressure_PDHG_sigma', PDHG.sigma, '_tau', PDHG.tau, '_theta', PDHG.theta, '_lambda', PDHG.lambda, '_iter', PDHG.iter, '.dat'], ' ', 0);
 pixelPressure = max(0, matrix2cube(pixelPressureMatrix, Nz));
 plot_projection(pixelPressure, dx);
 a = axes;
@@ -123,7 +123,7 @@ saveas(gcf, ['./figures/Example74_PDHG_sigma', PDHG.sigma, '_tau', PDHG.tau, '_l
 %==============================
 % S-PDHG
 %==============================
-pixelPressureMatrix = importdata(['./results/pixelPressure_S-PDHG_sigma', SPDHG.sigma, '_tau', SPDHG.tau, '_theta', SPDHG.theta, '_lambda', SPDHG.lambda, '_batch', SPDHG.batch, '_epoch', SPDHG.epoch, '.dat'], ' ', 0);
+pixelPressureMatrix = importdata(['./results/adjoint/S-PDHG/pixelPressure_S-PDHG_sigma', SPDHG.sigma, '_tau', SPDHG.tau, '_theta', SPDHG.theta, '_lambda', SPDHG.lambda, '_batch', SPDHG.batch, '_epoch', SPDHG.epoch, '.dat'], ' ', 0);
 pixelPressure = max(0, matrix2cube(pixelPressureMatrix, Nz));
 plot_projection(pixelPressure, dx);
 a = axes;
@@ -141,7 +141,7 @@ disp('******* PRIMAL DISTANCE ********');
 disp('GD');
 GD_error_pd = norm_distance(u0, 0*u0);
 for iter = 1:5
-    ppmatrix = importdata(['./results/pixelPressure_GD_tau', GD.tau, '_lambda', GD.lambda, '_iter', int2str(iter), '.dat'], ' ', 0);
+    ppmatrix = importdata(['./results/adjoint/FB/pixelPressure_GD_tau', GD.tau, '_lambda', GD.lambda, '_iter', int2str(iter), '.dat'], ' ', 0);
     pp = max(0, matrix2cube(ppmatrix, Nz));
     GD_error_pd = [GD_error_pd norm_distance(u0, pp)];
 end
@@ -150,7 +150,7 @@ end
 disp('S-GD');
 SGD_error_pd = norm_distance(u0, 0*u0);
 for iter = 1:5
-    ppmatrix = importdata(['./results/pixelPressure_S-GD_tau', SGD.tau, '_lambda', SGD.lambda, '_batch', SGD.batch, '_epoch', int2str(iter), '.dat'], ' ', 0);
+    ppmatrix = importdata(['./results/adjoint/S-FB/pixelPressure_S-GD_tau', SGD.tau, '_lambda', SGD.lambda, '_batch', SGD.batch, '_epoch', int2str(iter), '.dat'], ' ', 0);
     pp = max(0, matrix2cube(ppmatrix, Nz));
     SGD_error_pd = [SGD_error_pd norm_distance(u0, pp)];
 end
@@ -159,7 +159,7 @@ end
 disp('FISTA');
 FISTA_error_pd = norm_distance(u0, 0*u0);
 for iter = 1:5
-    ppmatrix = importdata(['./results/pixelPressure_FISTA_tau', FISTA.tau, '_lambda', FISTA.lambda, '_iter', int2str(iter), '.dat'], ' ', 0);
+    ppmatrix = importdata(['./results/adjoint/AFB/pixelPressure_FISTA_tau', FISTA.tau, '_lambda', FISTA.lambda, '_iter', int2str(iter), '.dat'], ' ', 0);
     pp = max(0, matrix2cube(ppmatrix, Nz));
     FISTA_error_pd = [FISTA_error_pd norm_distance(u0, pp)];
 end
@@ -168,7 +168,7 @@ end
 disp('PDHG');
 PDHG_error_pd = norm_distance(u0, 0*u0);
 for iter = 1:5
-    ppmatrix = importdata(['./results/pixelPressure_PDHG_sigma', PDHG.sigma, '_tau', PDHG.tau, '_theta', PDHG.theta, '_lambda', PDHG.lambda, '_iter', PDHG.iter, '.dat'], ' ', 0);
+    ppmatrix = importdata(['./results/adjoint/PDHG/pixelPressure_PDHG_sigma', PDHG.sigma, '_tau', PDHG.tau, '_theta', PDHG.theta, '_lambda', PDHG.lambda, '_iter', int2str(iter), '.dat'], ' ', 0);
     pp = max(0, matrix2cube(ppmatrix, Nz));
     PDHG_error_pd = [PDHG_error_pd norm_distance(u0, pp)];
 end
@@ -177,7 +177,7 @@ end
 disp('S-PDHG');
 SPDHG_error_pd = norm_distance(u0, 0*u0);
 for iter = 1:5
-    ppmatrix = importdata(['./results/pixelPressure_S-PDHG_sigma', SPDHG.sigma, '_tau', SPDHG.tau, '_theta', SPDHG.theta, '_lambda', SPDHG.lambda, '_batch', SPDHG.batch, '_epoch', SPDHG.epoch, '.dat'], ' ', 0);
+    ppmatrix = importdata(['./results/adjoint/S-PDHG/pixelPressure_S-PDHG_sigma', SPDHG.sigma, '_tau', SPDHG.tau, '_theta', SPDHG.theta, '_lambda', SPDHG.lambda, '_batch', SPDHG.batch, '_epoch', int2str(iter), '.dat'], ' ', 0);
     pp = max(0, matrix2cube(ppmatrix, Nz));
     SPDHG_error_pd = [SPDHG_error_pd norm_distance(u0, pp)];
 end
@@ -207,7 +207,7 @@ disp('******* DUAL DISTANCE ********');
 disp('GD');
 GD_error_dd = norm_distance(y0, 0*y0);
 for iter = 1:5
-    tSignal = importdata(['./results/forwardSignal_GD_tau', GD.tau, '_lambda', GD.lambda, '_iter', int2str(iter), '.dat'], ' ', 0);
+    tSignal = importdata(['./results/forward/FB/forwardSignal_GD_tau', GD.tau, '_lambda', GD.lambda, '_iter', int2str(iter), '.dat'], ' ', 0);
     yi = tSignal(2:end, :);
     GD_error_dd = [GD_error_dd norm_distance(y0, yi)];
 end
@@ -216,7 +216,7 @@ end
 disp('S-GD');
 SGD_error_dd = norm_distance(y0, 0*y0);
 for iter = 1:5
-    tSignal = importdata(['./results/forwardSignal_S-GD_tau', SGD.tau, '_lambda', SGD.lambda, '_batch', SGD.batch, '_epoch', int2str(iter), '.dat'], ' ', 0);
+    tSignal = importdata(['./results/forward/S-FB/forwardSignal_S-GD_tau', SGD.tau, '_lambda', SGD.lambda, '_batch', SGD.batch, '_epoch', int2str(iter), '.dat'], ' ', 0);
     yi = tSignal(2:end, :);
     SGD_error_dd = [SGD_error_dd norm_distance(y0, yi)];
 end
@@ -225,25 +225,26 @@ end
 disp('FISTA');
 FISTA_error_dd = norm_distance(y0, 0*y0);
 for iter = 1:5
-    tSignal = importdata(['./results/forwardSignal_FISTA_tau', FISTA.tau, '_lambda', FISTA.lambda, '_iter', int2str(iter), '.dat'], ' ', 0);
+    tSignal = importdata(['./results/forward/AFB/forwardSignal_FISTA_tau', FISTA.tau, '_lambda', FISTA.lambda, '_iter', int2str(iter), '.dat'], ' ', 0);
     yi = tSignal(2:end, :);
     FISTA_error_dd = [FISTA_error_dd norm_distance(y0, yi)];
 end
 
-%%  % PDHG
-%%  disp('PDHG');
-%%  PDHG_error_dd = norm_distance(y0, 0*y0);
-%%  for iter = 1:5
-%%      tSignal = importdata(['./results/forwardSignal_PDHG_sigma', PDHG.sigma, '_tau', PDHG.tau, '_theta', PDHG.theta, '_lambda', PDHG.lambda, '_iter', PDHG.iter, '.dat'], ' ', 0);
-%%      yi = tSignal(2:end, :);
-%%      PDHG_error_dd = [PDHG_error_dd norm_distance(y0, yi)];
-%%  end
+% PDHG
+disp('PDHG');
+PDHG_error_dd = norm_distance(y0, 0*y0);
+for iter = 1:5
+    tSignal = importdata(['./results/forward/PDHG/forwardSignal_PDHG_sigma', PDHG.sigma, '_tau', PDHG.tau, '_theta', PDHG.theta, '_lambda', PDHG.lambda, '_iter', int2str(iter), '.dat'], ' ', 0);
+    %tSignal = importdata(['./output_data/a2.dat'], ' ', 0);
+    yi = tSignal(2:end, :);
+    PDHG_error_dd = [PDHG_error_dd norm_distance(y0, yi)];
+end
 
 % SPDHG
 disp('S-PDHG');
 SPDHG_error_dd = norm_distance(y0, 0*y0);
 for iter = 1:5
-    tSignal = importdata(['./results/forwardSignal_S-PDHG_sigma', SPDHG.sigma, '_tau', SPDHG.tau, '_theta', SPDHG.theta, '_lambda', SPDHG.lambda, '_batch', SPDHG.batch, '_epoch', SPDHG.epoch, '.dat'], ' ', 0); 
+    tSignal = importdata(['./results/forward/S-PDHG/forwardSignal_S-PDHG_sigma', SPDHG.sigma, '_tau', SPDHG.tau, '_theta', SPDHG.theta, '_lambda', SPDHG.lambda, '_batch', SPDHG.batch, '_epoch', int2str(iter), '.dat'], ' ', 0); 
     yi = tSignal(2:end, :);
     SPDHG_error_dd = [SPDHG_error_dd norm_distance(y0, yi)];
 end
@@ -255,12 +256,34 @@ semilogy(x_axis, GD_error_dd, 'Color', 'r', 'Linewidth', 1.5);
 hold on;
 semilogy(x_axis, SGD_error_dd, 'Color', 'g', 'Linewidth', 1.5);
 semilogy(x_axis, FISTA_error_dd, 'Color', 'b', 'Linewidth', 1.5);
-%semilogy(x_axis, PDHG_error_pd, 'Color', 'm', 'Linewidth', 1.5);
+semilogy(x_axis, PDHG_error_dd, 'Color', 'm', 'Linewidth', 1.5);
 semilogy(x_axis, SPDHG_error_dd, 'Color', 'c', 'Linewidth', 1.5);
-legend('GD', 'S-GD', 'FISTA', 'S-PDHG');
+legend('GD', 'S-GD', 'FISTA', 'PDHG', 'S-PDHG');
+%legend('GD', 'FISTA', 'PDHG', 'S-PDHG');
 title('Dual Distance Error - homogeneous SS');
 grid on;
 box on;
 ax = gca;
 ax.GridAlpha = 0.2;
 saveas(gcf, ['./figures/Example74_dd_error.fig']);
+
+
+%========================================================================================================================
+% PLOT DUAL
+%========================================================================================================================
+iter = 5;
+% Gradient Descent
+figure;
+tSignal = importdata(['./results/forward/GD/forwardSignal_GD_tau', GD.tau, '_lambda', GD.lambda, '_iter', int2str(iter), '.dat'], ' ', 0);
+yi = tSignal(2:end, :);
+imagesc(yi);
+% FISTA
+figure;
+tSignal = importdata(['./results/forward/FISTA/forwardSignal_FISTA_tau', FISTA.tau, '_lambda', FISTA.lambda, '_iter', int2str(iter), '.dat'], ' ', 0);
+yi = tSignal(2:end, :);
+imagesc(yi);
+% PDHG
+figure;
+tSignal = importdata(['./results/forward/S-PDHG/forwardSignal_S-PDHG_sigma', SPDHG.sigma, '_tau', SPDHG.tau, '_theta', SPDHG.theta, '_lambda', SPDHG.lambda, '_batch', SPDHG.batch, '_epoch', SPDHG.epoch, '.dat'], ' ', 0); 
+yi = tSignal(2:end, :);
+imagesc(yi);

@@ -41,13 +41,13 @@ cd $EXAMPLE_FOLDER
 export DIMENSIONS="dimensions.dat"
 export SOUND_SPEED="sound_speed.dat"
 export INITIAL_PRESSURE="initial_pressure_veins_80x240x240.dat"
-export SENSORS="sensors_subsampled_57600.dat" 
-export FORWARD_SIGNAL="forwardSignal_reference_57600sensors.dat"
-export STDOUT="stdout-forward.txt"
+export SENSORS="sensors_subsampled_81.dat" 
+export FORWARD_SIGNAL="forwardSignal_reference_81sensors.dat"
+export STDOUT="stdout-adjoint.txt"
 
 # Mode
-export MODE="-f"
-export GPU_INDEX=1
+export MODE="-a"
+export GPU_INDEX=0
 # Generate dimensions file
 Nx=80  dx=0.000053
 Ny=240 dy=0.000053
@@ -60,7 +60,7 @@ EOF
 #==============================
 # SENSORS
 #==============================
-nSensorsArray=240
+nSensorsArray=9
 nRaysPhi=1024 
 nRaysTheta=1024
 dt=1.6667e-8
@@ -78,9 +78,15 @@ for ((k=0; k<nSensorsArray; k++)); do
         echo "0 $yPos $zPos $nRaysPhi $nRaysTheta -1.57 1.57 0.04 3.1" >> $INPUT_FOLDER$SENSORS
     done 
 done 
+# Single Sensor
+#zPos=$(echo "scale=4;($dz*($Nz-1))/2" | bc)
+#yPos=$(echo "scale=4;($dy*($Ny-1))/2" | bc)
+#echo "0 $yPos $zPos $nRaysPhi $nRaysTheta -1.57 1.57 0.04 3.1" >> $INPUT_FOLDER$SENSORS
+
 
 #====================
 # RUN 
 #====================
 RTsolver_GPU $MODE $INPUT_FOLDER$DIMENSIONS $INPUT_FOLDER$SOUND_SPEED $INPUT_FOLDER$INITIAL_PRESSURE \
-             $INPUT_FOLDER$SENSORS $OUTPUT_FOLDER $INPUT_FOLDER$FORWARD_SIGNAL > $OUTPUT_FOLDER$STDOUT
+             $INPUT_FOLDER$SENSORS $OUTPUT_FOLDER $INPUT_FOLDER$FORWARD_SIGNAL
+# > $OUTPUT_FOLDER$STDOUT

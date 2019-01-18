@@ -40,7 +40,7 @@ cd $EXAMPLE_FOLDER
 # Assign files
 export DIMENSIONS="dimensions.dat"
 export SOUND_SPEED="sound_speed.dat"
-export INITIAL_PRESSURE="initial_pressure_veins_80x240x240.dat"
+export INITIAL_PRESSURE="initial_pressure_veins_80x240x240_smooth.dat"
 export SENSORS="sensors_subsampled_14400.dat" 
 export FORWARD_SIGNAL="forwardSignal_reference_14400sensors.dat"
 export STDOUT="stdout-adjoint.txt"
@@ -60,8 +60,8 @@ EOF
 #==============================
 # SENSORS
 #==============================
-nRaysPhi=30
-nRaysTheta=30
+nRaysPhi=1024
+nRaysTheta=1024
 dt=1.5e-8
 tMax=8.0836e-06
 # Generate sensor file

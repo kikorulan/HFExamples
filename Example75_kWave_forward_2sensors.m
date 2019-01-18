@@ -26,7 +26,7 @@ medium.density = 1;
 
 % compute time
 dt = 1.5e-8;
-Nt = 486;
+Nt = 539;
 tMax = dt*(Nt-1);
 kgrid.t_array = 0:dt:tMax;
 

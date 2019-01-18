@@ -41,8 +41,8 @@ cd $EXAMPLE_FOLDER
 export DIMENSIONS="dimensions.dat"
 export SOUND_SPEED="sound_speed.dat"
 export INITIAL_PRESSURE="initial_pressure_veins_80x240x240.dat"
-export SENSORS="sensors_subsampled_14400.dat" 
-export FORWARD_SIGNAL="forwardSignal_reference_14400sensors.dat"
+export SENSORS="sensors_subsampled_1600.dat" 
+export FORWARD_SIGNAL="forwardSignal_reference_1600sensors.dat"
 export STDOUT="stdout-adjoint.txt"
 
 # Mode
@@ -60,7 +60,7 @@ EOF
 #==============================
 # SENSORS
 #==============================
-nSensorsArray=120
+nSensorsArray=40
 nRaysPhi=1024 
 nRaysTheta=1024
 dt=1.5e-8

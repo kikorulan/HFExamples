@@ -16,7 +16,7 @@
 #$ -N RTsolver
 
 #================================================================================
-# EXAMPLE 74
+# EXAMPLE 68
 # 3D domain. 
 # Compute the forward signal for sensors placed in the boundary of the cube
 #================================================================================
@@ -41,12 +41,12 @@ cd $EXAMPLE_FOLDER
 export DIMENSIONS="dimensions.dat"
 export SOUND_SPEED="sound_speed.dat"
 export INITIAL_PRESSURE="initial_pressure_veins_80x240x240.dat"
-export SENSORS="sensors_subsampled_100.dat" 
-export FORWARD_SIGNAL="forwardSignal_reference_100sensors.dat"
-export STDOUT="stdout-forward.txt"
+export SENSORS="sensors_subsampled_14400.dat" 
+export FORWARD_SIGNAL="forwardSignal_reference_14400sensors.dat"
+export STDOUT="stdout-adjoint.txt"
 
 # Mode
-export MODE="-f"
+export MODE="-a"
 export GPU_INDEX=1
 # Generate dimensions file
 Nx=80  dx=0.000053
@@ -60,7 +60,7 @@ EOF
 #==============================
 # SENSORS
 #==============================
-nSensorsArray=40
+nSensorsArray=120
 nRaysPhi=1024 
 nRaysTheta=1024
 dt=1.6667e-8
@@ -83,5 +83,4 @@ done
 # RUN 
 #====================
 RTsolver_GPU $MODE $INPUT_FOLDER$DIMENSIONS $INPUT_FOLDER$SOUND_SPEED $INPUT_FOLDER$INITIAL_PRESSURE \
-             $INPUT_FOLDER$SENSORS $OUTPUT_FOLDER $INPUT_FOLDER$FORWARD_SIGNAL 
-#> $OUTPUT_FOLDER$STDOUT
+             $INPUT_FOLDER$SENSORS $OUTPUT_FOLDER $INPUT_FOLDER$FORWARD_SIGNAL > $OUTPUT_FOLDER$STDOUT

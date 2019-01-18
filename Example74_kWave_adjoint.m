@@ -36,10 +36,10 @@ system('../kspaceFirstOrder3D-OMP -i input_data/Example74_adjoint_input_14400sen
 % SAVE
 %=========================================================================
 PML_SIZE = 10;
-u_PML = h5read('output_data/Example74_adjoint_output_1600sensors.h5', '/p_final');
+u_PML = h5read('output_data/Example74_adjoint_output_14400sensors.h5', '/p_final');
 u_k_neg = u_PML(1+PML_size:end-PML_size, 1+PML_size:end-PML_size, 1+PML_size:end-PML_size);
 u_k = max(0, u_k_neg);
 % Save pressure
 u_matrix = cube2matrix(u_k_neg);
-dlmwrite('input_data/pressure_adjoint_kWave_1600sensors.dat', u_matrix, 'delimiter', ' ');
+dlmwrite('input_data/pressure_adjoint_kWave_14400sensors.dat', u_matrix, 'delimiter', ' ');
 
