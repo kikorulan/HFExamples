@@ -8,8 +8,8 @@
 #$ -l gpu=1
 #$ -l h_rt=24:00:00
 #$ -l tmem=3G
-#$ -N pdhg74
-#$ -wd /home/frullan/HighFreqCode/Examples/Ex74_3D_thinveins
+#$ -N spdhg77
+#$ -wd /home/frullan/HighFreqCode/Examples/Ex77_3D_noisy_vessels
 #$ -S /bin/bash
 
 # -o RTiter.txt
@@ -22,7 +22,7 @@
 # Compute the forward signal for sensors placed in the boundary of the cube
 #================================================================================
 
-export EXAMPLE="Ex74_3D_thinveins/"
+export EXAMPLE="Ex77_3D_noisy_vessels/"
 
 # Output folder
 if [ "$HOSTNAME" = "maryam.cs.ucl.ac.uk" ]; then
@@ -48,7 +48,7 @@ export PIXEL_PRESSURE="pixelPressure_0.dat"
 # Choose GPU
 export GPU_INDEX=0
 # Choose mode
-export MODE='-P'
+export MODE='-p'
 
 #================================================================================
 #=======   GRADIENT DESCENT
@@ -130,7 +130,7 @@ elif [ "$MODE" = "-p" ]; then
     THETA=1    
     LAMBDA=1e-4
     BATCH_SIZE=90
-    N_EPOCHS=6
+    N_EPOCHS=5
     # Output
     export STDOUT="stdout_S-PDHG_sigma"$SIGMA"_tau"$TAU"_theta"$THETA"_lambda"$LAMBDA"_batch"$BATCH_SIZE"_epochs"$N_EPOCHS".txt"
     RTiterative_GPU $MODE $INPUT_FOLDER$DIMENSIONS $INPUT_FOLDER$SOUND_SPEED \
