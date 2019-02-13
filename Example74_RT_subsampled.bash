@@ -72,9 +72,9 @@ EOF
 echo "$dt $tMax 0 0 0 0 0 0 0" >> $INPUT_FOLDER$SENSORS
 # YZ
 for ((k=0; k<nSensorsArray; k++)); do
-    zPos=$(echo "scale=4;($k*$dz*($Nz-1))/($nSensorsArray-1)" | bc)
+    zPos=$(echo "scale=6;($k*$dz*($Nz-1))/($nSensorsArray-1)" | bc)
     for ((i=0; i<nSensorsArray; i++)); do
-        yPos=$(echo "scale=4;($i*$dy*($Ny-1))/($nSensorsArray-1)" | bc)
+        yPos=$(echo "scale=6;($i*$dy*($Ny-1))/($nSensorsArray-1)" | bc)
         echo "0 $yPos $zPos $nRaysPhi $nRaysTheta -1.57 1.57 0.04 3.1" >> $INPUT_FOLDER$SENSORS
     done 
 done 
