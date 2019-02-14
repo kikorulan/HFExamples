@@ -29,7 +29,7 @@ if [ "$HOSTNAME" = "maryam.cs.ucl.ac.uk" ]; then
 elif [ "$HOSTNAME" = "hannover" ]; then
     export HOST_FOLDER="/home/wontek/sharedWK/Examples/"
 else
-    export HOST_FOLDER="/home/frullan/HighFreqCode/Examples/"
+    export HOST_FOLDER="/home/wonhong/sharedWK/Examples/"
 fi
 export EXAMPLE_FOLDER=$HOST_FOLDER$EXAMPLE
 export INPUT_FOLDER=$EXAMPLE_FOLDER"input_data/"
@@ -43,10 +43,10 @@ export SOUND_SPEED="sound_speed.dat"
 export INITIAL_PRESSURE="initial_pressure_veins_80x240x240.dat"
 export SENSORS="sensors_subsampled_36.dat" 
 export FORWARD_SIGNAL="forwardSignal_reference_36sensors.dat"
-export STDOUT="stdout-forward.txt"
+export STDOUT="stdout-adjoint.txt"
 
 # Mode
-export MODE="-f"
+export MODE="-a"
 export GPU_INDEX=1
 # Generate dimensions file
 Nx=80  dx=0.000053
@@ -60,7 +60,7 @@ EOF
 #==============================
 # SENSORS
 #==============================
-nSensorsArray=120
+nSensorsArray=6
 nRaysPhi=1024 
 nRaysTheta=1024
 dt=1.6667e-8
