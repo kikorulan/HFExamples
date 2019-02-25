@@ -42,7 +42,7 @@ iter = 5;
 %============================================================
 % GD *************************************
 GD = [];
-GD.tau    = '4e17';
+GD.tau    = '4e18';
 GD.lambda = '1e-2';
 GD.iter   = int2str(iter);
 % S-GD ***********************************
@@ -137,9 +137,10 @@ t.Visible = 'on';
 % PRIMAL DISTANCE ERROR
 %========================================================================================================================
 disp('******* PRIMAL DISTANCE ********');
-nIter = 2;
+nIter = 5;
 % Gradient descent
 disp('GD');
+GD.tau = '2e18';
 GD_error_pd = norm_distance(u0, 0*u0);
 for iter = 1:nIter
     ppmatrix = importdata(['./results/adjoint/FB/pixelPressure_GD_tau', GD.tau, '_lambda', GD.lambda, '_iter', int2str(iter), '.dat'], ' ', 0);
@@ -165,23 +166,23 @@ for iter = 1:nIter
     FISTA_error_pd = [FISTA_error_pd norm_distance(u0, pp)];
 end
 
-% PDHG
-disp('PDHG');
-PDHG_error_pd = norm_distance(u0, 0*u0);
-for iter = 1:5
-    ppmatrix = importdata(['./results/adjoint/PDHG/pixelPressure_PDHG_sigma', PDHG.sigma, '_tau', PDHG.tau, '_theta', PDHG.theta, '_lambda', PDHG.lambda, '_iter', int2str(iter), '.dat'], ' ', 0);
-    pp = max(0, matrix2cube(ppmatrix, Nz));
-    PDHG_error_pd = [PDHG_error_pd norm_distance(u0, pp)];
-end
-
-% SPDHG
-disp('S-PDHG');
-SPDHG_error_pd = norm_distance(u0, 0*u0);
-for iter = 1:nIter
-    ppmatrix = importdata(['./results/adjoint/S-PDHG/pixelPressure_S-PDHG_sigma', SPDHG.sigma, '_tau', SPDHG.tau, '_theta', SPDHG.theta, '_lambda', SPDHG.lambda, '_batch', SPDHG.batch, '_epoch', int2str(iter), '.dat'], ' ', 0);
-    pp = max(0, matrix2cube(ppmatrix, Nz));
-    SPDHG_error_pd = [SPDHG_error_pd norm_distance(u0, pp)];
-end
+%%  % PDHG
+%%  disp('PDHG');
+%%  PDHG_error_pd = norm_distance(u0, 0*u0);
+%%  for iter = 1:5
+%%      ppmatrix = importdata(['./results/adjoint/PDHG/pixelPressure_PDHG_sigma', PDHG.sigma, '_tau', PDHG.tau, '_theta', PDHG.theta, '_lambda', PDHG.lambda, '_iter', int2str(iter), '.dat'], ' ', 0);
+%%      pp = max(0, matrix2cube(ppmatrix, Nz));
+%%      PDHG_error_pd = [PDHG_error_pd norm_distance(u0, pp)];
+%%  end
+%%  
+%%  % SPDHG
+%%  disp('S-PDHG');
+%%  SPDHG_error_pd = norm_distance(u0, 0*u0);
+%%  for iter = 1:nIter
+%%      ppmatrix = importdata(['./results/adjoint/S-PDHG/pixelPressure_S-PDHG_sigma', SPDHG.sigma, '_tau', SPDHG.tau, '_theta', SPDHG.theta, '_lambda', SPDHG.lambda, '_batch', SPDHG.batch, '_epoch', int2str(iter), '.dat'], ' ', 0);
+%%      pp = max(0, matrix2cube(ppmatrix, Nz));
+%%      SPDHG_error_pd = [SPDHG_error_pd norm_distance(u0, pp)];
+%%  end
 
 % Plot
 x_axis = 0:nIter;
@@ -189,7 +190,7 @@ figure();
 semilogy(x_axis, GD_error_pd, 'Color', 'r', 'Linewidth', 1.5);
 hold on;
 semilogy(x_axis, SGD_error_pd, 'Color', 'g', 'Linewidth', 1.5);
-%semilogy(x_axis, FISTA_error_pd, 'Color', 'b', 'Linewidth', 1.5);
+semilogy(x_axis, FISTA_error_pd, 'Color', 'b', 'Linewidth', 1.5);
 %semilogy(x_axis, PDHG_error_pd, 'Color', 'm', 'Linewidth', 1.5);
 %semilogy(x_axis, SPDHG_error_pd, 'Color', 'c', 'Linewidth', 1.5);
 legend('GD', 'S-GD', 'FISTA', 'PDHG', 'S-PDHG');
