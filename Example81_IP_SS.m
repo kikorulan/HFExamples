@@ -103,7 +103,7 @@ rng(1);
 Nx_ss = floor(Nx/3)
 gridR = gridRT(Nx_ss, 1, Ny, 1, Nz, 1);
 % Set sound speed
-c0 = 1580;
+c0 = 1500;
 c = c0*ones(Nx_ss, Ny, Nz);
 gridR.setCMatrix(c);
 inc = 0.1;
