@@ -24,7 +24,7 @@
 export PATH="/home/frullan/HighFreqCode/HighFreq_3DRT/Build/bin:$PATH"
 export EXAMPLE="Ex76_3D_40x120x120/"
 # Output folder
-if [[ "$HOSTNAME" = "maryam.cs.ucl.ac.uk" ]] ; then
+if [[ "$HOSTNAME" = "maryam.cs.ucl.ac.uk" || "$HOSTNAME" = "ember.cs.ucl.ac.uk" ]] ; then
     export HOST_FOLDER="/cs/research/medim/projects2/projects/frullan/Documents/HighFreqCode/Examples/"
 elif [ "$HOSTNAME" = "hannover" ]; then
     export HOST_FOLDER="/home/wontek/sharedWK/Examples/"
@@ -41,13 +41,13 @@ cd $EXAMPLE_FOLDER
 export DIMENSIONS="dimensions.dat"
 export SOUND_SPEED="sound_speed.dat"
 export INITIAL_PRESSURE="initial_pressure_veins_40x120x120.dat"
-export SENSORS="sensors_subsampled_36.dat" 
-export FORWARD_SIGNAL="forwardSignal_reference_36sensors.dat"
+export SENSORS="sensors_subsampled_1600.dat" 
+export FORWARD_SIGNAL="forwardSignal_reference_1600sensors.dat"
 export STDOUT="stdout-adjoint.txt"
 
 # Mode
-export MODE="-a"
-export GPU_INDEX=1
+export MODE="-f"
+export GPU_INDEX=0
 # Generate dimensions file
 Nx=40  dx=0.000053
 Ny=120 dy=0.000053
@@ -60,7 +60,7 @@ EOF
 #==============================
 # SENSORS
 #==============================
-nSensorsArray=6
+nSensorsArray=40
 nRaysPhi=256
 nRaysTheta=256
 dt=1.6667e-8

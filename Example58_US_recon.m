@@ -4,7 +4,7 @@ cd /cs/research/medim/projects2/projects/frullan/Documents/HighFreqCode/Examples
 close all;
 %clear all;
 load gridLMatrix;
-load prop_time_RT_126;
+load prop_time_126_RT;
 
 
 %====================================
@@ -43,16 +43,21 @@ para.maxIter = 30;
 para.constraint = 'positivity';
 lambda = max(x_0)/1e4;
 nIter = 200;
+x_tensor = zeros(grid.Nx, grid.Ny, nIter);
 
 % Compute iterations
 for i = 1:nIter
     % Prox g
     x_mat = reshape(x_k - tau*Kadj*y_k, grid.Nx, grid.Ny);
     if (mod(i, 10) == 0)
-        figure, surf(1./x_mat, 'EdgeColor', 'none'), view(2), colorbar(), title(['Iter', num2str(i)]);
+        figure, surf(1./x_mat, 'EdgeColor', 'none');
+        view(2);
+        colorbar();
+        title(['Iter', num2str(i)]);
     end
     x_mat_1 = conTVdenoising(x_mat, lambda, para);
     x_k_1 = reshape(x_mat_1, [], 1);
+    x_tensor(:, :, i) = x_mat_1;
     % Prox f
     y_k_1 = (y_k + sigma*K*(2*x_k_1 - x_k) - sigma*y_0)/(1+sigma);
     % Update
@@ -66,7 +71,7 @@ end
 % VISUALIZATION
 %==============================================================================================================
 
-positionYBar = [700 700 500 400];
+positionYBar = [700 700 500 450];
 % Initial sound speed
 figure;
 surf(1e3*grid.xAxis, 1e3*grid.yAxis, cMatrix, 'EdgeColor', 'none');
@@ -77,8 +82,9 @@ ylabel('y [mm]');
 colorbar();
 box on;
 set(gcf, 'pos', positionYBar);
-%saveas(gcf, 'Example58_C', 'png');
-%saveas(gcf, 'Example58_C.fig');
+title('Sound speed phantom');
+saveas(gcf, 'Example58_C', 'png');
+saveas(gcf, 'Example58_C.fig');
 
 % Initial sound speed
 figure;
@@ -91,5 +97,15 @@ colorbar();
 caxis([1379 1650]);
 box on;
 set(gcf, 'pos', positionYBar);
-%saveas(gcf, 'Example58_C_recon', 'png');
-%saveas(gcf, 'Example58_C_recon.fig');
+title('Sound speed reconstruction');
+saveas(gcf, 'Example58_C_recon', 'png');
+saveas(gcf, 'Example58_C_recon.fig');
+
+
+% Tensor plot
+ss_recon = 1./x_tensor;
+ss_recon = permute(ss_recon, [2 1 3]);
+ss_recon = fliplr(ss_recon);
+ss_recon = permute(ss_recon, [2 1 3]);
+scrollView(ss_recon, 3, [1379, 1650]);
+save eta_126_RT_tensor x_tensor;

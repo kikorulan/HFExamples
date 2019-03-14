@@ -108,8 +108,8 @@ end
 %=======================================
 % Verify computation
 %=======================================
-%%  %load prop_time_126;
-%%  load prop_time_homogeneous_126;
+%%  %load prop_time_126_KW;
+%%  load prop_time_homogeneous_126_KW;
 %%  
 %%  %prop_time_vec = reshape(prop_time_matrix, [], 1);
 %%  prop_time_vec_homo = reshape(prop_time_matrix_homo, [], 1);
