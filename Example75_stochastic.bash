@@ -8,7 +8,7 @@
 #$ -l gpu=1
 #$ -l h_rt=24:00:00
 #$ -l tmem=3G
-#$ -N spdhg75
+#$ -N sgd75_tau8e18_lambda1e-3_batch90
 #$ -wd /home/frullan/HighFreqCode/Examples/Ex75_3D_thinveins_het
 #$ -S /bin/bash
 
@@ -49,7 +49,7 @@ export PIXEL_PRESSURE="pixelPressure_0.dat"
 # Choose GPU
 export GPU_INDEX=0
 # Choose mode
-export MODE='-p'
+export MODE='-g'
 
 #================================================================================
 #=======   GRADIENT DESCENT
@@ -57,7 +57,7 @@ export MODE='-p'
 if [ "$MODE" = "-G" ]; then
     echo "=================== GRADIENT DESCENT ===================="
     # Regularization parameters
-    TAU=1e18
+    TAU=8e18
     LAMBDA=1e-2 # 1e-2
     NITER=5
     # Output
@@ -71,7 +71,7 @@ elif [ "$MODE" = "-g" ]; then
     echo "=================== STOCHASTIC GRADIENT DESCENT ===================="
     # Regularization parameters
     TAU=8e18
-    LAMBDA=3e-4
+    LAMBDA=1e-3
     BATCH_SIZE=90
     N_EPOCHS=5
     # Output

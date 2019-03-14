@@ -8,8 +8,8 @@
 #$ -l gpu=1
 #$ -l h_rt=24:00:00
 #$ -l tmem=3G
-#$ -N spdhg74
-#$ -wd /home/frullan/HighFreqCode/Examples/Ex74_3D_thinveins
+#$ -N spdhg80_tau1.6e19_sigma1
+#$ -wd /home/frullan/HighFreqCode/Examples/Ex80_3D_subsampled
 #$ -S /bin/bash
 
 # -o RTiter.txt
@@ -21,6 +21,8 @@
 # 3D domain. 
 # Compute the forward signal for sensors placed in the boundary of the cube
 #================================================================================
+#export PATH="/home/frullan/HighFreqCode/HighFreq_3DRT/Build/bin:$PATH"
+export PATH="/home/wonhong/sharedWK/RTlib/bin:$PATH"
 
 export EXAMPLE="Ex80_3D_veins_subsampled/"
 
@@ -48,7 +50,7 @@ export PIXEL_PRESSURE="pixelPressure_0.dat"
 # Choose GPU
 export GPU_INDEX=0
 # Choose mode
-export MODE='-p'
+export MODE='-G'
 
 #================================================================================
 #=======   GRADIENT DESCENT
@@ -56,13 +58,13 @@ export MODE='-p'
 if [ "$MODE" = "-G" ]; then
     echo "=================== GRADIENT DESCENT ===================="
     # Regularization parameters
-    TAU=4e17
-    LAMBDA=1e-2 # 1e-2
+    TAU=1.6e18
+    LAMBDA=1e-2
     NITER=5
     # Output
     export STDOUT="stdout_GD_tau"$TAU"_lambda"$LAMBDA$"_iter"$NITER".txt"
     RTiterative_GPU $MODE $INPUT_FOLDER$DIMENSIONS $INPUT_FOLDER$SOUND_SPEED \
-                    $INPUT_FOLDER$SENSORS $INPUT_FOLDER$FORWARD_SIGNAL $INPUT_FOLDER$PIXEL_PRESSURE $TAU $LAMBDA $NITER  > $OUTPUT_FOLDER$STDOUT
+                    $INPUT_FOLDER$SENSORS $INPUT_FOLDER$FORWARD_SIGNAL $INPUT_FOLDER$PIXEL_PRESSURE $TAU $LAMBDA $NITER > $OUTPUT_FOLDER$STDOUT
 #================================================================================
 #=======   STOCHASTIC GRADIENT DESCENT
 #================================================================================
@@ -83,7 +85,7 @@ elif [ "$MODE" = "-g" ]; then
 elif [ "$MODE" = "-F" ]; then
     echo "=================== FISTA ===================="
     # Regularization parameters
-    TAU=4e17
+    TAU=6.4e18
     LAMBDA=1e-2
     NITER=5
     # Output
@@ -111,7 +113,7 @@ elif [ "$MODE" = "-P" ]; then
     echo "=================== PDHG ===================="
     # Regularization parameters
     SIGMA=1
-    TAU=8e17     
+    TAU=6.4e18
     THETA=1      
     LAMBDA=1e-2  
     NITER=5
@@ -125,10 +127,10 @@ elif [ "$MODE" = "-P" ]; then
 elif [ "$MODE" = "-p" ]; then
     echo "=================== S-PDHG ===================="
     # Regularization parameters
-    SIGMA=2
-    TAU=6e18
+    SIGMA=1
+    TAU=1.6e19
     THETA=1    
-    LAMBDA=1e-4
+    LAMBDA=1e-3
     BATCH_SIZE=90
     N_EPOCHS=5
     # Output

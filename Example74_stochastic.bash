@@ -8,7 +8,7 @@
 #$ -l gpu=1
 #$ -l h_rt=24:00:00
 #$ -l tmem=3G
-#$ -N spdhg74
+#$ -N gd74_tau4e18
 #$ -wd /home/frullan/HighFreqCode/Examples/Ex74_3D_thinveins
 #$ -S /bin/bash
 
@@ -48,7 +48,7 @@ export PIXEL_PRESSURE="pixelPressure_0.dat"
 # Choose GPU
 export GPU_INDEX=0
 # Choose mode
-export MODE='-p'
+export MODE='-g'
 
 #================================================================================
 #=======   GRADIENT DESCENT
@@ -56,7 +56,7 @@ export MODE='-p'
 if [ "$MODE" = "-G" ]; then
     echo "=================== GRADIENT DESCENT ===================="
     # Regularization parameters
-    TAU=4e17
+    TAU=4e18
     LAMBDA=1e-2 # 1e-2
     NITER=5
     # Output

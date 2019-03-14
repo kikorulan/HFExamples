@@ -6,10 +6,10 @@
 
 #$ -P gpu
 #$ -l gpu=1
-#$ -l h_rt=24:00:00
+#$ -l h_rt=10:00:00
 #$ -l tmem=3G
-#$ -N spdhg75
-#$ -wd /home/frullan/HighFreqCode/Examples/Ex75_3D_thinveins_het
+#$ -N spdhg81_tau2e19_sigma1
+#$ -wd /home/frullan/HighFreqCode/Examples/Ex81_3D_veins_subsampled_het
 #$ -S /bin/bash
 
 # -o RTiter.txt
@@ -57,8 +57,8 @@ export MODE='-p'
 if [ "$MODE" = "-G" ]; then
     echo "=================== GRADIENT DESCENT ===================="
     # Regularization parameters
-    TAU=1e18
-    LAMBDA=1e-2 # 1e-2
+    TAU=1.6e19
+    LAMBDA=1e-2
     NITER=5
     # Output
     export STDOUT="stdout_GD_tau"$TAU"_lambda"$LAMBDA$"_iter"$NITER".txt"
@@ -84,7 +84,7 @@ elif [ "$MODE" = "-g" ]; then
 elif [ "$MODE" = "-F" ]; then
     echo "=================== FISTA ===================="
     # Regularization parameters
-    TAU=1e18
+    TAU=1.6e19
     LAMBDA=1e-2
     NITER=5
     # Output
@@ -97,7 +97,7 @@ elif [ "$MODE" = "-F" ]; then
 elif [ "$MODE" = "-f" ]; then
     echo "=================== STOCHASTIC FISTA ===================="
     # Regularization parameters
-    TAU=1e18   
+    TAU=1e18  
     LAMBDA=1e-3
     BATCH_SIZE=90
     N_EPOCHS=5
@@ -112,7 +112,7 @@ elif [ "$MODE" = "-P" ]; then
     echo "=================== PDHG ===================="
     # Regularization parameters
     SIGMA=1
-    TAU=2e18    
+    TAU=1.6e19
     THETA=1      
     LAMBDA=1e-2  
     NITER=5
@@ -126,10 +126,10 @@ elif [ "$MODE" = "-P" ]; then
 elif [ "$MODE" = "-p" ]; then
     echo "=================== S-PDHG ===================="
     # Regularization parameters
-    SIGMA=5e-1
-    TAU=1.5e19
+    SIGMA=1
+    TAU=2e19
     THETA=1    
-    LAMBDA=3e-4
+    LAMBDA=1e-3
     BATCH_SIZE=90
     N_EPOCHS=5
     # Output

@@ -42,12 +42,12 @@ export DIMENSIONS="dimensions.dat"
 export SOUND_SPEED="sound_speed.dat"
 export INITIAL_PRESSURE="initial_pressure_veins_80x240x240.dat"
 export SENSORS="sensors_subsampled_3600.dat" 
-export FORWARD_SIGNAL="forwardSignal_reference_3600sensors.dat"
+export FORWARD_SIGNAL="forwardSignal_reference_noisy5_3600sensors.dat"
 export STDOUT="stdout-forward.txt"
 
 # Mode
-export MODE="-f"
-export GPU_INDEX=0
+export MODE="-a"
+export GPU_INDEX=1
 # Generate dimensions file
 Nx=80  dx=0.000053
 Ny=240 dy=0.000053

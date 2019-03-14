@@ -16,7 +16,7 @@ else:
     sys.path.append(root_folder + "RTlib")
 
 # Choose GPU
-GPU_INDEX = 0
+GPU_INDEX = 1
 # Import libraries
 import numpy as np
 import pyrtgrid as rt
