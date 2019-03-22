@@ -16,6 +16,7 @@ elif (host_name == "hannover"):
     host_folder = "/home/wontek/sharedWK/Examples/"
 else:
     host_folder = "/home/frullan/HighFreqCode/Examples/"
+
 example_folder = host_folder + example
 # FOLDERS
 input_folder = example_folder + "input_data/"
@@ -26,8 +27,11 @@ os.chdir(example_folder)
 file_name_dimensions       = input_folder + "dimensions.dat"
 file_name_initial_pressure = input_folder + "initial_pressure.dat"
 file_name_sound_speed      = input_folder + "sound_speed.dat"
-file_name_sensors_1        = input_folder + "sensors_1.dat"
+file_name_sensors_1a       = input_folder + "sensors_1a.dat"
+file_name_sensors_1b       = input_folder + "sensors_1b.dat"
 file_name_sensors_2        = input_folder + "sensors_2.dat"
+file_name_sensors_10       = input_folder + "sensors_10.dat"
+file_name_sensors_3600     = input_folder + "sensors_3600.dat"
 file_name_sensors_14400    = input_folder + "sensors_14400.dat"
 
 #============================================================
@@ -69,30 +73,30 @@ nSensorsArray = 120
 nRaysPhi = 1024 
 nRaysTheta = 1024
 dt = 1.667e-8
-tMax = 3.32e-6
+tMax = 8e-6
 
 def str_prec(number, prec = '%.6f'):
     return str(prec % (number))
 
-# ARRAY OF 14400 SENSORS
-file_sensors_14400 = open(file_name_sensors_14400, "w")
-file_sensors_14400.write(str(dt) + " " + str(tMax) + " 0 0 0 0 0 0 0\n")
-for k in range(nSensorsArray):
-    zPos = k*dz*(Nz-1)/(nSensorsArray-1)
-    for i in range(nSensorsArray):
-        yPos = i*dy*(Ny-1)/(nSensorsArray-1)
-        file_sensors_14400.write("0 " + str_prec(yPos) + " " + str_prec(zPos) + " " + str(nRaysPhi) + " " + str(nRaysTheta) + " -1.57 1.57 0.04 3.1\n")
-file_sensors_14400.close()
-
-# 1 SENSOR
-file_sensors_1 = open(file_name_sensors_1, "w")
-file_sensors_1.write(str(dt) + " " + str(tMax) + " 0 0 0 0 0 0 0\n")
+# 1a SENSOR
+file_sensors_1a = open(file_name_sensors_1a, "w")
+file_sensors_1a.write(str(dt) + " " + str(tMax) + " 0 0 0 0 0 0 0\n")
 y1   = 40
 z1   = 40
 yPos = y1*dy*(Ny-1)/(nSensorsArray-1)
 zPos = z1*dz*(Nz-1)/(nSensorsArray-1)
-file_sensors_1.write("0 " + str_prec(yPos) + " " + str_prec(zPos) + " " + str(nRaysPhi) + " " + str(nRaysTheta) + " -1.57 1.57 0.04 3.1\n")
-file_sensors_1.close()
+file_sensors_1a.write("0 " + str_prec(yPos) + " " + str_prec(zPos) + " " + str(nRaysPhi) + " " + str(nRaysTheta) + " -1.57 1.57 0.04 3.1\n")
+file_sensors_1a.close()
+
+# 1b SENSOR
+file_sensors_1b = open(file_name_sensors_1b, "w")
+file_sensors_1b.write(str(dt) + " " + str(tMax) + " 0 0 0 0 0 0 0\n")
+y1   = 80
+z1   = 60
+yPos = y1*dy*(Ny-1)/(nSensorsArray-1)
+zPos = z1*dz*(Nz-1)/(nSensorsArray-1)
+file_sensors_1b.write("0 " + str_prec(yPos) + " " + str_prec(zPos) + " " + str(nRaysPhi) + " " + str(nRaysTheta) + " -1.57 1.57 0.04 3.1\n")
+file_sensors_1b.close()
 
 # 2 SENSORS
 file_sensors_2 = open(file_name_sensors_2, "w")
@@ -108,3 +112,40 @@ yPos = y2*dy*(Ny-1)/(nSensorsArray-1)
 zPos = z2*dz*(Nz-1)/(nSensorsArray-1)
 file_sensors_2.write("0 " + str_prec(yPos) + " " + str_prec(zPos) + " " + str(nRaysPhi) + " " + str(nRaysTheta) + " -1.57 1.57 0.04 3.1\n")
 file_sensors_2.close()
+
+# 10 SENSORS
+file_sensors_10 = open(file_name_sensors_10, "w")
+file_sensors_10.write(str(dt) + " " + str(tMax) + " 0 0 0 0 0 0 0\n")
+y = np.array([40, 40, 40, 60, 60, 60, 70, 70, 70, 90])
+z = np.array([40, 60, 80, 40, 60, 80, 40, 60, 90, 90])
+for i in range(10):
+    yPos = y[i]*dy*(Ny-1)/(nSensorsArray-1)
+    zPos = z[i]*dz*(Nz-1)/(nSensorsArray-1)
+    file_sensors_10.write("0 " + str_prec(yPos) + " " + str_prec(zPos) + " " + str(nRaysPhi) + " " + str(nRaysTheta) + " -1.57 1.57 0.04 3.1\n")
+
+file_sensors_10.close()
+
+# ARRAY OF 14400 SENSORS
+file_sensors_14400 = open(file_name_sensors_14400, "w")
+file_sensors_14400.write(str(dt) + " " + str(tMax) + " 0 0 0 0 0 0 0\n")
+for k in range(nSensorsArray):
+    zPos = k*dz*(Nz-1)/(nSensorsArray-1)
+    for i in range(nSensorsArray):
+        yPos = i*dy*(Ny-1)/(nSensorsArray-1)
+        file_sensors_14400.write("0 " + str_prec(yPos) + " " + str_prec(zPos) + " " + str(nRaysPhi) + " " + str(nRaysTheta) + " -1.57 1.57 0.04 3.1\n")
+
+file_sensors_14400.close()
+
+
+# ARRAY OF 3600 SENSORS
+nSensorsArray = 60
+file_sensors_3600 = open(file_name_sensors_3600, "w")
+file_sensors_3600.write(str(dt) + " " + str(tMax) + " 0 0 0 0 0 0 0\n")
+for k in range(nSensorsArray):
+    zPos = k*dz*(Nz-1)/(nSensorsArray-1)
+    for i in range(nSensorsArray):
+        yPos = i*dy*(Ny-1)/(nSensorsArray-1)
+        file_sensors_3600.write("0 " + str_prec(yPos) + " " + str_prec(zPos) + " " + str(nRaysPhi) + " " + str(nRaysTheta) + " -1.57 1.57 0.04 3.1\n")
+
+file_sensors_3600.close()
+

@@ -1,5 +1,6 @@
 % Read data from files
-cd /cs/research/medim/projects2/projects/frullan/Documents/HighFreqCode/Examples/Ex81_3D_veins_subsampled_het;
+%cd /cs/research/medim/projects2/projects/frullan/Documents/HighFreqCode/Examples/Ex81_3D_veins_subsampled_het;
+cd /scratch0/NOT_BACKED_UP/frullan/Examples/Ex81_3D_veins_subsampled_het;
 
 clear all;
 close all;
@@ -59,7 +60,7 @@ a = axes;
 t = title(['FB - t = ', GD.tau, ', l = ', GD.lambda, ', iter = ', GD.iter, ' - homogeneous SS']);
 a.Visible = 'off'; 
 t.Visible = 'on'; 
-saveas(gcf, ['./figures/Example80_GD_tau', GD.tau, '_lambda', GD.lambda, '_iter', GD.iter, '.fig']);
+saveas(gcf, ['./figures/Example81_GD_tau', GD.tau, '_lambda', GD.lambda, '_iter', GD.iter, '.fig']);
 
 %==============================
 % Stochastic Gradient Descent
@@ -104,10 +105,10 @@ t.Visible = 'on';
 % PDHG ************************
 PDHG = [];
 PDHG.sigma  = '1';
-PDHG.tau    = '8e18';
+PDHG.tau    = '1e18';
 PDHG.theta  = '1';
-PDHG.lambda = '1e-2';
-PDHG.iter   = int2str(iter);
+PDHG.lambda = '1e-3';
+PDHG.iter   = int2str(1);
 %******************************
 pixelPressureMatrix = importdata(['./results/adjoint/PDHG/pixelPressure_PDHG_sigma', PDHG.sigma, '_tau', PDHG.tau, '_theta', PDHG.theta, '_lambda', PDHG.lambda, '_iter', PDHG.iter, '.dat'], ' ', 0);
 pixelPressure = max(0, matrix2cube(pixelPressureMatrix, Nz));
