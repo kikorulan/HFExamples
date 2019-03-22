@@ -8,7 +8,7 @@
 #$ -l gpu=1
 #$ -l h_rt=10:00:00
 #$ -l tmem=3G
-#$ -N spdhg81_tau2e19_sigma1
+#$ -N pdhg81_tau1e18_sigma1
 #$ -wd /home/frullan/HighFreqCode/Examples/Ex81_3D_veins_subsampled_het
 #$ -S /bin/bash
 
@@ -20,7 +20,7 @@
 # 3D domain. 
 # Compute the forward signal for sensors placed in the boundary of the cube
 #================================================================================
-
+export PATH="/home/frullan/HighFreqCode/HighFreq_3DRT/Build/bin:$PATH"
 export EXAMPLE="Ex81_3D_veins_subsampled_het/"
 
 # Output folder
@@ -37,19 +37,19 @@ export OUTPUT_FOLDER=$EXAMPLE_FOLDER"output_data/"
 
 cd $EXAMPLE_FOLDER
 
-# Mode provided in the first argument of the script
 
 # Assign files
 export DIMENSIONS="dimensions.dat"
 export SOUND_SPEED="sound_speed.dat"
 export SENSORS="sensors_subsampled_3600.dat" 
 export FORWARD_SIGNAL="forwardSignal_reference_noisy5_3600sensors.dat"
-export PIXEL_PRESSURE="pixelPressure_0.dat"
+#export PIXEL_PRESSURE="pixelPressure_0.dat"
+export PIXEL_PRESSURE="pixelPressure_adjoint_3600sensors.dat"
 
 # Choose GPU
-export GPU_INDEX=0
+export GPU_INDEX=1
 # Choose mode
-export MODE='-p'
+export MODE='-P'
 
 #================================================================================
 #=======   GRADIENT DESCENT
@@ -112,9 +112,9 @@ elif [ "$MODE" = "-P" ]; then
     echo "=================== PDHG ===================="
     # Regularization parameters
     SIGMA=1
-    TAU=1.6e19
+    TAU=1e18
     THETA=1      
-    LAMBDA=1e-2  
+    LAMBDA=1e-3
     NITER=5
     # Output
     export STDOUT="stdout_PDHG_sigma"$SIGMA"_tau"$TAU"_theta"$THETA"_lambda"$LAMBDA"_iter"$NITER".txt"
