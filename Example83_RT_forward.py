@@ -10,7 +10,7 @@ import numpy as np
 from datetime import datetime
 import os
 import h5py
-import matplotlib.pyplot as plt
+#import matplotlib.pyplot as plt
 # Choose machine
 host = socket.gethostname()
 if (host == "hannover"):
@@ -21,9 +21,9 @@ elif (host == "ember.cs.ucl.ac.uk" or host == "maryam.cs.ucl.ac.uk" or host == "
     data_folder = "/cs/research/medim/projects2/projects/frullan/Documents/HighFreqCode/MLproject/data/"
     sys.path.append(root_folder + "HighFreq_3DRT/Build/bin")
 else:
-    root_folder = "/home/wonhong/sharedWK/"
+    root_folder = "/home/frullan/HighFreqCode/"
     data_folder = "/home/wonhong/sharedWK/training/"
-    sys.path.append(root_folder + "RTlib")
+    sys.path.append(root_folder + "HighFreq_3DRT/Build/bin")
 
 # Choose GPU
 GPU_INDEX = 1
@@ -74,7 +74,7 @@ rtobj.load_sensors(sensors)
 #==================================================
 # LOOP OVER VOLUMES
 #==================================================
-for index_volume in range(250, 500):
+for index_volume in range(480, 500):
     # Load initial pressure
     initial_pressure = photo_data[index_volume, :, :, :]
     rtobj.load_u(initial_pressure)
