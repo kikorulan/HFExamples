@@ -55,7 +55,7 @@ with h5py.File(data_folder + "forwardData_nImages_kWave.h5", "r") as f:
 #==============================
 # Plot
 #==============================
-for index_volume in range(250, 254):
+for index_volume in range(500, 510):
     # Load forward data
     with h5py.File(output_folder + "forwardData_vol" + str(index_volume+1) + "_python.h5", "r") as f:
         forward_data = f["/forward_data"].value
@@ -80,6 +80,27 @@ for index_volume in range(250, 254):
     # Wait and close figures
     input("Press Enter to continue...")
     plt.close('all')
+
+
+
+#================================================================================
+# COMPACT volumes
+#================================================================================
+nVolumes = 1024
+with h5py.File(output_folder + "forwardData_vol" + str(1) + "_python.h5", "r") as f:
+    forward_data = f["/forward_data"].value
+
+forward_data_nImages = np.zeros(np.append(nVolumes, np.transpose(forward_data).shape))
+for index_volume in range(0, nVolumes):
+    # Load forward data
+    with h5py.File(output_folder + "forwardData_vol" + str(index_volume+1) + "_python.h5", "r") as f:
+        forward_data = f["/forward_data"].value
+    
+    forward_data_nImages[index_volume, :, :] = np.transpose(forward_data) 
+
+hf = h5py.File(data_folder + "forwardData_nImages_python.h5", "w")
+hf.create_dataset('forward_data', data=forward_data_nImages)
+hf.close()
 
 #============================
 # Plot maximum projection
