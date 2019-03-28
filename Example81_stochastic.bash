@@ -144,4 +144,3 @@ else
     echo "Non supported mode"
 fi
 
-    

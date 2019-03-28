@@ -1,6 +1,6 @@
 % Read data from files
-%cd /cs/research/medim/projects2/projects/frullan/Documents/HighFreqCode/Examples/Ex81_3D_veins_subsampled_het;
-cd /scratch0/NOT_BACKED_UP/frullan/Examples/Ex81_3D_veins_subsampled_het;
+%cd /cs/research/medim/projects2/projects/frullan/Documents/HighFreqCode/Examples/Ex80_3D_veins_subsampled;
+cd /scratch0/NOT_BACKED_UP/frullan/Examples/Ex80_3D_veins_subsampled;
 
 clear all;
 close all;
@@ -49,9 +49,9 @@ iter = 5;
 %==============================
 % GD **************************
 GD = [];
-GD.tau    = '4e18';
-GD.lambda = '1e-2';
-GD.iter   = int2str(iter);
+GD.tau    = '8e17';
+GD.lambda = '1e-3';
+GD.iter   = int2str(10);
 %******************************
 pixelPressureMatrix = importdata(['./results/adjoint/FB/pixelPressure_GD_tau', GD.tau, '_lambda', GD.lambda, '_iter', GD.iter, '.dat'], ' ', 0);
 pixelPressure = max(0, matrix2cube(pixelPressureMatrix, Nz));
@@ -60,7 +60,7 @@ a = axes;
 t = title(['FB - t = ', GD.tau, ', l = ', GD.lambda, ', iter = ', GD.iter, ' - homogeneous SS']);
 a.Visible = 'off'; 
 t.Visible = 'on'; 
-saveas(gcf, ['./figures/Example81_GD_tau', GD.tau, '_lambda', GD.lambda, '_iter', GD.iter, '.fig']);
+%saveas(gcf, ['./figures/Example80_GD_tau', GD.tau, '_lambda', GD.lambda, '_iter', GD.iter, '.fig']);
 
 %==============================
 % Stochastic Gradient Descent
@@ -106,10 +106,10 @@ t.Visible = 'on';
 % PDHG ************************
 PDHG = [];
 PDHG.sigma  = '1';
-PDHG.tau    = '5e16';
+PDHG.tau    = '1e18';
 PDHG.theta  = '1';
 PDHG.lambda = '1e-3';
-PDHG.iter   = int2str(1);
+PDHG.iter   = int2str(5);
 %******************************
 pixelPressureMatrix = importdata(['./results/adjoint/PDHG/pixelPressure_PDHG_sigma', PDHG.sigma, '_tau', PDHG.tau, '_theta', PDHG.theta, '_lambda', PDHG.lambda, '_iter', PDHG.iter, '.dat'], ' ', 0);
 pixelPressure = max(0, matrix2cube(pixelPressureMatrix, Nz));
@@ -153,7 +153,7 @@ x_axis = 0:nIter;
 % Gradient descent
 %==============================
 disp('GD');
-GD.tau = {'5e17', '1e18', '2e18', '4e18', '8e18', '1.6e19'};
+GD.tau = {'2e17', '4e17', '8e17', '1.6e18', '3.2e18'};
 L = length(GD.tau);
 clear GD_error_pd;
 for ii = 1:L
@@ -174,8 +174,9 @@ for ii = 1:L
 end
 box on;
 grid on;
+axis([0 nIter 20 100]);
 ax.GridAlpha = 0.2;
-legend('GD 5e17', 'GD 1e18', 'GD 2e18', 'GD 4e18', 'GD 8e18', 'GD 1.6e19');
+legend('GD 2e17', 'GD 4e17', 'GD 8e17', 'GD 1.6e18', 'GD 3.2e18');
 
 %==============================
 % Stochastic Gradient descent
@@ -236,7 +237,8 @@ legend('FISTA 5e17', 'FISTA 1e18', 'FISTA 2e18', 'FISTA 4e18', 'FISTA 8e18', 'FI
 % PDHG
 %==============================
 disp('PDHG');
-PDHG.tau = {'1e18', '2e18', '4e18', '8e18', '1.6e19'};
+PDHG.tau = {'2e17', '4e17', '8e17', '1.6e18'};
+PDHG.sigma = '5e-1';
 L = length(PDHG.tau);
 clear PDHG_error_pd;
 for ii = 1:L
@@ -257,15 +259,19 @@ for ii = 1:L
 end
 box on;
 grid on;
+axis([0 nIter 20 100]);
 ax.GridAlpha = 0.2;
-legend('PDHG 1e18', 'PDHG 2e18', 'PDHG 4e18', 'PDHG 8e18', 'PDHG 1.6e19');
+legend('PDHG 2e17', 'PDHG 4e17', 'PDHG 8e17', 'PDHG 1.6e18');
 
 %==============================
 % SPDHG
 %==============================
 disp('S-PDHG');
-SPDHG.tau = {'1e19', '2e19', '4e19'};
+SPDHG.tau = {'2e17', '4e17', '8e17', '1.6e18'};
 SPDHG.sigma = '5e-1';
+SPDHG.theta = '1';
+SPDHG.batch = '100';
+SPDHG.lambda = '1e-3';
 L = length(SPDHG.tau);
 clear SPDHG_error_pd;
 for ii = 1:L
@@ -286,29 +292,44 @@ for ii = 1:L
 end
 box on;
 grid on;
+ax = gca;
 ax.GridAlpha = 0.2;
 axis([0 nIter 10 100]);
-legend('SPDHG 1e19', 'SPDHG 2e19', 'SPDHG 4e19');
+legend('S-PDHG 2e17', 'S-PDHG 4e17', 'S-PDHG 8e17', 'S-PDHG 1.6e18');
 
 
-%==============================
+%======================================================================
 % PLOT ALL
+%======================================================================
 %==============================
+% Gradient descent
+%==============================
+disp('GD');
+GD.tau = '8e17';
+L = length(GD.tau);
+GD_error_pd_final = norm_distance(u0, 0*u0);
+for iter = 1:10
+    ppmatrix = importdata(['./results/adjoint/FB/pixelPressure_GD_tau', GD.tau, '_lambda', GD.lambda, '_iter', int2str(iter), '.dat'], ' ', 0);
+    pp = max(0, matrix2cube(ppmatrix, Nz));
+    GD_error_pd_final = [GD_error_pd_final norm_distance(u0, pp)];
+end
+
 % Plot
+x_axis_10 = 0:10;
 figure();
-semilogy(x_axis, GD_error_pd{4}, 'Color', 'r', 'Linewidth', 1.5);
-hold on;
-semilogy(x_axis, SGD_error_pd{2}, 'Color', 'g', 'Linewidth', 1.5);
-semilogy(x_axis, FISTA_error_pd{4}, 'Color', 'b', 'Linewidth', 1.5);
-semilogy(x_axis, PDHG_error_pd{4}, 'Color', 'm', 'Linewidth', 1.5);
-semilogy(x_axis, SPDHG_error_pd{2}, 'Color', 'c', 'Linewidth', 1.5);
+semilogy(x_axis_10, GD_error_pd_final, 'Color', 'r', 'Linewidth', 1.5);
+hold on;          
+%semilogy(x_axis_10, SGD_error_pd{2}, 'Color', 'g', 'Linewidth', 1.5);
+%semilogy(x_axis_10, FISTA_error_pd{4}, 'Color', 'b', 'Linewidth', 1.5);
+%semilogy(x_axis_10, PDHG_error_pd{4}, 'Color', 'm', 'Linewidth', 1.5);
+%semilogy(x_axis_10, SPDHG_error_pd{2}, 'Color', 'c', 'Linewidth', 1.5);
 legend('GD', 'S-GD', 'FISTA', 'PDHG', 'S-PDHG');
 title('Primal Distance Error - homogeneous SS');
 grid on;
 box on;
 ax = gca;
 ax.GridAlpha = 0.2;
-axis([0 nIter 10 100]);
+axis([0 10 20 100]);
 %saveas(gcf, ['./figures/Example80_pd_error.fig']);
 
 %==========================================================================================================================================================================
