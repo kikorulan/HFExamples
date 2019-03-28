@@ -15,6 +15,7 @@ import h5py
 host = socket.gethostname()
 if (host == "hannover"):
     root_folder = "/home/wontek/sharedWK/"
+    data_folder = "/home/wontek/sharedWK/MLproject/data/"
     sys.path.append(root_folder + "HighFreq_3DRT/Build/bin")
 elif (host == "ember.cs.ucl.ac.uk" or host == "maryam.cs.ucl.ac.uk" or host == "blaze.cs.ucl.ac.uk"):
     root_folder = "/cs/research/medim/projects2/projects/frullan/Documents/HighFreqCode/"
@@ -26,7 +27,7 @@ else:
     sys.path.append(root_folder + "HighFreq_3DRT/Build/bin")
 
 # Choose GPU
-GPU_INDEX = 1
+GPU_INDEX = 0
 
 # Import libraries
 import pyrtgrid as rt
@@ -74,18 +75,18 @@ rtobj.load_sensors(sensors)
 #==================================================
 # LOOP OVER VOLUMES
 #==================================================
-for index_volume in range(480, 500):
-    # Load initial pressure
-    initial_pressure = photo_data[index_volume, :, :, :]
-    rtobj.load_u(initial_pressure)
-    
-    # Forward operator
-    startTime = datetime.now()
-    forward_data = rtobj.forward_operator(sensor_array)
-    endTime = datetime.now()
-    print(endTime - startTime)
-    
-    # Write to disk
-    hf = h5py.File(output_folder + "forwardData_vol" + str(index_volume+1) + "_python.h5", "w")
-    hf.create_dataset('forward_data', data=forward_data)
-    hf.close()
+index_volume = 1
+# Load initial pressure
+initial_pressure = photo_data[index_volume, :, :, :]
+rtobj.load_u(initial_pressure)
+
+# Forward operator
+startTime = datetime.now()
+forward_data = rtobj.forward_operator(sensor_array)
+endTime = datetime.now()
+print(endTime - startTime)
+
+# Write to disk
+hf = h5py.File(output_folder + "forwardData_vol" + str(index_volume+1) + "_python.h5", "w")
+hf.create_dataset('forward_data', data=forward_data)
+hf.close()
