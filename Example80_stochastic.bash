@@ -8,8 +8,8 @@
 #$ -l gpu=1
 #$ -l h_rt=24:00:00
 #$ -l tmem=3G
-#$ -N spdhg80_tau1.6e19_sigma1
-#$ -wd /home/frullan/HighFreqCode/Examples/Ex80_3D_subsampled
+#$ -N fista80_tau1.6e18
+#$ -wd /home/frullan/HighFreqCode/Examples/Ex80_3D_veins_subsampled
 #$ -S /bin/bash
 
 # -o RTiter.txt
@@ -21,8 +21,8 @@
 # 3D domain. 
 # Compute the forward signal for sensors placed in the boundary of the cube
 #================================================================================
-#export PATH="/home/frullan/HighFreqCode/HighFreq_3DRT/Build/bin:$PATH"
-export PATH="/home/wonhong/sharedWK/RTlib/bin:$PATH"
+export PATH="/home/frullan/HighFreqCode/HighFreq_3DRT/Build/bin:$PATH"
+#export PATH="/home/wonhong/sharedWK/RTlib/bin:$PATH"
 
 export EXAMPLE="Ex80_3D_veins_subsampled/"
 
@@ -50,7 +50,7 @@ export PIXEL_PRESSURE="pixelPressure_0.dat"
 # Choose GPU
 export GPU_INDEX=0
 # Choose mode
-export MODE='-G'
+export MODE='-P'
 
 #================================================================================
 #=======   GRADIENT DESCENT
@@ -71,9 +71,9 @@ if [ "$MODE" = "-G" ]; then
 elif [ "$MODE" = "-g" ]; then
     echo "=================== STOCHASTIC GRADIENT DESCENT ===================="
     # Regularization parameters
-    TAU=4e18
-    LAMBDA=3e-4
-    BATCH_SIZE=90
+    TAU=6.4e18
+    LAMBDA=1e-3
+    BATCH_SIZE=100
     N_EPOCHS=5
     # Output
     export STDOUT="stdout_S-GD_tau"$TAU"_lambda"$LAMBDA"_batch"$BATCH_SIZE"_epochs"$N_EPOCHS".txt"
@@ -85,8 +85,8 @@ elif [ "$MODE" = "-g" ]; then
 elif [ "$MODE" = "-F" ]; then
     echo "=================== FISTA ===================="
     # Regularization parameters
-    TAU=6.4e18
-    LAMBDA=1e-2
+    TAU=1.6e18
+    LAMBDA=1e-3
     NITER=5
     # Output
     export STDOUT="stdout_FISTA_tau"$TAU"_lambda"$LAMBDA"_iter"$NITER".txt"
@@ -113,9 +113,9 @@ elif [ "$MODE" = "-P" ]; then
     echo "=================== PDHG ===================="
     # Regularization parameters
     SIGMA=1
-    TAU=6.4e18
+    TAU=3.2e18
     THETA=1      
-    LAMBDA=1e-2  
+    LAMBDA=1e-3
     NITER=5
     # Output
     export STDOUT="stdout_PDHG_sigma"$SIGMA"_tau"$TAU"_theta"$THETA"_lambda"$LAMBDA"_iter"$NITER".txt"
@@ -128,10 +128,10 @@ elif [ "$MODE" = "-p" ]; then
     echo "=================== S-PDHG ===================="
     # Regularization parameters
     SIGMA=1
-    TAU=1.6e19
+    TAU=3.2e18
     THETA=1    
     LAMBDA=1e-3
-    BATCH_SIZE=90
+    BATCH_SIZE=3600
     N_EPOCHS=5
     # Output
     export STDOUT="stdout_S-PDHG_sigma"$SIGMA"_tau"$TAU"_theta"$THETA"_lambda"$LAMBDA"_batch"$BATCH_SIZE"_epochs"$N_EPOCHS".txt"
