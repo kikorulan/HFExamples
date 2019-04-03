@@ -3,20 +3,22 @@
 import numpy as np
 import socket
 import os
+import getpass
 
 #============================================================
 # FOLDER and FILE NAMES
 #============================================================
 # EXAMPLE FOLDER
 example = "Ex83_python_3600/"
+user_name = getpass.getuser()
 host_name = socket.gethostname()
 if (host_name == "maryam.cs.ucl.ac.uk" or host_name == "ember.cs.ucl.ac.uk"):
     host_folder = "/cs/research/medim/projects2/projects/frullan/Documents/HighFreqCode/Examples/"
 elif (host_name == "hannover"):
     host_folder = "/home/wontek/sharedWK/Examples/"
 else:
-    host_folder = "/home/frullan/HighFreqCode/Examples/"
-
+    host_folder = "/home/wonhong/sharedWK/Examples/"
+        
 example_folder = host_folder + example
 # FOLDERS
 input_folder = example_folder + "input_data/"

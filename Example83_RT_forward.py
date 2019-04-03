@@ -10,6 +10,7 @@ import numpy as np
 from datetime import datetime
 import os
 import h5py
+import getpass
 #import matplotlib.pyplot as plt
 # Choose machine
 host = socket.gethostname()
@@ -22,9 +23,9 @@ elif (host == "ember.cs.ucl.ac.uk" or host == "maryam.cs.ucl.ac.uk" or host == "
     data_folder = "/cs/research/medim/projects2/projects/frullan/Documents/HighFreqCode/MLproject/data/"
     sys.path.append(root_folder + "HighFreq_3DRT/Build/bin")
 else:
-    root_folder = "/home/frullan/HighFreqCode/"
-    data_folder = "/home/wonhong/sharedWK/training/"
-    sys.path.append(root_folder + "HighFreq_3DRT/Build/bin")
+    root_folder = "/home/wonhong/sharedWK/"
+    data_folder = root_folder + "training/"
+    sys.path.append(root_folder + "RTlib/bin")
 
 # Choose GPU
 GPU_INDEX = 0
