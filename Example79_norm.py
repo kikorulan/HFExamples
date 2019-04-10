@@ -13,7 +13,7 @@ import matplotlib.pyplot as plt
 # EXAMPLE FOLDER
 example = "Examples/Ex79_3D_norm/"
 host_name = socket.gethostname()
-if (host_name == "maryam.cs.ucl.ac.uk" or host_name == "ember.cs.ucl.ac.uk"):
+if (host_name == "maryam.cs.ucl.ac.uk" or host_name == "ember.cs.ucl.ac.uk" or host_name == "blaze.cs.ucl.ac.uk"):
     root_folder = "/cs/research/medim/projects2/projects/frullan/Documents/HighFreqCode/"
     sys.path.append(root_folder + "HighFreq_3DRT/Build/bin")
 elif (host_name == "hannover"):
@@ -62,7 +62,7 @@ initial_pressure = np.loadtxt(file_initial_pressure)
 initial_pressure = np.reshape(initial_pressure, (int(dim[0, 2]), int(dim[0, 0]), int(dim[0, 1])))
 initial_pressure = np.transpose(initial_pressure, (1, 2, 0)).copy()
 # Sensors
-sensors = np.loadtxt(file_sensors_3600)
+sensors = np.loadtxt(file_sensors_2)
 # Create object
 rtobj = rt.rtgrid(dim)
 # Load sound speed
@@ -71,7 +71,7 @@ rtobj.load_c(sound_speed)
 rtobj.load_u(initial_pressure)
 # Load sensors
 rtobj.load_sensors(sensors)
-nSensors = 3600
+nSensors = 2
 sensor_array = np.arange(nSensors).astype(np.int64)
 
 #==============================
@@ -101,23 +101,28 @@ for i in range(nIter):
     adjoint_pressure_next = rtobj.adjoint_operator(sensor_array, forward_signal)
     norm_vector[i] = np.max(adjoint_pressure_next)/np.max(adjoint_pressure_prev)
     
-    if i > nIter-3:
-        plt.figure()
-        plt.plot(forward_signal.transpose())
-        plt.show(block=False)
-        
-        projY = np.max(adjoint_pressure_next, axis=1)
-        plt.figure()
-        plt.imshow(projY)
-        plt.colorbar()
-        plt.show(block=False)
-        
-        sliceY = adjoint_pressure_next[:, 81, :]
-        plt.figure()
-        plt.imshow(sliceY)
-        plt.colorbar()
-        plt.show(block=False)
- 
+    plt.figure()
+    plt.plot(forward_signal.transpose())
+    plt.show(block=False)
+    
+    projY = np.max(adjoint_pressure_next, axis=1)
+    plt.figure()
+    plt.imshow(projY)
+    plt.colorbar()
+    plt.show(block=False)
+    
+    sliceY = adjoint_pressure_next[:, 81, :]
+    plt.figure()
+    plt.imshow(sliceY)
+    plt.colorbar()
+    plt.show(block=False)
+    
+    sliceY = adjoint_pressure_next[:, 40, :]
+    plt.figure()
+    plt.imshow(sliceY)
+    plt.colorbar()
+    plt.show(block=False)
+
 
 plt.figure()
 plt.plot(norm_vector)
@@ -137,7 +142,7 @@ plt.show(block=False)
 #==============================
 # RESULTS
 #==============================
-tail_norm_vector = np.mean(norm_vector[20:])
-print(tail_norm_vector)
+#tail_norm_vector = np.mean(norm_vector[20:])
+#print(tail_norm_vector)
 # NORM 1 SENSOR  = 9.4e-19
 # NORM 2 SENSORS = 9.4e-19
