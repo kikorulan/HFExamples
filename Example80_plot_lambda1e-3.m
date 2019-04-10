@@ -49,9 +49,9 @@ iter = 5;
 %==============================
 % GD **************************
 GD = [];
-GD.tau    = '8e17';
+GD.tau    = '1.6e18';
 GD.lambda = '1e-3';
-GD.iter   = int2str(10);
+GD.iter   = int2str(5);
 %******************************
 pixelPressureMatrix = importdata(['./results/adjoint/FB/pixelPressure_GD_tau', GD.tau, '_lambda', GD.lambda, '_iter', GD.iter, '.dat'], ' ', 0);
 pixelPressure = max(0, matrix2cube(pixelPressureMatrix, Nz));
@@ -60,17 +60,17 @@ a = axes;
 t = title(['FB - t = ', GD.tau, ', l = ', GD.lambda, ', iter = ', GD.iter, ' - homogeneous SS']);
 a.Visible = 'off'; 
 t.Visible = 'on'; 
-%saveas(gcf, ['./figures/Example80_GD_tau', GD.tau, '_lambda', GD.lambda, '_iter', GD.iter, '.fig']);
+saveas(gcf, ['./figures/Example80_GD_tau', GD.tau, '_lambda', GD.lambda, '_iter', GD.iter, '.fig']);
 
 %==============================
 % Stochastic Gradient Descent
 %==============================
 % S-GD ************************
 SGD = [];
-SGD.tau    = '8e18';
-SGD.lambda = '3e-4';
-SGD.batch  = '90';
-SGD.epoch  = int2str(iter);
+SGD.tau    = '3.2e18';
+SGD.lambda = '1e-3';
+SGD.batch  = '100';
+SGD.epoch  = int2str(30);
 %******************************
 pixelPressureMatrix = importdata(['./results/adjoint/S-FB/pixelPressure_S-GD_tau', SGD.tau, '_lambda', SGD.lambda, '_batch', SGD.batch, '_subepoch', SGD.epoch, '.dat'], ' ', 0);
 pixelPressure = max(0, matrix2cube(pixelPressureMatrix, Nz));
@@ -79,16 +79,16 @@ a = axes;
 t = title(['S-FB - t = ', SGD.tau, ', l = ', SGD.lambda, ', batch = ', SGD.batch, ', epoch = ', SGD.epoch, ' - homogeneous SS']);
 a.Visible = 'off'; 
 t.Visible = 'on'; 
-%saveas(gcf, ['./figures/Example80_S-GD_tau', SGD.tau, '_lambda', SGD.lambda, '_batch', SGD.batch, '_epoch', SGD.epoch, '.fig']);
+saveas(gcf, ['./figures/Example80_S-GD_tau', SGD.tau, '_lambda', SGD.lambda, '_batch', SGD.batch, '_epoch', SGD.epoch, '.fig']);
 
 %==============================
 % FISTA
 %==============================
 % FISTA ***********************
 FISTA = [];
-FISTA.tau    = '4e18';
-FISTA.lambda = '1e-2';
-FISTA.iter   = int2str(iter);
+FISTA.tau    = '4e17';
+FISTA.lambda = '1e-3';
+FISTA.iter   = int2str(30);
 %******************************
 pixelPressureMatrix = importdata(['./results/adjoint/AFB/pixelPressure_FISTA_tau', FISTA.tau, '_lambda', FISTA.lambda, '_iter', FISTA.iter, '.dat'], ' ', 0);
 pixelPressure = max(0, matrix2cube(pixelPressureMatrix, Nz));
@@ -97,7 +97,7 @@ a = axes;
 t = title(['AFB - t = ', FISTA.tau, ', l = ', FISTA.lambda, ', iter = ', FISTA.iter, ' - homogeneous SS']);
 a.Visible = 'off'; 
 t.Visible = 'on'; 
-%saveas(gcf, ['./figures/Example80_FISTA_tau', FISTA.tau, '_lambda', FISTA.lambda, '_iter', FISTA.iter, '.fig']);
+saveas(gcf, ['./figures/Example80_FISTA_tau', FISTA.tau, '_lambda', FISTA.lambda, '_iter', FISTA.iter, '.fig']);
 
 
 %==============================
@@ -106,7 +106,7 @@ t.Visible = 'on';
 % PDHG ************************
 PDHG = [];
 PDHG.sigma  = '1';
-PDHG.tau    = '1e18';
+PDHG.tau    = '1.6e18';
 PDHG.theta  = '1';
 PDHG.lambda = '1e-3';
 PDHG.iter   = int2str(5);
@@ -118,7 +118,7 @@ a = axes;
 t = title(['PDHG - s = ', PDHG.sigma, ', t = ', PDHG.tau, ', l = ', PDHG.lambda, ', iter = ', PDHG.iter, ' - homogeneous SS']);
 a.Visible = 'off'; 
 t.Visible = 'on'; 
-%saveas(gcf, ['./figures/Example80_PDHG_sigma', PDHG.sigma, '_tau', PDHG.tau, '_lambda', PDHG.lambda, '_iter', PDHG.iter, '.fig']);
+saveas(gcf, ['./figures/Example80_PDHG_sigma', PDHG.sigma, '_tau', PDHG.tau, '_lambda', PDHG.lambda, '_iter', PDHG.iter, '.fig']);
 
 
 %==============================
@@ -127,11 +127,11 @@ t.Visible = 'on';
 % S-PDHG **********************
 SPDHG = [];
 SPDHG.sigma  = '1';
-SPDHG.tau    = '2e19';
+SPDHG.tau    = '2e17';
 SPDHG.theta  = '1';
 SPDHG.lambda = '1e-3';
-SPDHG.batch  = '90';
-SPDHG.epoch  = int2str(iter);
+SPDHG.batch  = '100';
+SPDHG.epoch  = int2str(15);
 %******************************
 pixelPressureMatrix = importdata(['./results/adjoint/S-PDHG/pixelPressure_S-PDHG_sigma', SPDHG.sigma, '_tau', SPDHG.tau, '_theta', SPDHG.theta, '_lambda', SPDHG.lambda, '_batch', SPDHG.batch, '_subepoch', SPDHG.epoch, '.dat'], ' ', 0);
 pixelPressure = max(0, matrix2cube(pixelPressureMatrix, Nz));
@@ -143,23 +143,25 @@ t.Visible = 'on';
 %saveas(gcf, ['./figures/Example80_S-PDHG_sigma', SPDHG.sigma, '_tau', SPDHG.tau, '_lambda', SPDHG.lambda, '_batch', SPDHG.batch, '_epoch', SPDHG.epoch, '.fig']);
 
 
-%========================================================================================================================
-% PRIMAL DISTANCE ERROR
-%========================================================================================================================
+%==========================================================================================================================================================================
+%===============================                                                            ===============================================================================
+%===============================                    PRIMAL DISTANCE ERROR                   ===============================================================================
+%===============================                                                            ===============================================================================
+%==========================================================================================================================================================================
 disp('******* PRIMAL DISTANCE ********');
-nIter = 5;
-x_axis = 0:nIter;
+
 %==============================
 % Gradient descent
 %==============================
 disp('GD');
 GD.tau = {'2e17', '4e17', '8e17', '1.6e18', '3.2e18'};
+GD.nIter = {5, 5, 10, 10, 5};
 L = length(GD.tau);
 clear GD_error_pd;
 for ii = 1:L
     disp(ii)
     GD_error_pd{ii} = norm_distance(u0, 0*u0);
-    for iter = 1:nIter
+    for iter = 1:GD.nIter{ii}
         ppmatrix = importdata(['./results/adjoint/FB/pixelPressure_GD_tau', GD.tau{ii}, '_lambda', GD.lambda, '_iter', int2str(iter), '.dat'], ' ', 0);
         pp = max(0, matrix2cube(ppmatrix, Nz));
         GD_error_pd{ii} = [GD_error_pd{ii} norm_distance(u0, pp)];
@@ -169,25 +171,31 @@ end
 figure();
 colors = winter(L);
 for ii = 1:L
-    semilogy(x_axis, GD_error_pd{ii}, 'Color', colors(ii, :), 'Linewidth', 1.5)
+    semilogy(0:GD.nIter{ii}, GD_error_pd{ii}, 'Color', colors(ii, :), 'Linewidth', 1.5)
     hold on;
 end
 box on;
 grid on;
-axis([0 nIter 20 100]);
+axis([0 10 20 100]);
+ax = gca;
 ax.GridAlpha = 0.2;
 legend('GD 2e17', 'GD 4e17', 'GD 8e17', 'GD 1.6e18', 'GD 3.2e18');
-
+%save ./results/error_vectors/GD_error_pd GD_error_pd GD;
+ 
 %==============================
 % Stochastic Gradient descent
 %==============================
 disp('S-GD');
-SGD.tau = {'4e18', '8e18', '1.6e19'};
+SGD.tau = {'2e17', '8e17', '1.6e18', '3.2e18', '6.4e18'};
+SGD.nIter = {5, 5, 5, 30, 5};
+SGD.lambda = '1e-3';
+SGD.batch = '100';
+SGD.sigma = '1';
 L = length(SGD.tau);
 for ii = 1:L
     disp(ii)
     SGD_error_pd{ii} = norm_distance(u0, 0*u0);
-    for iter = 1:nIter
+    for iter = 1:SGD.nIter{ii}
         ppmatrix = importdata(['./results/adjoint/S-FB/pixelPressure_S-GD_tau', SGD.tau{ii}, '_lambda', SGD.lambda, '_batch', SGD.batch, '_subepoch', int2str(iter), '.dat'], ' ', 0);
         pp = max(0, matrix2cube(ppmatrix, Nz));
         SGD_error_pd{ii} = [SGD_error_pd{ii} norm_distance(u0, pp)];
@@ -197,54 +205,66 @@ end
 figure();
 colors = winter(L);
 for ii = 1:L
-    semilogy(x_axis, SGD_error_pd{ii}, 'Color', colors(ii, :), 'Linewidth', 1.5)
+    semilogy(0:SGD.nIter{ii}, SGD_error_pd{ii}, 'Color', colors(ii, :), 'Linewidth', 1.5)
     hold on;
 end
 box on;
 grid on;
+axis([0 30 1 100]);
+ax = gca;
 ax.GridAlpha = 0.2;
-legend('SGD 4e18', 'SGD 8e18', 'SGD 1.6e19');
+legend('SGD 2e17', 'SGD 8e17', 'SGD 1.6e18', 'SGD 3.2e18', 'SGD 6.4e18');
+save ./results/error_vectors/SGD_error_pd SGD_error_pd SGD;
 
 %==============================
 % FISTA
 %==============================
 disp('FISTA');
-FISTA.tau = {'5e17', '1e18', '2e18', '4e18', '8e18', '1.6e19'};
+FISTA.tau = {'2e17', '4e17', '8e17', '1.6e18'};
+FISTA.nIter = {5, 30, 30, 5};
+FISTA.lambda = '1e-3';
 L = length(FISTA.tau);
 clear FISTA_error_pd;
 for ii = 1:L
     disp(ii)
     FISTA_error_pd{ii} = norm_distance(u0, 0*u0);
-    for iter = 1:nIter
+    for iter = 1:FISTA.nIter{ii}
         ppmatrix = importdata(['./results/adjoint/AFB/pixelPressure_FISTA_tau', FISTA.tau{ii}, '_lambda', FISTA.lambda, '_iter', int2str(iter), '.dat'], ' ', 0);
         pp = max(0, matrix2cube(ppmatrix, Nz));
         FISTA_error_pd{ii} = [FISTA_error_pd{ii} norm_distance(u0, pp)];
     end
 end
 % Plot
+%load results/error_vectors/FISTA_error_pd;
 figure();
-colors = winter(L);
-for ii = 1:L
-    semilogy(x_axis, FISTA_error_pd{ii}, 'Color', colors(ii, :), 'Linewidth', 1.5)
+colors = winter(length(FISTA.tau));
+for ii = 1:length(FISTA.tau)
+    semilogy(0:FISTA.nIter{ii}, FISTA_error_pd{ii}, 'Color', colors(ii, :), 'Linewidth', 1.5)
     hold on;
 end
 box on;
 grid on;
+axis([0 30 1 100]);
+ax = gca;
 ax.GridAlpha = 0.2;
-legend('FISTA 5e17', 'FISTA 1e18', 'FISTA 2e18', 'FISTA 4e18', 'FISTA 8e18', 'FISTA 1.6e19');
+legend('FISTA 2e17', 'FISTA 4e17', 'FISTA 8e17', 'FISTA 1.6e18');
+save ./results/error_vectors/FISTA_error_pd FISTA_error_pd FISTA;
 
 %==============================
 % PDHG
 %==============================
 disp('PDHG');
-PDHG.tau = {'2e17', '4e17', '8e17', '1.6e18'};
-PDHG.sigma = '5e-1';
+PDHG.tau = {'2e17', '4e17', '8e17', '1.6e18', '3.2e18'};
+PDHG.nIter = {5, 5, 30, 10, 10};
+PDHG.sigma = '1';
+PDHG.theta = '1';
+PDHG.lambda = '1e-3';
 L = length(PDHG.tau);
 clear PDHG_error_pd;
 for ii = 1:L
     disp(ii)
     PDHG_error_pd{ii} = norm_distance(u0, 0*u0);
-    for iter = 1:5
+    for iter = 1:PDHG.nIter{ii}
         ppmatrix = importdata(['./results/adjoint/PDHG/pixelPressure_PDHG_sigma', PDHG.sigma, '_tau', PDHG.tau{ii}, '_theta', PDHG.theta, '_lambda', PDHG.lambda, '_iter', int2str(iter), '.dat'], ' ', 0);
         pp = max(0, matrix2cube(ppmatrix, Nz));
         PDHG_error_pd{ii} = [PDHG_error_pd{ii} norm_distance(u0, pp)];
@@ -252,32 +272,36 @@ for ii = 1:L
 end
 % Plot
 figure();
-colors = winter(L);
-for ii = 1:L
-    semilogy(x_axis, PDHG_error_pd{ii}, 'Color', colors(ii, :), 'Linewidth', 1.5)
+colors = winter(length(PDHG.tau));
+for ii = 1:length(PDHG.tau)
+    semilogy(0:PDHG.nIter{ii}, PDHG_error_pd{ii}, 'Color', colors(ii, :), 'Linewidth', 1.5)
     hold on;
 end
 box on;
 grid on;
-axis([0 nIter 20 100]);
+axis([0 30 1 100]);
+ax = gca;
 ax.GridAlpha = 0.2;
-legend('PDHG 2e17', 'PDHG 4e17', 'PDHG 8e17', 'PDHG 1.6e18');
+legend('PDHG 2e17', 'PDHG 4e17', 'PDHG 8e17', 'PDHG 1.6e18', 'PDHG 3.2e18');
+save ./results/error_vectors/PDHG_error_pd PDHG_error_pd PDHG;
 
 %==============================
 % SPDHG
 %==============================
 disp('S-PDHG');
-SPDHG.tau = {'2e17', '4e17', '8e17', '1.6e18'};
-SPDHG.sigma = '5e-1';
+SPDHG.tau = {'1e15', '2e15', '5e15', '1e16', '5e16', '1e17', '2e17', '4e17'};
+%SPDHG.tau = {'2e17', '4e17', '8e17', '1.6e18'};
+SPDHG.sigma = '1';
 SPDHG.theta = '1';
 SPDHG.batch = '100';
+SPDHG.nIter = {10, 10, 10, 10, 10, 10, 30, 10};
 SPDHG.lambda = '1e-3';
 L = length(SPDHG.tau);
 clear SPDHG_error_pd;
 for ii = 1:L
     disp(ii)
     SPDHG_error_pd{ii} = norm_distance(u0, 0*u0);
-    for iter = 1:nIter
+    for iter = 1:SPDHG.nIter{ii}
         ppmatrix = importdata(['./results/adjoint/S-PDHG/pixelPressure_S-PDHG_sigma', SPDHG.sigma, '_tau', SPDHG.tau{ii}, '_theta', SPDHG.theta, '_lambda', SPDHG.lambda, '_batch', SPDHG.batch, '_subepoch', int2str(iter), '.dat'], ' ', 0);
         pp = max(0, matrix2cube(ppmatrix, Nz));
         SPDHG_error_pd{ii} = [SPDHG_error_pd{ii} norm_distance(u0, pp)];
@@ -285,51 +309,44 @@ for ii = 1:L
 end
 % Plot
 figure();
-colors = winter(L);
-for ii = 1:L
-    semilogy(x_axis, SPDHG_error_pd{ii}, 'Color', colors(ii, :), 'Linewidth', 1.5)
+colors = winter(length(SPDHG.tau));
+for ii = 1:length(SPDHG.tau)
+    semilogy(0:SPDHG.nIter{ii}, SPDHG_error_pd{ii}, 'Color', colors(ii, :), 'Linewidth', 1.5)
     hold on;
 end
 box on;
 grid on;
 ax = gca;
 ax.GridAlpha = 0.2;
-axis([0 nIter 10 100]);
-legend('S-PDHG 2e17', 'S-PDHG 4e17', 'S-PDHG 8e17', 'S-PDHG 1.6e18');
-
+axis([0 30 1 100]);
+legend('SPDHG 1e15', 'SPDHG 2e15', 'SPDHG 5e15', 'SPDHG 1e16', 'SPHDG 5e16', 'SPHDG 1e17', 'SPHDG 2e17', 'SPHDG 4e17');
+%legend('SPDHG 2e17', 'SPDHG 4e17', 'SPDHG 8e17', 'SPDHG 1.6e18');
+save ./results/error_vectors/SPDHG_error_pd_100 SPDHG_error_pd SPDHG;
+%save ./results/error_vectors/SPDHG_error_pd_3600 SPDHG_error_pd SPDHG;
 
 %======================================================================
 % PLOT ALL
 %======================================================================
-%==============================
-% Gradient descent
-%==============================
-disp('GD');
-GD.tau = '8e17';
-L = length(GD.tau);
-GD_error_pd_final = norm_distance(u0, 0*u0);
-for iter = 1:10
-    ppmatrix = importdata(['./results/adjoint/FB/pixelPressure_GD_tau', GD.tau, '_lambda', GD.lambda, '_iter', int2str(iter), '.dat'], ' ', 0);
-    pp = max(0, matrix2cube(ppmatrix, Nz));
-    GD_error_pd_final = [GD_error_pd_final norm_distance(u0, pp)];
-end
-
+load ./results/error_vectors/GD_error_pd;
+load ./results/error_vectors/SGD_error_pd;
+load ./results/error_vectors/FISTA_error_pd;
+load ./results/error_vectors/PDHG_error_pd;
+load ./results/error_vectors/SPDHG_error_pd_100;
 % Plot
-x_axis_10 = 0:10;
 figure();
-semilogy(x_axis_10, GD_error_pd_final, 'Color', 'r', 'Linewidth', 1.5);
-hold on;          
-%semilogy(x_axis_10, SGD_error_pd{2}, 'Color', 'g', 'Linewidth', 1.5);
-%semilogy(x_axis_10, FISTA_error_pd{4}, 'Color', 'b', 'Linewidth', 1.5);
-%semilogy(x_axis_10, PDHG_error_pd{4}, 'Color', 'm', 'Linewidth', 1.5);
-%semilogy(x_axis_10, SPDHG_error_pd{2}, 'Color', 'c', 'Linewidth', 1.5);
+semilogy(0:GD.nIter{3}, GD_error_pd{3}, 'Color', 'r', 'Linewidth', 1.5);
+hold on;       
+semilogy(0:SGD.nIter{4}, SGD_error_pd{4}, 'Color', 'g', 'Linewidth', 1.5);
+semilogy(0:FISTA.nIter{2}, FISTA_error_pd{2}, 'Color', 'b', 'Linewidth', 1.5);
+semilogy(0:PDHG.nIter{3}, PDHG_error_pd{3}, 'Color', 'm', 'Linewidth', 1.5);
+semilogy(0:SPDHG.nIter{7}, SPDHG_error_pd{7}, 'Color', 'c', 'Linewidth', 1.5);
 legend('GD', 'S-GD', 'FISTA', 'PDHG', 'S-PDHG');
 title('Primal Distance Error - homogeneous SS');
 grid on;
 box on;
 ax = gca;
 ax.GridAlpha = 0.2;
-axis([0 10 20 100]);
+axis([0 30 1 100]);
 %saveas(gcf, ['./figures/Example80_pd_error.fig']);
 
 %==========================================================================================================================================================================
@@ -338,17 +355,22 @@ axis([0 10 20 100]);
 %===============================                                                            ===============================================================================
 %==========================================================================================================================================================================
 disp('******* DUAL DISTANCE ********');
+
+
 %==============================
 % Gradient descent
 %==============================
 disp('GD');
-GD.tau = {'5e17', '1e18', '2e18', '4e18', '8e18', '1.6e19'};
+GD = [];
+GD.lambda = '1e-3';
+GD.tau = {'2e17', '4e17', '8e17', '1.6e18', '3.2e18'};
+GD.nIter = {5, 5, 10, 10, 5};
 L = length(GD.tau);
 clear GD_error_dd;
 for ii = 1:L
     disp(ii)
     GD_error_dd{ii} = norm_distance(y0, 0*y0);
-    for iter = 1:5
+    for iter = 1:GD.nIter{ii}
         tSignal = importdata(['./results/forward/FB/forwardSignal_GD_tau', GD.tau{ii}, '_lambda', GD.lambda, '_iter', int2str(iter), '.dat'], ' ', 0);
         yi = tSignal(2:end, :);
         GD_error_dd{ii} = [GD_error_dd{ii} norm_distance(y0, yi)];
@@ -358,26 +380,31 @@ end
 figure();
 colors = winter(L);
 for ii = 1:L
-    semilogy(x_axis, GD_error_dd{ii}, 'Color', colors(ii, :), 'Linewidth', 1.5)
+    semilogy(0:GD.nIter{ii}, GD_error_dd{ii}, 'Color', colors(ii, :), 'Linewidth', 1.5)
     hold on;
 end
 box on;
 grid on;
 ax = gca;
 ax.GridAlpha = 0.2;
-legend('GD 5e17', 'GD 1e18', 'GD 2e18', 'GD 4e18', 'GD 8e18', 'GD 1.6e19');
-
+axis([0 10 1e-18 1e-17])
+legend('GD 2e17', 'GD 4e17', 'GD 8e17', 'GD 1.6e18', 'GD 3.2e18');
+%save ./results/error_vectors/GD_error_dd GD_error_dd GD;
+   
 %==============================
 % Stochastic Gradient descent
 %==============================
 disp('S-GD');
-SGD.tau = {'4e18', '8e18', '1.6e19'};
+SGD.tau = {'2e17', '8e17', '1.6e18', '3.2e18', '6.4e18'};
+SGD.nIter = {5, 5, 5, 30, 5};
+SGD.lambda = '1e-3';
+SGD.batch = '100';
+SGD.sigma = '1';
 L = length(SGD.tau);
-clear SGD_error_dd;
 for ii = 1:L
     disp(ii)
     SGD_error_dd{ii} = norm_distance(y0, 0*y0);
-    for iter = 1:5
+    for iter = 1:SGD.nIter{ii}
         tSignal = importdata(['./results/forward/S-FB/forwardSignal_S-GD_tau', SGD.tau{ii}, '_lambda', SGD.lambda, '_batch', SGD.batch, '_subepoch', int2str(iter), '.dat'], ' ', 0);
         yi = tSignal(2:end, :);
         SGD_error_dd{ii} = [SGD_error_dd{ii} norm_distance(y0, yi)];
@@ -385,126 +412,214 @@ for ii = 1:L
 end
 % Plot
 figure();
-colors = winter(L);
-for ii = 1:L
-    semilogy(x_axis, SGD_error_dd{ii}, 'Color', colors(ii, :), 'Linewidth', 1.5)
+colors = winter(length(SGD.tau));
+for ii = 1:length(SGD.tau)
+    semilogy(0:SGD.nIter{ii}, SGD_error_dd{ii}, 'Color', colors(ii, :), 'Linewidth', 1.5)
     hold on;
 end
 box on;
 grid on;
+axis([0 30 1e-18 1e-17]);
 ax = gca;
 ax.GridAlpha = 0.2;
-legend('SGD 4e18', 'SGD 8e18', 'SGD 1.6e19');
-
+legend('SGD 2e17', 'SGD 8e17', 'SGD 1.6e18', 'SGD 3.2e18', 'SGD 6.4e18');
+save ./results/error_vectors/SGD_error_dd SGD_error_dd SGD;
 
 %==============================
 % FISTA
 %==============================
 disp('FISTA');
-FISTA.tau = {'5e17', '1e18', '2e18', '4e18', '8e18', '1.6e19'};
+FISTA.tau = {'2e17', '4e17', '8e17', '1.6e18'};
+FISTA.nIter = {5, 30, 30, 5};
+FISTA.lambda = '1e-3';
 L = length(FISTA.tau);
 clear FISTA_error_dd;
 for ii = 1:L
     disp(ii)
     FISTA_error_dd{ii} = norm_distance(y0, 0*y0);
-    for iter = 1:5
+    for iter = 1:FISTA.nIter{ii}
         tSignal = importdata(['./results/forward/AFB/forwardSignal_FISTA_tau', FISTA.tau{ii}, '_lambda', FISTA.lambda, '_iter', int2str(iter), '.dat'], ' ', 0);
         yi = tSignal(2:end, :);
         FISTA_error_dd{ii} = [FISTA_error_dd{ii} norm_distance(y0, yi)];
     end
 end
 % Plot
+%load results/error_vectors/FISTA_error_dd;
 figure();
-colors = winter(L);
-for ii = 1:L
-    semilogy(x_axis, FISTA_error_dd{ii}, 'Color', colors(ii, :), 'Linewidth', 1.5)
+colors = winter(length(FISTA.tau));
+for ii = 1:length(FISTA.tau)
+    semilogy(0:FISTA.nIter{ii}, FISTA_error_dd{ii}, 'Color', colors(ii, :), 'Linewidth', 1.5)
     hold on;
 end
 box on;
 grid on;
+axis([0 30 1e-19 1e-17]);
 ax = gca;
 ax.GridAlpha = 0.2;
-legend('FISTA 5e17', 'FISTA 1e18', 'FISTA 2e18', 'FISTA 4e18', 'FISTA 8e18', 'FISTA 1.6e19');
-
-
+legend('FISTA 2e17', 'FISTA 4e17', 'FISTA 8e17', 'FISTA 1.6e18');
+save ./results/error_vectors/FISTA_error_dd FISTA_error_dd FISTA;
+  
 %==============================
 % PDHG
 %==============================
 disp('PDHG');
-PDHG.tau = {'1e18', '2e18', '4e18', '8e18', '1.6e19'};
+PDHG.tau = {'2e17', '4e17', '8e17', '1.6e18', '3.2e18'};
+PDHG.nIter = {5, 5, 30, 10, 10};
+PDHG.sigma = '1';
+PDHG.lambda = '1e-3';
 L = length(PDHG.tau);
 clear PDHG_error_dd;
 for ii = 1:L
     disp(ii)
     PDHG_error_dd{ii} = norm_distance(y0, 0*y0);
-    for iter = 1:5
+    for iter = 1:PDHG.nIter{ii}
         tSignal = importdata(['./results/forward/PDHG/forwardSignal_PDHG_sigma', PDHG.sigma, '_tau', PDHG.tau{ii}, '_theta', PDHG.theta, '_lambda', PDHG.lambda, '_iter', int2str(iter), '.dat'], ' ', 0);
-        %tSignal = importdata(['./output_data/a2.dat'], ' ', 0);
         yi = tSignal(2:end, :);
         PDHG_error_dd{ii} = [PDHG_error_dd{ii} norm_distance(y0, yi)];
     end
 end
 % Plot
 figure();
-colors = winter(L);
-for ii = 1:L
-    semilogy(x_axis, PDHG_error_dd{ii}, 'Color', colors(ii, :), 'Linewidth', 1.5)
+colors = winter(length(PDHG.tau));
+for ii = 1:length(PDHG.tau)
+    semilogy(0:PDHG.nIter{ii}, PDHG_error_dd{ii}, 'Color', colors(ii, :), 'Linewidth', 1.5)
     hold on;
 end
 box on;
 grid on;
+axis([0 30 5e-19 1e-17]);
 ax = gca;
 ax.GridAlpha = 0.2;
-legend('PDHG 1e18', 'PDHG 2e18', 'PDHG 4e18', 'PDHG 8e18', 'PDHG 1.6e19');
-
+legend('PDHG 2e17', 'PDHG 4e17', 'PDHG 8e17', 'PDHG 1.6e18', 'PDHG 3.2e18');
+save ./results/error_vectors/PDHG_error_dd PDHG_error_dd PDHG;
 
 %==============================
 % SPDHG
 %==============================
 disp('S-PDHG');
-SGD.tau = {'1e19', '2e19', '4e19'};
+SPDHG.tau = {'1e15', '2e15', '5e15', '1e16', '5e16', '1e17', '2e17', '4e17'};
+%SPDHG.tau = {'2e17', '4e17', '8e17', '1.6e18'};
+SPDHG.sigma = '1';
+SPDHG.theta = '1';
+SPDHG.batch = '100';
+SPDHG.nIter = {10, 10, 10, 10, 10, 10, 30, 10};
+%SPDHG.nIter = {5, 5, 5, 5};
+SPDHG.lambda = '1e-3';
 L = length(SPDHG.tau);
 clear SPDHG_error_dd;
 for ii = 1:L
     disp(ii)
     SPDHG_error_dd{ii} = norm_distance(y0, 0*y0);
-    for iter = 1:5
-        tSignal = importdata(['./results/forward/S-PDHG/forwardSignal_S-PDHG_sigma', SPDHG.sigma, '_tau', SPDHG.tau{ii}, '_theta', SPDHG.theta, '_lambda', SPDHG.lambda, '_batch', SPDHG.batch, '_subepoch', int2str(iter), '.dat'], ' ', 0); 
+    for iter = 1:SPDHG.nIter{ii}
+        tSignal = importdata(['./results/forward/S-PDHG/forwardSignal_S-PDHG_sigma', SPDHG.sigma, '_tau', SPDHG.tau{ii}, '_theta', SPDHG.theta, '_lambda', SPDHG.lambda, '_batch', SPDHG.batch, '_subepoch', int2str(iter), '.dat'], ' ', 0);
         yi = tSignal(2:end, :);
         SPDHG_error_dd{ii} = [SPDHG_error_dd{ii} norm_distance(y0, yi)];
     end
 end
 % Plot
 figure();
-colors = winter(L);
-for ii = 1:L
-    semilogy(x_axis, SPDHG_error_dd{ii}, 'Color', colors(ii, :), 'Linewidth', 1.5)
+colors = winter(length(SPDHG.tau));
+for ii = 1:length(SPDHG.tau)
+    semilogy(0:SPDHG.nIter{ii}, SPDHG_error_dd{ii}, 'Color', colors(ii, :), 'Linewidth', 1.5)
     hold on;
 end
 box on;
 grid on;
 ax = gca;
 ax.GridAlpha = 0.2;
-legend('SPDHG 1e19', 'SPDHG 2e19', 'SPDHG 4e19');
+axis([0 30 5e-19 1e-17]);
+legend('SPDHG 1e15', 'SPDHG 2e15', 'SPDHG 5e15', 'SPDHG 1e16', 'SPHDG 5e16', 'SPHDG 1e17', 'SPHDG 2e17', 'SPHDG 4e17');
+%legend('SPDHG 2e17', 'SPDHG 4e17', 'SPDHG 8e17', 'SPDHG 1.6e18');
+save ./results/error_vectors/SPDHG_error_dd_100 SPDHG_error_dd SPDHG;
+%save ./results/error_vectors/SPDHG_error_dd_3600 SPDHG_error_dd SPDHG;
 
-
-%==============================
+%======================================================================
 % PLOT ALL
-%==============================
+%======================================================================
+load ./results/error_vectors/GD_error_dd;
+load ./results/error_vectors/SGD_error_dd;
+load ./results/error_vectors/FISTA_error_dd;
+load ./results/error_vectors/PDHG_error_dd;
+load ./results/error_vectors/SPDHG_error_dd_100;
+
 % Plot
 figure();
-semilogy(x_axis, GD_error_dd{4}, 'Color', 'r', 'Linewidth', 1.5);
-hold on;
-semilogy(x_axis, SGD_error_dd{2}, 'Color', 'g', 'Linewidth', 1.5);
-semilogy(x_axis, FISTA_error_dd{4}, 'Color', 'b', 'Linewidth', 1.5);
-semilogy(x_axis, PDHG_error_dd{4}, 'Color', 'm', 'Linewidth', 1.5);
-semilogy(x_axis, SPDHG_error_dd{2}, 'Color', 'c', 'Linewidth', 1.5);
+semilogy(0:GD.nIter{3}, GD_error_dd{3}, 'Color', 'r', 'Linewidth', 1.5);
+hold on;       
+semilogy(0:SGD.nIter{4}, SGD_error_dd{4}, 'Color', 'g', 'Linewidth', 1.5);
+semilogy(0:FISTA.nIter{2}, FISTA_error_dd{2}, 'Color', 'b', 'Linewidth', 1.5);
+semilogy(0:PDHG.nIter{3}, PDHG_error_dd{3}, 'Color', 'm', 'Linewidth', 1.5);
+semilogy(0:SPDHG.nIter{7}, SPDHG_error_dd{7}, 'Color', 'c', 'Linewidth', 1.5);
 legend('GD', 'S-GD', 'FISTA', 'PDHG', 'S-PDHG');
-%legend('GD', 'FISTA', 'PDHG', 'S-PDHG');
 title('Dual Distance Error - homogeneous SS');
 grid on;
 box on;
 ax = gca;
 ax.GridAlpha = 0.2;
-%saveas(gcf, ['./figures/Example80_dd_error.fig']);
+axis([0 30 1e-19 1e-17]);
+saveas(gcf, ['./figures/Example80_dd_error.fig']);
 
+
+%==========================================================================================================================================================================
+%===============================                                                            ===============================================================================
+%===============================                       LONG RECONSTRUCTION                  ===============================================================================
+%===============================                                                            ===============================================================================
+%==========================================================================================================================================================================
+disp('******* LONG RECONSTRUCTION ****');
+GD.tau = {'4e17', '8e17'};
+GD.lambda = '1e-3';
+nIter = 100;
+% PLOT ************************
+pixelPressureMatrix = importdata(['./results/adjoint/FB/pixelPressure_GD_tau', GD.tau{2}, '_lambda', GD.lambda, '_iter', int2str(nIter), '.dat'], ' ', 0);
+pixelPressure = max(0, matrix2cube(pixelPressureMatrix, Nz));
+plot_projection(pixelPressure, dx);
+a = axes;
+t = title(['FB - t = ', GD.tau, ', l = ', GD.lambda, ', iter = ', GD.iter, ' - homogeneous SS']);
+a.Visible = 'off'; 
+t.Visible = 'on'; 
+%******************************
+L = length(GD.tau);
+clear GD_error_dd_long;
+for ii = 1:L
+    disp(ii)
+    GD_error_dd_long{ii} = norm_distance(y0, 0*y0);
+    GD_error_pd_long{ii} = norm_distance(u0, 0*u0);
+    for iter = 1:100
+        disp(['iter ', iter])
+        % Primal error
+        ppmatrix = importdata(['./results/adjoint/FB/pixelPressure_GD_tau', GD.tau{ii}, '_lambda', GD.lambda, '_iter', int2str(iter), '.dat'], ' ', 0);
+        pp = max(0, matrix2cube(ppmatrix, Nz));
+        GD_error_pd_long{ii} = [GD_error_pd_long{ii} norm_distance(u0, pp)];
+        % Dual error
+        tSignal = importdata(['./results/forward/FB/forwardSignal_GD_tau', GD.tau{ii}, '_lambda', GD.lambda, '_iter', int2str(iter), '.dat'], ' ', 0);
+        yi = tSignal(2:end, :);
+        GD_error_dd_long{ii} = [GD_error_dd_long{ii} norm_distance(y0, yi)];
+    end
+end
+
+load ./results/error_vectors/GD_error_long_reconstruction;
+% Primal Error plot
+figure();
+colors = winter(length(GD.tau));
+for ii = 1:length(GD.tau)
+    semilogy(0:100, GD_error_pd_long{ii}, 'Color', colors(ii, :), 'Linewidth', 1.5)
+    hold on;
+end
+grid on;
+ax = gca;
+ax.GridAlpha = 0.2;
+box on;
+% Dual Error Plot
+figure();
+colors = winter(length(GD.tau));
+for ii = 1:length(GD.tau)
+    semilogy(0:100, GD_error_dd_long{ii}, 'Color', colors(ii, :), 'Linewidth', 1.5)
+    hold on;
+end
+grid on;
+ax = gca;
+ax.GridAlpha = 0.2;
+box on;
+
+% Save results
+%save results/error_vectors/GD_error_long_reconstruction GD_error_dd_long GD_error_pd_long GD;

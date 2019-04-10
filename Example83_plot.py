@@ -123,3 +123,31 @@ plt.imshow(projYZ)
 plt.colorbar()
 plt.show(block=False)
 '''
+
+
+#================================================================================
+# COMPARE FORWARD DATA
+#================================================================================
+index_volume = 1
+with h5py.File(output_folder + "forwardData_vol" + str(index_volume+1) + "_python.h5", "r") as f:
+    forward_data = f["/forward_data"].value
+
+with h5py.File(output_folder + "forwardData_vol" + str(index_volume+1) + "_python_cluster.h5", "r") as f:
+    forward_data_cluster = f["/forward_data"].value
+
+print(np.max(forward_data))
+print(np.max(forward_data_cluster))
+print(np.max(forward_data-forward_data_cluster))
+
+plt.figure()
+plt.imshow(forward_data)
+plt.colorbar()
+plt.show(block=False)
+plt.figure()
+plt.imshow(forward_data_cluster)
+plt.colorbar()
+plt.show(block=False)
+plt.figure()
+plt.imshow(forward_data-forward_data_cluster)
+plt.colorbar()
+plt.show(block=False)
