@@ -1,5 +1,5 @@
-%cd /cs/research/medim/projects2/projects/frullan/Documents/HighFreqCode/Examples/Ex80_3D_veins_subsampled;
-cd /scratch0/NOT_BACKED_UP/frullan/Examples/Ex80_3D_veins_subsampled;
+cd /cs/research/medim/projects2/projects/frullan/Documents/HighFreqCode/Examples/Ex80_3D_veins_subsampled;
+%cd /scratch0/NOT_BACKED_UP/frullan/Examples/Ex80_3D_veins_subsampled;
 
 clear all;
 close all;
@@ -17,56 +17,55 @@ Nz = dim(1, 3); dz = dim(2, 3);
 %==================================================
 % TIME SIGNAL - kWave
 %==================================================
-sensor_data = h5read('./output_data/Example80_forward_output_3600sensors.h5', '/p');
+sensor_data_kWave = h5read('./output_data/Example80_forward_output_25sensors.h5', '/p');
+figure;
+imagesc(sensor_data_kWave);
 
 %==================================================
+% TIME SIGNAL - RT
+%==================================================
+timeSignal = importdata(['./output_data/forwardSignal_25sensors_amplMod.dat'], ' ', 0);
+sensor_data_RT = timeSignal(2:end, :);
+figure;
+imagesc(sensor_data_RT);
+
+%==================================================
+% COMPARE
+%==================================================
+% Normalize
+normKW = max(sensor_data_kWave(:));
+normRT = max(sensor_data_RT(:));
+sensor_data_kWave_norm = sensor_data_kWave/normKW;
+sensor_data_RT_norm = sensor_data_RT/normRT;
+
 % Plot
+index_sensor = 1;
+figure;
+plot(sensor_data_kWave_norm(index_sensor, :), 'Color', 'r');
+hold on;
+plot(sensor_data_RT_norm(index_sensor, :), 'Color', 'b');
+
 %==================================================
-subiter = 2;
-subiter_str = int2str(subiter);
-
-
-x = importdata(['./output_data/x1_subiter', subiter_str, '_iter1.dat'], ' ', 0);
-x1 = matrix2cube(x, Nz);
-x = importdata(['./output_data/x2_subiter', subiter_str, '_iter1.dat'], ' ', 0);
-x2 = matrix2cube(x, Nz);
-x = importdata(['./output_data/x3_subiter', subiter_str, '_iter1.dat'], ' ', 0);
-x3 = matrix2cube(x, Nz);
-x = importdata(['./output_data/x4_subiter', subiter_str, '_iter1.dat'], ' ', 0);
-x4 = matrix2cube(x, Nz);
-
-plot_projection(x1, 1);
-colorbar();
-plot_projection(x2, 1);
-colorbar();
-plot_projection(x3, 1);
-colorbar();
-plot_projection(x4, 1);
-colorbar();
-
-
-y0 = importdata(['./output_data/y0_subiter', subiter_str, '_iter1.dat'], ' ', 0);
-y1 = importdata(['./output_data/y1_subiter', subiter_str, '_iter1.dat'], ' ', 0);
-y2 = importdata(['./output_data/y2_subiter', subiter_str, '_iter1.dat'], ' ', 0);
-y3 = importdata(['./output_data/y3_subiter', subiter_str, '_iter1.dat'], ' ', 0);
-y4 = importdata(['./output_data/y4_subiter', subiter_str, '_iter1.dat'], ' ', 0);
-y5 = importdata(['./output_data/y5_subiter', subiter_str, '_iter1.dat'], ' ', 0);
-
-
+% AMPLITUDE
+%==================================================
+amplitude     = importdata(['./output_data/Amplitude20.dat'], ' ', 0);
+amplitude_mod = importdata(['./output_data/Amplitude20_amplMod.dat'], ' ', 0);
 figure;
-plot(y0);
+semilogy(amplitude(:, 1), 'Color', 'r')
 hold on;
-plot(y1);
-plot(y2);
-plot(y3);
-plot(y4);
-plot(y5);
-legend('y0', 'y1', 'y2', 'y3', 'y4', 'y5')
+semilogy(amplitude_mod(:, 1), 'Color', 'b')
+grid on;
+ax = gca;
+ax.GridAlpha = 0.4;
 
 
-index = 1;
-y0_kWave = sensor_data(index, :);
+amplitude_norm = amplitude/amplitude(1);
+amplitude_mod_norm = amplitude_mod/amplitude_mod(1);
 figure;
-plot(y0/max(y0));
+semilogy(amplitude_norm(:, 1), 'Color', 'r', 'Linewidth', 1.5)
 hold on;
-plot(y0_kWave/max(y0_kWave));
+semilogy(amplitude_mod_norm(:, 1), 'Color', 'b', 'Linewidth', 1.5)
+grid on;
+ax = gca;
+ax.GridAlpha = 0.4;
+

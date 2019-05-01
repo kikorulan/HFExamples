@@ -1,6 +1,6 @@
 % Heterogeneous Propagation Medium Example
-%cd /cs/research/medim/projects2/projects/frullan/Documents/HighFreqCode/Examples/Ex80_3D_veins_subsampled;
-cd /scratch0/NOT_BACKED_UP/frullan/Examples/Ex80_3D_veins_subsampled;
+cd /cs/research/medim/projects2/projects/frullan/Documents/HighFreqCode/Examples/Ex80_3D_veins_subsampled;
+%cd /scratch0/NOT_BACKED_UP/frullan/Examples/Ex80_3D_veins_subsampled;
 
 clear all;
 close all;
@@ -51,7 +51,7 @@ plot_projection(initial_pressure_veins_smooth, dx);
 %==============================
 % Define the sensors
 sensor.mask = zeros(Nx, Ny, Nz);
-numberSensorsArray = 60;
+numberSensorsArray = 5;
 xArray = round(1:(Nx-1)/(numberSensorsArray-1):Nx);
 yArray = round(1:(Ny-1)/(numberSensorsArray-1):Ny);
 zArray = round(1:(Nz-1)/(numberSensorsArray-1):Nz);
@@ -65,11 +65,11 @@ numberSensors = sum(sensor.mask(:))
 % set the input arguments: force the PML to be outside the computational
 % grid; switch off p0 smoothing within kspaceFirstOrder2D
 input_args = {'PMLInside', false, 'PlotPML', false, 'Smooth', false};
-save input_data/sensor_data_veins_3600sensors.mat kgrid medium source sensor input_args;
+save input_data/sensor_data_veins_25sensors.mat kgrid medium source sensor input_args;
 % Save to disk
-filename = 'input_data/Example80_forward_input_3600sensors.h5';
+filename = 'input_data/Example80_forward_input_25sensors.h5';
 kspaceFirstOrder3D(kgrid, medium, source, sensor, input_args{:}, 'SaveToDisk', filename);
 
 % Call C++ code
 setenv LD_LIBRARY_PATH '/cs/research/medim/projects2/projects/frullan/lib/root/lib64';
-system('/cs/research/medim/projects2/projects/frullan/Documents/HighFreqCode/Examples/kspaceFirstOrder3D-OMP -i input_data/Example80_forward_input_3600sensors.h5 -o output_data/Example80_forward_output_3600sensors.h5');
+system('/cs/research/medim/projects2/projects/frullan/Documents/HighFreqCode/Examples/kspaceFirstOrder3D-OMP -i input_data/Example80_forward_input_25sensors.h5 -o output_data/Example80_forward_output_25sensors.h5');
