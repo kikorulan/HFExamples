@@ -1,7 +1,9 @@
 %%% BUILD INITIAL PRESSURE
 
 % Read data from files
-cd /cs/research/medim/projects2/projects/frullan/Documents/HighFreqCode/Examples/Ex81_3D_veins_subsampled_het;
+%cd /cs/research/medim/projects2/projects/frullan/Documents/HighFreqCode/Examples/Ex81_3D_veins_subsampled_het;
+cd /scratch0/NOT_BACKED_UP/frullan/Examples/Ex81_3D_veins_subsampled_het;
+
 %clear all;
 close all;
 
@@ -103,7 +105,7 @@ rng(1);
 Nx_ss = floor(Nx/3)
 gridR = gridRT(Nx_ss, 1, Ny, 1, Nz, 1);
 % Set sound speed
-c0 = 1500;
+c0 = 1580.0;
 c = c0*ones(Nx_ss, Ny, Nz);
 gridR.setCMatrix(c);
 inc = 0.1;

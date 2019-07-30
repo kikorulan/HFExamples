@@ -1,5 +1,6 @@
 % Read data from files
-cd /cs/research/medim/projects2/projects/frullan/Documents/HighFreqCode/Examples/Ex81_3D_veins_subsampled_het;
+%cd /cs/research/medim/projects2/projects/frullan/Documents/HighFreqCode/Examples/Ex81_3D_veins_subsampled_het;
+cd /scratch0/NOT_BACKED_UP/frullan/Examples/Ex81_3D_veins_subsampled_het;
 
 clear all;
 close all;
