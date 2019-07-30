@@ -43,7 +43,7 @@ export SOUND_SPEED="sound_speed.dat"
 export INITIAL_PRESSURE="initial_pressure_veins_80x240x240.dat"
 export SENSORS="sensors_subsampled_3600.dat" 
 export FORWARD_SIGNAL="forwardSignal_reference_noisy5_3600sensors.dat"
-export STDOUT="stdout-forward.txt"
+export STDOUT="stdout-adjoint.txt"
 
 # Mode
 export MODE="-a"
@@ -82,5 +82,5 @@ done
 #====================
 # RUN 
 #====================
-#RTsolver_GPU $MODE $INPUT_FOLDER$DIMENSIONS $INPUT_FOLDER$SOUND_SPEED $INPUT_FOLDER$INITIAL_PRESSURE \
-#             $INPUT_FOLDER$SENSORS $OUTPUT_FOLDER $INPUT_FOLDER$FORWARD_SIGNAL > $OUTPUT_FOLDER$STDOUT
+RTsolver_GPU $MODE $INPUT_FOLDER$DIMENSIONS $INPUT_FOLDER$SOUND_SPEED $INPUT_FOLDER$INITIAL_PRESSURE \
+             $INPUT_FOLDER$SENSORS $OUTPUT_FOLDER $INPUT_FOLDER$FORWARD_SIGNAL > $OUTPUT_FOLDER$STDOUT

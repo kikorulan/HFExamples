@@ -8,7 +8,7 @@
 #$ -l gpu=1
 #$ -l h_rt=20:00:00
 #$ -l tmem=3G
-#$ -N spdhg81_tau1e17
+#$ -N spdhg81
 #$ -wd /home/frullan/HighFreqCode/Examples/Ex81_3D_veins_subsampled_het
 #$ -S /bin/bash
 
@@ -57,7 +57,7 @@ export MODE='-p'
 if [ "$MODE" = "-G" ]; then
     echo "=================== GRADIENT DESCENT ===================="
     # Regularization parameters
-    TAU=1e18
+    TAU=2e18
     LAMBDA=1e-4
     NITER=30
     # Output
@@ -70,7 +70,7 @@ if [ "$MODE" = "-G" ]; then
 elif [ "$MODE" = "-g" ]; then
     echo "=================== STOCHASTIC GRADIENT DESCENT ===================="
     # Regularization parameters
-    TAU=4e18
+    TAU=8e18
     LAMBDA=1e-4
     BATCH_SIZE=100
     N_EPOCHS=30
@@ -84,7 +84,7 @@ elif [ "$MODE" = "-g" ]; then
 elif [ "$MODE" = "-F" ]; then
     echo "=================== FISTA ===================="
     # Regularization parameters
-    TAU=1e18
+    TAU=2e18
     LAMBDA=1e-4
     NITER=30
     # Output
@@ -112,7 +112,7 @@ elif [ "$MODE" = "-P" ]; then
     echo "=================== PDHG ===================="
     # Regularization parameters
     SIGMA=1
-    TAU=1e18
+    TAU=2e18
     THETA=1      
     LAMBDA=1e-4
     NITER=30
@@ -127,7 +127,7 @@ elif [ "$MODE" = "-p" ]; then
     echo "=================== S-PDHG ===================="
     # Regularization parameters
     SIGMA=1
-    TAU=1e17
+    TAU=2e17
     THETA=1    
     LAMBDA=1e-4
     BATCH_SIZE=100
