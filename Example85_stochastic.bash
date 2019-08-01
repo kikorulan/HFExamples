@@ -4,27 +4,26 @@
 # QSUB
 #====================
 
-#$ -P gpu
+# #$ -P gpu
 #$ -l gpu=1
 #$ -l h_rt=24:00:00
 #$ -l tmem=3G
-#$ -N gd_tau8e17_lambda1e-4
-#$ -wd /home/frullan/HighFreqCode/Examples/Ex80_3D_veins_subsampled
+#$ -N gd85_tau1.6e18_lambda1e-22
+#$ -wd /home/frullan/HighFreqCode/Examples/Ex85_3D_veins_subsampled
 #$ -S /bin/bash
 
 # -o RTiter.txt
 #$ -j y
 
-
 #================================================================================
-# EXAMPLE 80 ITERATIVE
+# EXAMPLE 85 ITERATIVE
 # 3D domain. 
 # Compute the forward signal for sensors placed in the boundary of the cube
 #================================================================================
 export PATH="/home/frullan/HighFreqCode/HighFreq_3DRT/Build/bin:$PATH"
 #export PATH="/home/wonhong/sharedWK/RTlib/bin:$PATH"
 
-export EXAMPLE="Ex80_3D_veins_subsampled/"
+export EXAMPLE="Ex85_3D_veins_subsampled/"
 
 # Output folder
 if [ "$HOSTNAME" = "maryam.cs.ucl.ac.uk" ]; then
@@ -47,8 +46,10 @@ export SENSORS="sensors_subsampled_3600.dat"
 export FORWARD_SIGNAL="forwardSignal_reference_noisy5_3600sensors.dat"
 export PIXEL_PRESSURE="pixelPressure_0.dat"
 
+# Machine
+echo $HOSTNAME
 # Choose GPU
-export GPU_INDEX=1
+export GPU_INDEX=0
 # Choose mode
 export MODE='-G'
 
@@ -58,14 +59,13 @@ export MODE='-G'
 if [ "$MODE" = "-G" ]; then
     echo "=================== GRADIENT DESCENT ===================="
     # Regularization parameters
-    TAU=8e17
-    LAMBDA=1e-4
+    TAU=1.6e18
+    LAMBDA=1e-22
     NITER=30
     # Output
     export STDOUT="stdout_GD_tau"$TAU"_lambda"$LAMBDA$"_iter"$NITER".txt"
     RTiterative_GPU $MODE $INPUT_FOLDER$DIMENSIONS $INPUT_FOLDER$SOUND_SPEED \
-                    $INPUT_FOLDER$SENSORS $INPUT_FOLDER$FORWARD_SIGNAL $INPUT_FOLDER$PIXEL_PRESSURE $TAU $LAMBDA $NITER
-# > $OUTPUT_FOLDER$STDOUT
+                    $INPUT_FOLDER$SENSORS $INPUT_FOLDER$FORWARD_SIGNAL $INPUT_FOLDER$PIXEL_PRESSURE $TAU $LAMBDA $NITER > $OUTPUT_FOLDER$STDOUT
 #================================================================================
 #=======   STOCHASTIC GRADIENT DESCENT
 #================================================================================
