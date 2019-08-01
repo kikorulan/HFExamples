@@ -60,11 +60,11 @@ EOF
 #==============================
 # SENSORS
 #==============================
-nSensorsArray=5
-#nRaysPhi=1024 
-#nRaysTheta=1024
-nRaysPhi=10
-nRaysTheta=10
+nSensorsArray=60
+nRaysPhi=1024 
+nRaysTheta=1024
+#nRaysPhi=10
+#nRaysTheta=10
 dt=1.6667e-8
 tMax=8.0836e-06
 # Generate sensor file
