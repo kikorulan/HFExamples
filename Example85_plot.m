@@ -6,7 +6,10 @@ clear all;
 close all;
 
 % Functions
-norm_distance = @(x, y) sqrt(sum((x(:) - y(:)).*(x(:) - y(:))));
+lambda = 1e-20;
+[TV, D, DTV] = TVOperators(3, 'none');
+norm_distance = @(x, y) sum((x(:) - y(:)).*(x(:) - y(:)));
+obj_function = @(y0, y, u0) 0.5*norm_distance(y0, y) + lambda*TV(u0);
 
 %==================================================
 % Dimensions
@@ -24,7 +27,7 @@ Nz = dim(1, 3); dz = dim(2, 3);
 u0Matrix = importdata('./input_data/initial_pressure_veins_80x240x240.dat', ' ', 0);
 u0 = matrix2cube(u0Matrix, Nz);
 plot_projection_compact(u0, dx);
-saveas(gcf, './figures/Example85_initial_pressure', 'epsc');
+%saveas(gcf, './figures/Example85_initial_pressure', 'epsc');
   
 % Forward signal
 time_signal = importdata(['./input_data/forwardSignal_reference_noisy5_3600sensors.dat'], ' ', 0);
@@ -32,26 +35,26 @@ y0 = time_signal(2:end, :);
 figure;
 imagesc(y0(1:60, :));
 colorbar()
-saveas(gcf, './figures/Example85_forwardSignal_noisy5', 'epsc');
+%saveas(gcf, './figures/Example85_forwardSignal_noisy5', 'epsc');
   
 % Load Adjoint Pressure
 pressure_adjoint = importdata('./input_data/pixelPressure_adjoint_3600sensors.dat', ' ', 0);
 pressure_adjoint = matrix2cube(pressure_adjoint, Nz);
 plot_projection_compact(pressure_adjoint, dx);
-saveas(gcf, './figures/Example85_pixelPressure_adjoint', 'epsc');
+%saveas(gcf, './figures/Example85_pixelPressure_adjoint', 'epsc');
 
 %========================================================================================================================
 % ITERATIVE RECONSTRUCTION
 %========================================================================================================================
-iter = 5;
+iter = 30;
 
 %==============================
 % Gradient Descent
 %==============================
 % GD **************************
 GD = [];
-GD.tau    = '4e17';
-GD.lambda = '1e-21';
+GD.tau    = '1.6e18';
+GD.lambda = '1e-20';
 GD.iter   = int2str(iter);
 %******************************
 pixelPressureMatrix = importdata(['./results/adjoint/FB/pixelPressure_GD_tau', GD.tau, '_lambda', GD.lambda, '_iter', GD.iter, '.dat'], ' ', 0);
@@ -127,60 +130,61 @@ plot_projection_compact(pixelPressure, dx);
 %===============================                     DISTANCE ERROR                         ===============================================================================
 %===============================                                                            ===============================================================================
 %==========================================================================================================================================================================
-%%  disp('******* PRIMAL DISTANCE ********');
-%%  disp('******* DUAL DISTANCE ********');
+disp('******* PRIMAL DISTANCE ********');
+disp('******* DUAL DISTANCE ********');
 %======================================================================
 % Gradient descent
 %======================================================================
-%%  disp('GD');
-%%  GD.tau = {'8e17'};
-%%  GD.nIter = {30};
-%%  GD.lambda = '1e-4';
-%%  L = length(GD.tau);
-%%  clear GD_error_pd GD_error_dd;
-%%  for ii = 1:L
-%%      disp(ii)
-%%      GD_error_pd{ii} = norm_distance(u0, 0*u0);
-%%      GD_error_dd{ii} = norm_distance(y0, 0*y0);
-%%      for iter = 1:GD.nIter{ii}
-%%          % Primal error
-%%          ppmatrix = importdata(['./results/adjoint/FB/pixelPressure_GD_tau', GD.tau{ii}, '_lambda', GD.lambda, '_iter', int2str(iter), '.dat'], ' ', 0);
-%%          pp = max(0, matrix2cube(ppmatrix, Nz));
-%%          GD_error_pd{ii} = [GD_error_pd{ii} norm_distance(u0, pp)];
-%%          % Dual error
-%%          tSignal = importdata(['./results/forward/FB/forwardSignal_GD_tau', GD.tau{ii}, '_lambda', GD.lambda, '_iter', int2str(iter), '.dat'], ' ', 0);
-%%          yi = tSignal(2:end, :);
-%%          GD_error_dd{ii} = [GD_error_dd{ii} norm_distance(y0, yi)];
-%%      end
-%%  end
-%%  % Plot primal
-%%  figure();
-%%  colors = winter(L);
-%%  for ii = 1:L
-%%      semilogy(0:GD.nIter{ii}, GD_error_pd{ii}, 'Color', colors(ii, :), 'Linewidth', 1.5)
-%%      hold on;
-%%  end
-%%  box on;
-%%  grid on;
-%%  ax = gca;
-%%  ax.GridAlpha = 0.2;
-%%  axis([0 30 1 100]);
-%%  legend('GD 8e17');
-%%  % Plot dual
-%%  figure();
-%%  colors = winter(L);
-%%  for ii = 1:L
-%%      semilogy(0:GD.nIter{ii}, GD_error_dd{ii}, 'Color', colors(ii, :), 'Linewidth', 1.5)
-%%      hold on;
-%%  end
-%%  box on;
-%%  grid on;
-%%  ax = gca;
-%%  ax.GridAlpha = 0.2;
-%%  axis([0 30 1e-19 1e-17])
-%%  legend('GD 8e17');
-%%  save ./results/error_vectors/GD_error_pd_lambda1em4 GD_error_pd GD;
-%%  save ./results/error_vectors/GD_error_dd_lambda1em4 GD_error_dd GD;
+disp('GD');
+GD.tau = {'1e17', '2e17', '4e17', '8e17', '1.6e18'};
+GD.nIter = {30, 30, 30, 30, 30};
+GD.lambda = '1e-20';
+L = length(GD.tau);
+clear GD_error_pd GD_error_dd;
+for ii = 1:L
+    disp(ii)
+    GD_error_pd{ii} = norm_distance(u0, 0*u0);
+    GD_error_dd{ii} = norm_distance(y0, 0*y0);
+    for iter = 1:GD.nIter{ii}
+        % Primal error
+        ppmatrix = importdata(['./results/adjoint/FB/pixelPressure_GD_tau', GD.tau{ii}, '_lambda', GD.lambda, '_iter', int2str(iter), '.dat'], ' ', 0);
+        pp = matrix2cube(ppmatrix, Nz);
+        pp_pos = max(0, pp);
+        GD_error_pd{ii} = [GD_error_pd{ii} norm_distance(u0, pp_pos)];
+        % Dual error
+        tSignal = importdata(['./results/forward/FB/forwardSignal_GD_tau', GD.tau{ii}, '_lambda', GD.lambda, '_iter', int2str(iter), '.dat'], ' ', 0);
+        yi = tSignal(2:end, :);
+        GD_error_dd{ii} = [GD_error_dd{ii} obj_function(y0, yi, pp)];
+    end
+end
+% Plot primal
+figure();
+colors = winter(L);
+for ii = 1:L
+    semilogy(0:GD.nIter{ii}, GD_error_pd{ii}, 'Color', colors(ii, :), 'Linewidth', 1.5)
+    hold on;
+end
+box on;
+grid on;
+ax = gca;
+ax.GridAlpha = 0.2;
+%axis([0 30 1 100]);
+legend('GD 8e17');
+% Plot dual
+figure();
+colors = winter(L);
+for ii = 1:L
+    semilogy(0:GD.nIter{ii}, GD_error_dd{ii}, 'Color', colors(ii, :), 'Linewidth', 1.5)
+    hold on;
+end
+box on;
+grid on;
+ax = gca;
+ax.GridAlpha = 0.2;
+%axis([0 30 1e-19 1e-17])
+legend('GD 8e17');
+save ./results/error_vectors/GD_error_pd_lambda1em20 GD_error_pd GD;
+save ./results/error_vectors/GD_error_dd_lambda1em20 GD_error_dd GD;
  
 %======================================================================
 % Stochastic Gradient descent
