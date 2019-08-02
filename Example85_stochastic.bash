@@ -6,9 +6,9 @@
 
 # #$ -P gpu
 #$ -l gpu=1
-#$ -l h_rt=24:00:00
+#$ -l h_rt=40:00:00
 #$ -l tmem=3G
-#$ -N gd85_tau1.6e18_lambda1e-22
+#$ -N sgd85_tau1e17_lambda1e-20
 #$ -wd /home/frullan/HighFreqCode/Examples/Ex85_3D_veins_subsampled
 #$ -S /bin/bash
 
@@ -51,7 +51,7 @@ echo $HOSTNAME
 # Choose GPU
 export GPU_INDEX=0
 # Choose mode
-export MODE='-G'
+export MODE='-F'
 
 #================================================================================
 #=======   GRADIENT DESCENT
@@ -72,8 +72,8 @@ if [ "$MODE" = "-G" ]; then
 elif [ "$MODE" = "-g" ]; then
     echo "=================== STOCHASTIC GRADIENT DESCENT ===================="
     # Regularization parameters
-    TAU=3.2e18
-    LAMBDA=1e-4
+    TAU=1.2e19
+    LAMBDA=1e-22
     BATCH_SIZE=100
     N_EPOCHS=30
     # Output
