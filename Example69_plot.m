@@ -16,17 +16,18 @@ Nz = dim(1, 3); dz = dim(2, 3);
 %============================================================================================================================================
 % FORWARD PROBLEM
 %============================================================================================================================================
-nSensors = 3;
+nSensors = 16;
 
 %==================================================
 % TIME SIGNAL - kWave
 %==================================================
-sensor_data = h5read('./output_data/Example69_forward_output_3sensors.h5', '/p');
+sensor_data = h5read('./output_data/Example69_forward_output_100sensors_homo.h5', '/p');
 figure;
-hold on;
-for n = 1:nSensors
-    plot(sensor_data(n, :));
-end
+imagesc(sensor_data);
+%%  hold on;
+%%  for n = 1:nSensors
+%%      plot(sensor_data(n, :));
+%%  end
 
 %==================================================
 % TIME SIGNAL - RT
@@ -38,196 +39,85 @@ timeRT = timeSignal(1, :);
 inputRT = timeSignal(2:end, :);
 % Plot
 figure;
-hold on;
-for n = 1:nSensors
-    plot(inputRT(n, :));
+imagesc(inputRT);
+%%  hold on;
+%%  for n = 1:nSensors
+%%      plot(inputRT(n, :));
+%%  end
+
+%==================================================
+% Comparison
+%==================================================
+for n = 1:10
+    figure;
+    hold on;
+    plot(sensor_data(n, :), 'Color', 'r', 'LineWidth', 2);
+    plot(inputRT(n, :), 'Color', 'b');
 end
 
-%%  
-%%  % Import data
-%%  filenameData = 'input_data/forwardSignal_reference_1600sensors.dat';
-%%  timeSignal = importdata(filenameData, ' ', 0);
-%%  timeRT = timeSignal(1, :);
-%%  inputRT = timeSignal(2:end, :);
-%%  % Plot
-%%  figure;
-%%  imagesc(inputRT);
-%%  box on;
-%%  colorbar();
-%%  
-%%  %==================================================
-%%  % Compute forward signal difference
-%%  %==================================================
-%%  % Import data
-%%  filenameData = 'input_data/forwardSignal_1600sensors_dt1.6e-8_lowres_interp_delay2.dat';
-%%  timeSignal = importdata(filenameData, ' ', 0);
-%%  timeRT = timeSignal(1, :);
-%%  signalRT_1 = timeSignal(2:end, :);
-%%  % Import data
-%%  filenameData = 'input_data/forwardSignal_kWave_adjoint_1600sensors.dat';
-%%  timeSignal = importdata(filenameData, ' ', 0);
-%%  timeRT = timeSignal(1, :);
-%%  signalRT_2 = timeSignal(2:end, :);
-%%  % Create signal
-%%  differenceRT = signalRT_1 - signalRT_2;
-%%  forwardDif = [timeRT; differenceRT];
-%%  dlmwrite('input_data/forwardSignal_difference_1600sensors.dat', forwardDif, 'delimiter', ' ');
-%%  
-%%  %============================================================================================================================================
-%%  % ADJOINT PROBLEM
-%%  %============================================================================================================================================
-%%  % Position
-%%  position     = [700 700 300 630];
-%%  positionY    = [700 700 320 630];
-%%  positionBar  = [700 700 363 630];
-%%  positionYBar = [700 700 390 630];
-%%  set(0,'DefaultFigurePaperPositionMode','auto');
-%%  
-%%  %==================================================
-%%  % INITIAL PRESSURE
-%%  %==================================================
-%%  % Load Initial Pressure
-%%  u0Matrix = importdata('input_data/initial_pressure_veins_80x240x240.dat', ' ', 0);
-%%  u0 = matrix2cube(u0Matrix, Nz);
-%%  h = plot_projection(u0, dx);
-%%  saveas(gcf, 'figures/Example68_initial_pressure.fig');
-%%  % Load Initial Pressure
-%%  load ./input_data/initial_pressure_veins_smooth;
-%%  %plot_projection(initial_pressure_veins_smooth, dx);
-%%  
-%%  %==================================================
-%%  % Reconstruction - kWave
-%%  %==================================================
-%%  % 57600 sensors
-%%  cd /cs/research/medim/projects2/projects/frullan/Documents/HighFreqCode/Examples/Ex68_3D_veins_resize;
-%%  p0_recon_PML = h5read('output_data/Example68_adjoint_output_57600sensors.h5', '/p_final');
-%%  PML_size = 10;
-%%  p0_recon = max(0, p0_recon_PML(1+PML_size:end-PML_size, 1+PML_size:end-PML_size, 1+PML_size:end-PML_size));
-%%  p0_recon_hom = p0_recon/max(p0_recon(:));
-%%  
-%%  cd /cs/research/medim/projects2/projects/frullan/Documents/HighFreqCode/Examples/Ex72_3D_veins_heterogeneous;
-%%  p0_recon_PML = h5read('output_data/Example72_adjoint_output_57600sensors.h5', '/p_final');
-%%  PML_size = 10;
-%%  p0_recon = max(0, p0_recon_PML(1+PML_size:end-PML_size, 1+PML_size:end-PML_size, 1+PML_size:end-PML_size));
-%%  p0_recon_het = p0_recon/max(p0_recon(:));
-%%  plot_projection(p0_recon_het-p0_recon_hom, 1);
-%%  
-%%  % 1600 sensors
-%%  p0_recon_PML = h5read('output_data/Example72_adjoint_output_1600sensors.h5', '/p_final');
-%%  PML_size = 10;
-%%  p0_recon = max(0, p0_recon_PML(1+PML_size:end-PML_size, 1+PML_size:end-PML_size, 1+PML_size:end-PML_size));
-%%  p0_recon = p0_recon/max(p0_recon(:));
-%%  plot_projection(p0_recon, dx);
-%%  
-%%  %==================================================
-%%  % Reconstruction - RT
-%%  %==================================================
-%%  % Import data
-%%  pixelPressureMatrix = importdata('input_data/pressure_adjoint_kWave_57600sensors.dat', ' ', 0);
-%%  pixelPressure = max(0, matrix2cube(pixelPressureMatrix, Nz));
-%%  plot_projection(pixelPressure, dx);
-%%  
-%%  % Import data
-%%  pixelPressureMatrix = importdata('input_data/pressure_adjoint_kWave_1600sensors.dat', ' ', 0);
-%%  pixelPressure = max(0, matrix2cube(pixelPressureMatrix, Nz));
-%%  plot_projection(pixelPressure, dx);
-%%  
-%%  % Import data
-%%  pixelPressureMatrix = importdata('output_data/pixelPressure_adjoint_RT_1600sensors.dat', ' ', 0);
-%%  pixelPressure = max(0, matrix2cube(pixelPressureMatrix, Nz));
-%%  plot_projection(pixelPressure, dx);
-%%  
-%%  % Import data
-%%  pixelPressureMatrix = importdata('output_data/pixelPressure_x_k.dat', ' ', 0);
-%%  pixelPressure = max(0, matrix2cube(pixelPressureMatrix, Nz));
-%%  plot_projection(pixelPressure, dx);
-%%  
-%%  % Import data
-%%  pixelPressureMatrix = importdata('output_data/pixelPressure_FISTA_tau5e18_lambda1e-2_iter50.dat', ' ', 0);
-%%  pixelPressure = max(0, matrix2cube(pixelPressureMatrix, Nz));
-%%  plot_projection(pixelPressure, dx);
-%%  
-%%  % Import data
-%%  pixelPressureMatrix = importdata('output_data/pixelPressure_SGD_27.dat', ' ', 0);
-%%  pixelPressure = max(0, matrix2cube(pixelPressureMatrix, Nz));
-%%  plot_projection(pixelPressure, dx);
-%%  
-%%  % Import data
-%%  pixelPressureMatrix = importdata('output_data/pixelPressure_FISTA_29.dat', ' ', 0);
-%%  pixelPressure = max(0, matrix2cube(pixelPressureMatrix, Nz));
-%%  plot_projection(pixelPressure, dx);
-%%  
-%%  % Import data
-%%  pixelPressureMatrix = importdata('output_data/pixelPressure_S-FISTA_10.dat', ' ', 0);
-%%  pixelPressure = max(0, matrix2cube(pixelPressureMatrix, Nz));
-%%  plot_projection(pixelPressure, dx);
-%%  a = axes;
-%%  t = title('S-FISTA, iter 10 - PROBLEM');
-%%  a.Visible = 'off'; 
-%%  t.Visible = 'on'; 
-%%  saveas(gcf, 'figures/Example72_S-FISTA_problem.fig');
-%%  
-%%  % Import data
-%%  pixelPressureMatrix = importdata('output_data/pixelPressure_PDHG_16.dat', ' ', 0);
-%%  pixelPressure = max(0, matrix2cube(pixelPressureMatrix, Nz));
-%%  plot_projection(pixelPressure, dx);
-%%  
-%%  
-%%  %==============================
-%%  % RESULTS
-%%  %==============================
-%%  % Gradient
-%%  pixelPressureMatrix = importdata('results/pixelPressure_GD_tau5e18_lambda1e-2_iter50.dat', ' ', 0);
-%%  pixelPressure = max(0, matrix2cube(pixelPressureMatrix, Nz));
-%%  plot_projection(pixelPressure, dx);
-%%  a = axes;
-%%  t = title('GD - t = 5e18, l = 1e-2, iter = 50 - heterogeneous SS');
-%%  a.Visible = 'off'; 
-%%  t.Visible = 'on'; 
-%%  saveas(gcf, 'figures/Example72_GD_tau5e18_lambda1e-2_iter50.fig');
-%%  
-%%  % Stochastic gradient
-%%  pixelPressureMatrix = importdata('results/pixelPressure_S-GD_tau5e18_lambda3e-4_epoch50.dat', ' ', 0);
-%%  pixelPressure = max(0, matrix2cube(pixelPressureMatrix, Nz));
-%%  plot_projection(pixelPressure, dx);
-%%  a = axes;
-%%  t = title('S-GD - t = 5e18, l = 3e-4, iter = 50 - heterogeneous SS');
-%%  a.Visible = 'off'; 
-%%  t.Visible = 'on'; 
-%%  saveas(gcf, 'figures/Example72_S-GD_tau5e18_lambda1e-2_iter50.fig');
-%%  
-%%  % FISTA
-%%  pixelPressureMatrix = importdata('results/pixelPressure_FISTA_tau5e18_lambda1e-2_iter50.dat', ' ', 0);
-%%  pixelPressure = max(0, matrix2cube(pixelPressureMatrix, Nz));
-%%  plot_projection(pixelPressure, dx);
-%%  a = axes;
-%%  t = title('FISTA - t = 5e18, l = 1e-2, iter = 50 - heterogeneous SS');
-%%  a.Visible = 'off'; 
-%%  t.Visible = 'on'; 
-%%  saveas(gcf, 'figures/Example72_FISTA_tau5e18_lambda1e-2_iter50.fig');
-%%  
-%%  % Stochastic FISTA
-%%  %pixelPressureMatrix = importdata('results/pixelPressure_S-FISTA_tau1e18_lambda5e-4_epoch50.dat', ' ', 0);
-%%  %pixelPressure = max(0, matrix2cube(pixelPressureMatrix, Nz));
-%%  %plot_projection(pixelPressure, dx);
-%%  %a = axes;
-%%  %t = title('S-FISTA - t = 1e18, l = 1e-2, iter = 50 - heterogeneous SS');
-%%  %a.Visible = 'off'; 
-%%  %t.Visible = 'on'; 
-%%  %saveas(gcf, 'Example72_GD_tau1e18_lambda1e-2_iter50.fig');
-%%  
-%%  % PDHG
-%%  pixelPressureMatrix = importdata('results/pixelPressure_PDHG_sigma1e0_tau5e18_theta1_lambda1e-2_iter50.dat', ' ', 0);
-%%  pixelPressure = max(0, matrix2cube(pixelPressureMatrix, Nz));
-%%  plot_projection(pixelPressure, dx);
-%%  a = axes;
-%%  t = title('PDHG - s = 1, t = 5e18, l = 1e-2, iter = 50 - heterogeneous SS');
-%%  a.Visible = 'off'; 
-%%  t.Visible = 'on'; 
-%%  saveas(gcf, 'figures/Example72_PDHG_sigma1_tau5e18_lambda1e-2_iter50.fig');
-%%  
-%%  
-%%  % Pixel pressure
-%%  pixelPressureMatrix = importdata('results/pixelPressure_adjoint_RT_57600sensors.dat', ' ', 0);
-%%  pixelPressure = max(0, matrix2cube(pixelPressureMatrix, Nz));
-%%  plot_projection(pixelPressure, dx);
+%==================================================
+% COMPUTE NORMS
+%==================================================
+% Infinity norm
+disp('=============== LINF NORM =================')
+normRT_Linf = max(abs(inputRT(:)))
+normKW_Linf = max(abs(sensor_data(:)))
+quotient_Linf = normRT_Linf / normKW_Linf
+
+% L1 norm
+disp('=============== L1 NORM =================')
+normRT_L1 = sum(abs(inputRT(:)))/length(inputRT(:))
+normKW_L1 = sum(abs(sensor_data(:)))/length(sensor_data(:))
+quotient_L1 = normRT_L1 / normKW_L1
+
+% L2 norm
+disp('=============== L2 NORM =================')
+normRT_L2 = sqrt(sum((inputRT(:).*inputRT(:))/length(inputRT(:))))
+normKW_L2 = sqrt(sum((sensor_data(:).*sensor_data(:))/length(sensor_data(:))))
+quotient_L2 = normRT_L2 / normKW_L2
+
+
+
+
+%============================================================================================================================================
+% ADJOINT PROBLEM
+%============================================================================================================================================
+
+%==================================================
+% kWave
+%==================================================
+p0_recon_PML = h5read('./output_data/Example69_adjoint_output_100sensors_homo.h5', '/p_final');
+PML_size = 10;
+pixelPressure_KW = max(0, p0_recon_PML(1+PML_size:end-PML_size, 1+PML_size:end-PML_size, 1+PML_size:end-PML_size));
+plot_projection(pixelPressure_KW, 1);
+
+%==================================================
+% RT
+%==================================================
+% Import data
+pixelPressureMatrix = importdata('./output_data/PixelPressure.dat', ' ', 0);
+pixelPressure_RT = max(0, matrix2cube(pixelPressureMatrix, Nz));
+plot_projection(pixelPressure_RT, 1);
+
+%==================================================
+% COMPUTE NORMS
+%==================================================
+% Infinity norm
+disp('=============== LINF NORM =================')
+normRT_Linf = max(abs(pixelPressure_RT(:)))
+normKW_Linf = max(abs(pixelPressure_KW(:)))
+quotient_Linf = normRT_Linf / normKW_Linf
+
+% L1 norm
+disp('=============== L1 NORM =================')
+normRT_L1 = sum(abs(pixelPressure_RT(:)))/length(pixelPressure_RT(:))
+normKW_L1 = sum(abs(pixelPressure_KW(:)))/length(pixelPressure_KW(:))
+quotient_L1 = normRT_L1 / normKW_L1
+
+% L2 norm
+disp('=============== L2 NORM =================')
+normRT_L2 = sqrt(sum((pixelPressure_RT(:).*pixelPressure_RT(:))/length(pixelPressure_RT(:))))
+normKW_L2 = sqrt(sum((pixelPressure_KW(:).*pixelPressure_KW(:))/length(pixelPressure_KW(:))))
+quotient_L2 = normRT_L2 / normKW_L2
+
+
