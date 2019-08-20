@@ -8,7 +8,7 @@
 #$ -l gpu=1
 #$ -l h_rt=40:00:00
 #$ -l tmem=3G
-#$ -N spdhg85_sigma5e-1_tau2e1_lambda1e-4
+#$ -N pdhg86_tau1.6e2_lambda1e-4
 #$ -wd /home/frullan/HighFreqCode/Examples/Ex85_3D_veins_subsampled
 #$ -S /bin/bash
 
@@ -16,7 +16,7 @@
 #$ -j y
 
 #================================================================================
-# EXAMPLE 85 ITERATIVE
+# EXAMPLE 86 ITERATIVE
 # 3D domain. 
 # Compute the forward signal for sensors placed in the boundary of the cube
 #================================================================================
@@ -27,7 +27,7 @@ else
     export PATH="/home/frullan/HighFreqCode/HighFreq_3DRT/Build/bin:$PATH"
 fi
 
-export EXAMPLE="Ex85_3D_veins_subsampled/"
+export EXAMPLE="Ex86_3D_veins_het/"
 
 # Output folder
 if [ "$HOSTNAME" = "maryam.cs.ucl.ac.uk" ]; then
@@ -55,7 +55,7 @@ echo $HOSTNAME
 # Choose GPU
 export GPU_INDEX=0
 # Choose mode
-export MODE='-p'
+export MODE='-P'
 
 #================================================================================
 #=======   GRADIENT DESCENT
@@ -63,7 +63,7 @@ export MODE='-p'
 if [ "$MODE" = "-G" ]; then
     echo "=================== GRADIENT DESCENT ===================="
     # Regularization parameters
-    TAU=6.4e2
+    TAU=1.6e2
     LAMBDA=1e-4
     NITER=30
     # Output
@@ -78,7 +78,7 @@ elif [ "$MODE" = "-g" ]; then
     # Regularization parameters
     TAU=3.2e2
     LAMBDA=1e-4
-    BATCH_SIZE=900
+    BATCH_SIZE=1800
     N_EPOCHS=30
     # Output
     export STDOUT="stdout_S-GD_tau"$TAU"_lambda"$LAMBDA"_batch"$BATCH_SIZE"_epochs"$N_EPOCHS".txt"
@@ -90,7 +90,7 @@ elif [ "$MODE" = "-g" ]; then
 elif [ "$MODE" = "-F" ]; then
     echo "=================== FISTA ===================="
     # Regularization parameters
-    TAU=4e1
+    TAU=8e1
     LAMBDA=1e-4
     NITER=30
     # Output
@@ -111,14 +111,15 @@ elif [ "$MODE" = "-P" ]; then
     # Output
     export STDOUT="stdout_PDHG_sigma"$SIGMA"_tau"$TAU"_theta"$THETA"_lambda"$LAMBDA"_iter"$NITER".txt"
     RTiterative_GPU $MODE $INPUT_FOLDER$DIMENSIONS $INPUT_FOLDER$SOUND_SPEED \
-                    $INPUT_FOLDER$SENSORS $INPUT_FOLDER$FORWARD_SIGNAL $INPUT_FOLDER$PIXEL_PRESSURE $SIGMA $TAU $THETA $LAMBDA $NITER > $OUTPUT_FOLDER$STDOUT
+                    $INPUT_FOLDER$SENSORS $INPUT_FOLDER$FORWARD_SIGNAL $INPUT_FOLDER$PIXEL_PRESSURE $SIGMA $TAU $THETA $LAMBDA $NITER
+# > $OUTPUT_FOLDER$STDOUT
 #================================================================================
 #=======   STOCHASTIC PRIMAL DUAL HYBRID GRADIENT
 #================================================================================
 elif [ "$MODE" = "-p" ]; then
     echo "=================== S-PDHG ===================="
     # Regularization parameters
-    SIGMA=5e-1
+    SIGMA=2
     TAU=2e1
     THETA=1    
     LAMBDA=1e-4
