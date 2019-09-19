@@ -1,6 +1,6 @@
 % Read data from files
-cd /scratch0/NOT_BACKED_UP/frullan/Examples/Ex85_3D_veins_subsampled;
-%cd /cs/research/medim/projects2/projects/frullan/Documents/HighFreqCode/Examples/Ex85_3D_veins_subsampled;
+cd /scratch0/NOT_BACKED_UP/frullan/Examples/Ex86_3D_veins_het;
+%cd /cs/research/medim/projects2/projects/frullan/Documents/HighFreqCode/Examples/Ex86_3D_veins_het;
 
 clear all;
 close all;
@@ -28,27 +28,22 @@ Nz = dim(1, 3); dz = dim(2, 3);
 u0Matrix = importdata('./input_data/initial_pressure_veins_80x240x240.dat', ' ', 0);
 u0 = matrix2cube(u0Matrix, Nz);
 plot_projection_compact(u0, dx);
-%saveas(gcf, './figures/Example85_initial_pressure', 'epsc');
+%saveas(gcf, './figures/Example86_initial_pressure', 'epsc');
   
 % Forward signal
 time_signal = importdata(['./input_data/forwardSignal_reference_noisy5_3600sensors.dat'], ' ', 0);
+%time_signal = importdata(['./input_data/forwardSignal_reference_noisy5_3600sensors.dat'], ' ', 0);
 y0 = time_signal(2:end, :);
 figure;
 imagesc(y0(1:60, :));
 colorbar()
-%saveas(gcf, './figures/Example85_forwardSignal_noisy5', 'epsc');
+%saveas(gcf, './figures/Example86_forwardSignal_noisy5', 'epsc');
   
 % Load Adjoint Pressure
-pressure_adjoint = importdata('./input_data/pixelPressure_adjoint_3600sensors.dat', ' ', 0);
-pressure_adjoint = matrix2cube(pressure_adjoint, Nz);
-plot_projection_compact(pressure_adjoint, dx);
-%saveas(gcf, './figures/Example85_pixelPressure_adjoint', 'epsc');
-
-%%  % kWave
-%%  p0_recon_PML = h5read('./output_data/Example85_adjoint_output_3600sensors.h5', '/p_final');
-%%  PML_size = 10;
-%%  pixelPressure_KW = max(0, p0_recon_PML(1+PML_size:end-PML_size, 1+PML_size:end-PML_size, 1+PML_size:end-PML_size));
-%%  plot_projection_compact(pixelPressure_KW, 1);
+%%  pressure_adjoint = importdata('./input_data/pixelPressure_adjoint_3600sensors.dat', ' ', 0);
+%%  pressure_adjoint = matrix2cube(pressure_adjoint, Nz);
+%%  plot_projection_compact(pressure_adjoint, dx);
+%%  %saveas(gcf, './figures/Example85_pixelPressure_adjoint', 'epsc');
 
 %========================================================================================================================
 % ITERATIVE RECONSTRUCTION
@@ -59,7 +54,7 @@ plot_projection_compact(pressure_adjoint, dx);
 %==============================
 % GD **************************
 GD = [];
-GD.tau    = '1e1';
+GD.tau    = '4e1';
 GD.lambda = '1e-4';
 GD.iter   = int2str(13);
 %******************************
@@ -82,7 +77,7 @@ plot_projection_compact(pixelPressure, dx);
 %%  pixelPressureMatrix = importdata(['./results/adjoint/SFB/pixelPressure_S-GD_tau', SGD.tau, '_lambda', SGD.lambda, '_batch', SGD.batch, '_subepoch', SGD.epoch, '.dat'], ' ', 0);
 %%  pixelPressure = max(0, matrix2cube(pixelPressureMatrix, Nz));
 %%  plot_projection_compact(pixelPressure, dx);
-%%  %%  saveas(gcf, ['./figures_paper/Example80_S-GD'], 'epsc');
+%%  %saveas(gcf, ['./figures_paper/Example80_S-GD'], 'epsc');
 
 %==============================
 % FISTA
@@ -117,19 +112,20 @@ plot_projection_compact(pixelPressure, dx);
 %==============================
 % S-PDHG
 %==============================
-% S-PDHG **********************
-SPDHG = [];
-SPDHG.sigma  = '5e-2';
-SPDHG.tau    = '8e1';
-SPDHG.theta  = '1';
-SPDHG.lambda = '1e-4';
-SPDHG.batch  = '100';
-SPDHG.epoch  = int2str(30);
-%******************************
-pixelPressureMatrix = importdata(['./results/adjoint/SPDHG/pixelPressure_S-PDHG_sigma', SPDHG.sigma, '_tau', SPDHG.tau, '_theta', SPDHG.theta, '_lambda', SPDHG.lambda, '_batch', SPDHG.batch, '_subepoch', SPDHG.epoch, '.dat'], ' ', 0);
-pixelPressure = max(0, matrix2cube(pixelPressureMatrix, Nz));
-plot_projection_compact(pixelPressure, dx);
-%saveas(gcf, ['./figures_paper/Example80_S-PDHG'], 'epsc');
+%%  % S-PDHG **********************
+%%  SPDHG = [];
+%%  SPDHG.sigma  = '1';
+%%  SPDHG.tau    = '5';
+%%  SPDHG.theta  = '1';
+%%  SPDHG.lambda = '1e-4';
+%%  SPDHG.batch  = '100';
+%%  SPDHG.epoch  = int2str(30);
+%%  %******************************
+%%  pixelPressureMatrix = importdata(['./results/adjoint/SPDHG/pixelPressure_S-PDHG_sigma', SPDHG.sigma, '_tau', SPDHG.tau, '_theta', SPDHG.theta, '_lambda', SPDHG.lambda, '_batch', SPDHG.batch, '_subepoch', SPDHG.epoch, '.dat'], ' ', 0);
+%%  pixelPressure = max(0, matrix2cube(pixelPressureMatrix, Nz));
+%%  plot_projection_compact(pixelPressure, dx);
+%%  %saveas(gcf, ['./figures_paper/Example80_S-PDHG'], 'epsc');
+
 
 %==========================================================================================================================================================================
 %===============================                                                            ===============================================================================
@@ -312,9 +308,9 @@ title('SPDHG dual')
 %========================================================================================================================
 % Choose index
 GD.plotIndex = 2;
-SGD.plotIndex = 2;
-FISTA.plotIndex = 2;
-PDHG.plotIndex = 3;
+SGD.plotIndex = 1;
+FISTA.plotIndex = 1;
+PDHG.plotIndex = 1;
 SPDHG.plotIndex = 2;
 
 %======================================================================
@@ -423,7 +419,7 @@ ylabel('regularization');
 %======================================================================
 % RELATIVE DISTANCE TO OBJECTIVE FUNCTION
 %======================================================================
-OBJ_VAL = 0.93475;
+OBJ_VAL = 0.94610;
 %OBJ_VAL = 0.93448;
 rel_distance = @(curve, iter) (curve(iter) - OBJ_VAL)/(curve(1) - OBJ_VAL);
 
@@ -433,7 +429,7 @@ hold on;
 semilogy(0:SGD.nIter{SGD.plotIndex}-1, rel_distance(SGD_error_dd{SGD.plotIndex}, 1:SGD.nIter{SGD.plotIndex}), 'Color', 'g', 'Linewidth', 1.5);
 semilogy(0:FISTA.nIter{FISTA.plotIndex}-1, rel_distance(FISTA_error_dd{SGD.plotIndex}, 1:FISTA.nIter{FISTA.plotIndex}), 'Color', 'b', 'Linewidth', 1.5);
 semilogy(0:PDHG.nIter{PDHG.plotIndex}-1, rel_distance(PDHG_error_dd{PDHG.plotIndex}, 1:PDHG.nIter{PDHG.plotIndex}), 'Color', 'm', 'Linewidth', 1.5);
-semilogy(0:SPDHG.nIter{GD.plotIndex}-1, rel_distance(SPDHG_error_dd{SPDHG.plotIndex}, 1:SPDHG.nIter{SPDHG.plotIndex}), 'Color', 'c', 'Linewidth', 1.5);
+semilogy(0:SPDHG.nIter{SPDHG.plotIndex}-1, rel_distance(SPDHG_error_dd{SPDHG.plotIndex}, 1:SPDHG.nIter{SPDHG.plotIndex}), 'Color', 'c', 'Linewidth', 1.5);
 legend('FB', 'S-FB', 'AFB', 'PDHG', 'S-PDHG');
 grid on;
 box on;
@@ -443,9 +439,9 @@ ax.GridAlpha = 0.2;
 xlabel('iter/epoch');
 ylabel('data term');
 
-title('Example 85 - Objective function')
+title('Example 86 - Objective function')
 axis([0 100 1e-6 1 ])
-saveas(gcf, 'figures/Example85_objectiveFunction', 'png');
+saveas(gcf, 'figures/Example86_objectiveFunction', 'png');
 
 
 

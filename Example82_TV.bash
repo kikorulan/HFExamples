@@ -44,13 +44,13 @@ export DIMENSIONS="dimensions.dat"
 export GPU_INDEX=1
 
 # Parameters
-export N_ITER_TV=200
-export N_ITER_OUT=100
+export N_ITER_TV=20
+export N_ITER_OUT=3
 
 #====================
 # LAMBDA = 1E-3
 #====================
-export LAMBDA=1e-3
+export LAMBDA=1e-4
 PIXEL_PRESSURE_IN="u0.dat"
 for ((i=0; i<N_ITER_OUT; i++)); do
     iNext=$(echo "$i+1" | bc)

@@ -1,6 +1,6 @@
 % Read data from files
-%cd /cs/research/medim/projects2/projects/frullan/Documents/HighFreqCode/Examples/Ex82_TVanalysis;
-cd /scratch0/NOT_BACKED_UP/frullan/Examples/Ex82_TVanalysis;
+cd /cs/research/medim/projects2/projects/frullan/Documents/HighFreqCode/Examples/Ex82_TVanalysis;
+%cd /scratch0/NOT_BACKED_UP/frullan/Examples/Ex82_TVanalysis;
 
 clear all;
 close all;
@@ -30,8 +30,8 @@ t.Visible = 'on';
 %========================================================================================================================
 % TV DENOISING
 %========================================================================================================================
-lambda = 1e-2;
-para.maxIter = 200;
+lambda = 1e-4;
+para.maxIter = 20;
 
 
 % Iter 1
@@ -59,15 +59,15 @@ plot_projection(u1_600, dx);
 %========================================================================================================================
 % CPP TV DENOISING
 %========================================================================================================================
-uMatrix = importdata('./output_data/u1.dat', ' ', 0);
+uMatrix = importdata('./output_data/u1_lambda1e-4.dat', ' ', 0);
 u1_cpp = matrix2cube(uMatrix, Nz);
 h = plot_projection(u1_cpp, dx);
 
-uMatrix = importdata('./output_data/u2.dat', ' ', 0);
+uMatrix = importdata('./output_data/u2_lambda1e-3.dat', ' ', 0);
 u2_cpp = matrix2cube(uMatrix, Nz);
 h = plot_projection(u2_cpp, dx);
 
-uMatrix = importdata('./output_data/u3.dat', ' ', 0);
+uMatrix = importdata('./output_data/u3_lambda1e-3.dat', ' ', 0);
 u3_cpp = matrix2cube(uMatrix, Nz);
 h = plot_projection(u3_cpp, dx);
 

@@ -7,7 +7,8 @@ close all;
 
 
 % Import data
-filenameData = './input_data/forwardSignal_reference_3600sensors.dat';
+%filenameData = './input_data/forwardSignal_reference_3600sensors.dat';
+filenameData = './input_data/forwardSignal_reference_14400sensors.dat';
 timeSignal = importdata(filenameData, ' ', 0);
 timeRT = timeSignal(1, :);
 inputRT = timeSignal(2:end, :);
@@ -25,7 +26,6 @@ colorbar();
 rng(1);
 noise = normrnd(0,0.05,[nSensors,signalLength]);
 
-
 % Add noise
 inputRT_noisy = inputRT + inputRT.*noise;
 
@@ -39,4 +39,5 @@ hold on;
 plot(inputRT_noisy(1, :), 'Color', 'r');
 % Write output
 timeSignal_noisy = [timeRT; inputRT_noisy];
-dlmwrite('./input_data/forwardSignal_reference_noisy5_3600sensors.dat', timeSignal_noisy, 'delimiter', ' ');
+%dlmwrite('./input_data/forwardSignal_reference_noisy5_3600sensors.dat', timeSignal_noisy, 'delimiter', ' ');
+dlmwrite('./input_data/forwardSignal_reference_noisy5_14400sensors.dat', timeSignal_noisy, 'delimiter', ' ');
