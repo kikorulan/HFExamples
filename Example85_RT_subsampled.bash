@@ -6,10 +6,9 @@
 
 #$ -P gpu
 #$ -l gpu=1
-#$ -l h_rt=10:50:0
+#$ -l h_rt=100:00:00
 #$ -l tmem=3G
 #$ -N RTsolver
-#$ -wd /home/frullan/C++
 #$ -S /bin/bash
 
 #$ -o RTsolver.txt
@@ -21,7 +20,7 @@
 # Compute the forward signal for sensors placed in the boundary of the cube
 #================================================================================
 #The code you want to run now goes here.
-if [ "$HOSTNAME" = "miller.local" ]; then
+if [ "$HOSTNAME" = "miller.local" ] || [ "$HOSTNAME" = "armstrong.local" ]; then
     export PATH="/home/frullan/HighFreqCode/HighFreq_3DRT/Build_miller/bin:$PATH"
 else
     export PATH="/home/frullan/HighFreqCode/HighFreq_3DRT/Build/bin:$PATH"
@@ -45,13 +44,13 @@ export DIMENSIONS="dimensions.dat"
 export SOUND_SPEED="sound_speed.dat"
 export INITIAL_PRESSURE="initial_pressure_veins_80x240x240.dat"
 #export INITIAL_PRESSURE="initial_pressure_veins_80x240x240_smooth.dat"
-export SENSORS="sensors_subsampled_3600.dat" 
-export FORWARD_SIGNAL="forwardSignal_reference_noisy5_3600sensors.dat"
+export SENSORS="sensors_subsampled_14400.dat" 
+export FORWARD_SIGNAL="forwardSignal_reference_noisy5_14400sensors.dat"
 export STDOUT="stdout-forward.txt"
 
 # Mode
-export MODE="-a"
-export GPU_INDEX=1
+export MODE="-f"
+export GPU_INDEX=0
 # Generate dimensions file
 Nx=80  dx=0.000053
 Ny=240 dy=0.000053
@@ -64,7 +63,7 @@ EOF
 #==============================
 # SENSORS
 #==============================
-##  nSensorsArray=60
+##  nSensorsArray=120
 ##  nRaysPhi=1024 
 ##  nRaysTheta=1024
 ##  #nRaysPhi=10
@@ -89,5 +88,5 @@ EOF
 # RUN 
 #====================
 RTsolver_GPU $MODE $INPUT_FOLDER$DIMENSIONS $INPUT_FOLDER$SOUND_SPEED $INPUT_FOLDER$INITIAL_PRESSURE \
-             $INPUT_FOLDER$SENSORS $OUTPUT_FOLDER $INPUT_FOLDER$FORWARD_SIGNAL 
-#> $OUTPUT_FOLDER$STDOUT
+             $INPUT_FOLDER$SENSORS $OUTPUT_FOLDER $INPUT_FOLDER$FORWARD_SIGNAL
+# > $OUTPUT_FOLDER$STDOUT
