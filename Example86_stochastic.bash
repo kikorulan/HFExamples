@@ -4,11 +4,10 @@
 # QSUB
 #====================
 
-# #$ -P gpu
 #$ -l gpu=1
 #$ -l h_rt=200:00:00
 #$ -l tmem=3G
-#$ -N gd86_tau2e1
+#$ -N spdhg86_tau1.6e2_sigma2e-1
 #$ -wd /home/frullan/HighFreqCode/Examples/Ex86_3D_veins_het
 #$ -S /bin/bash
 
@@ -46,8 +45,8 @@ cd $EXAMPLE_FOLDER
 export DIMENSIONS="dimensions.dat"
 export SOUND_SPEED="sound_speed.dat"
 export INITIAL_PRESSURE="initial_pressure_veins_80x240x240.dat"
-export SENSORS="sensors_subsampled_14400.dat" 
-export FORWARD_SIGNAL="forwardSignal_reference_noisy5_14400sensors.dat"
+export SENSORS="sensors_subsampled_3600.dat" 
+export FORWARD_SIGNAL="forwardSignal_reference_noisy5_3600sensors.dat"
 export PIXEL_PRESSURE="pixelPressure_0.dat"
 
 # Machine
@@ -55,15 +54,15 @@ echo $HOSTNAME
 # Choose GPU
 export GPU_INDEX=0
 # Choose mode
-export MODE='-G'
+export MODE='-p'
 
 # Parameters
-SIGMA=5e-2
-TAU=2e1
+SIGMA=2e-1
+TAU=1.6e2
 THETA=1  
 LAMBDA=1e-4
 BATCH_SIZE=100
-NITER=100
+NITER=20
 
 #=======   GRADIENT DESCENT
 if [ "$MODE" = "-G" ]; then
